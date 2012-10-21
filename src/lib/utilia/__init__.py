@@ -34,6 +34,38 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
+# Version
+# Note: If something goes wrong here, then just let the exception propagate.
+
+from os.path import (
+    join		    as path_join,
+)
+from ConfigParser import (
+    SafeConfigParser	    as __ConfigParser,
+)
+
+__vinfo_CFG	= __ConfigParser( )
+__vinfo_CFG.readfp( file( path_join( __path__[ 0 ], "version.cfg" ) ) )
+
+__vinfo_release_type	= __vinfo_CFG.get( "control", "release_type" )
+assert __vinfo_release_type in [ "bugfix", "candidate", "development" ]
+__vinfo_numbers_DICT	= dict( __vinfo_CFG.items( "numbers" ) )
+if   "bugfix" == __vinfo_release_type: # Stable Bugfix Release
+    __version__ = \
+    "{major}.{minor}.{bugfix}".format( **__vinfo_numbers_DICT )
+elif "candidate" == __vinfo_release_type: # Release Candidate
+    __version__ = \
+    "{major}.{minor}.0rc{update}".format( **__vinfo_numbers_DICT )
+elif "development" == __vinfo_release_type: # Development Release
+    __vinfo_numbers_DICT[ "update" ] = \
+    file( path_join( __path__[ 0 ], "dev-timestamp.dat" ) ).read( 12 )
+    __version__ = \
+    "{major}.{minor}.0dev{update}".format( **__vinfo_numbers_DICT )
+
+del path_join
+del __ConfigParser, __vinfo_CFG, __vinfo_release_type, __vinfo_numbers_DICT
+
+
 # Exceptions
 
 
