@@ -1,0 +1,7 @@
+*.swp
+*.py[co]
+*.egg
+*.tar.gz
+*env
+*ENV
+build
