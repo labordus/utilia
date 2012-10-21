@@ -26,7 +26,6 @@ from __future__ import (
     division		    as __FUTURE_division,
     absolute_import	    as __FUTURE_absolute_import,
     print_function	    as __FUTURE_print_function,
-    unicode_literals	    as __FUTURE_unicode_literals,
 ) # Assumes Python version >= 2.6.
 
 
