@@ -1,0 +1,24 @@
+..				   utilia
+
+The authorship or provenance of contributions to the *utilia* software and 
+the documentation distributed with it shall be recorded via a 
+publicly-accessible revision control repository. All contributions are 
+subject to the relevant licenses; please see the ``LICENSE.txt`` file
+distributed along with this file for more details. No copyright assignment is
+required at this time to accept contributions to the *utilia* software or the
+documentation distributed with it.
+
+Below is a list of contributors, given by name, nickname, or handle and an
+optional PGP/GPG public key ID.
+
++-----------------------------------------------+-----------------------------+
+| Name / Nickname / Handle                      | PGP/GPG Public Key ID       |
++===============================================+=============================+
+| Eric A. McDonald                              | 0xcf627346fb2ad110          |
++-----------------------------------------------+-----------------------------+
+
+If your name, nickname, or handle is not listed above and you have contributed,
+then please email the maintainer(s) of the *utilia* software with details on
+your contribution(s) and how you would like to be listed.
+
+.. vim: set ft=rst sts=3 sw=3 tw=79:

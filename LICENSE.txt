@@ -1,0 +1,32 @@
+..				   utilia
+
+The *utilia* software is licensed under the Apache License, version 2.0 (the
+"Software License"). The text of the Software License may be found in the 
+``licenses`` subdirectory of the ``doc`` directory in this software 
+distribution or at the following Internet URL: 
+http://www.apache.org/licenses/LICENSE-2.0 .
+
+The documentation distributed with the *utilia* software, excluding
+documentation which is contained with the source code but including attendant
+figures and graphical images, is licensed under the Creative Commons
+Attribution 3.0 Unported License (the "Documentation License"). The text of the
+Documentation License may be found at the following Internet URL:
+http://creativecommons.org/licenses/by/3.0/ .
+
+Any file distributed under the ``src`` directory, excluding
+files named with a ``.dat`` suffix, is licensed under the Software License. Any
+file distributed under the ``src`` directory, named with a ``.dat`` suffix, is
+in the public domain. Any file distributed under the ``doc`` directory,
+excluding license files, is licensed under the Documentation License. Licenses
+are reproduced as part of this distribution for your convenience of reference;
+any applicable copyright law and any terms and conditions set forth by the 
+copyright holder(s) of a reproduced license, regarding that license, are 
+considered to be in full effect for that license.
+
+.. note::
+   If you plan on contributing to the *utilia* software or the documentation
+   distributed with it, then please be aware of the terms and conditions of 
+   the Software License and the Documentation License, especially those terms 
+   and conditions concerned with contributions.
+
+.. vim: set ft=rst sts=3 sw=3 tw=79:
