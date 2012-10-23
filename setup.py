@@ -99,9 +99,21 @@ setup_data = { }
 
 setup_data[ "name" ]		    = "utilia"
 setup_data[ "version" ]		    = __version
-setup_data[ "description" ]	    = "A collection of handy utilities."
-# TODO: long_description
-# TODO: license
+setup_data[ "description" ]	    = \
+    "An assorted collection of modules and scripts."
+setup_data[ "long_description" ]    = \
+    """
+	The 'utilia' software is a collection of various useful Python modules
+	and scripts. A sample of some of the functionality provided is:
+
+	    * Calculation of standard paths for configuration information, 
+	      data stores, and scratch spaces for a particular operating
+	      system.
+
+	    * Et cetera....
+    """
+setup_data[ "license" ]		    = \
+    "Apache License 2.0 (software), CC BY 3.0 Unported (documentation)"
 setup_data[ "author" ]		    = "Eric A. McDonald"
 setup_data[ "author_email" ]	    = "the.eric.mcdonald@gmail.com"
 # TODO: url
@@ -123,7 +135,6 @@ setup_data[ "classifiers" ]	    = \
     ]
 # TODO: namespace_packages
 setup_data[ "packages" ]	    = find_packages( dirname( __path_to_lib ) )
-print( setup_data[ "packages" ], file = sys.stderr )
 setup_data[ "package_dir" ]	    = { "": dirname( __path_to_lib ) }
 # TODO: py_modules
 # TODO: ext_modules
