@@ -34,41 +34,33 @@ Path Roots
 
 .. autofunction:: whereis_user_home
 
-.. autofunction:: whereis_system_install_root
+.. autofunction:: whereis_oscore_install_root
+
+.. autofunction:: whereis_osdist_install_root
 
 .. autofunction:: whereis_common_install_root
-
-.. autofunction:: whereis_my_install_root
-
-.. autofunction:: whereis_my_devel_root
 
 User Paths
 ----------
 
 .. autofunction:: whereis_user_temp_base
 
-.. autofunction:: whereis_my_user_org_root
-
 .. autofunction:: whereis_my_user_config
 
 .. autofunction:: whereis_my_user_data
+
+.. autofunction:: whereis_my_saves
 
 Public Base Paths
 -----------------
 
 .. autofunction:: whereis_common_temp_base
 
-.. autofunction:: whereis_system_config_base
+.. autofunction:: whereis_oscore_config_base
+
+.. autofunction:: whereis_osdist_config_base
 
 .. autofunction:: whereis_common_config_base
-
-.. autofunction:: whereis_my_install_config_base
-
-.. autofunction:: whereis_system_data_base
-
-.. autofunction:: whereis_common_data_base
-
-.. autofunction:: whereis_my_install_data_base
 
 Effective Site Paths
 --------------------

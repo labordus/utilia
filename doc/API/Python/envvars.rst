@@ -52,7 +52,7 @@
 
    .. sourcecode:: bat
 
-      set FOO_INSTALL_PATH=C:\Program Files\Foo\1.2.3
+      set FOO_INSTALL_PATH="C:\Program Files\Foo\1.2.3"
 
    At a Unix high performance computing center, a hypothetical environment
    module might contain:
