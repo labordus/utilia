@@ -29,30 +29,14 @@ Elementary Functions
 
 .. autofunction:: which_fs_layout
 
-Path Roots
-----------
-
-.. autofunction:: whereis_user_home
+Public Base Paths
+-----------------
 
 .. autofunction:: whereis_oscore_install_root
 
 .. autofunction:: whereis_osdist_install_root
 
 .. autofunction:: whereis_common_install_root
-
-User Paths
-----------
-
-.. autofunction:: whereis_user_temp_base
-
-.. autofunction:: whereis_my_user_config
-
-.. autofunction:: whereis_my_user_data
-
-.. autofunction:: whereis_my_saves
-
-Public Base Paths
------------------
 
 .. autofunction:: whereis_common_temp_base
 
@@ -62,19 +46,39 @@ Public Base Paths
 
 .. autofunction:: whereis_common_config_base
 
-Effective Site Paths
+User Base Paths
+---------------
+
+.. autofunction:: whereis_user_home
+
+.. autofunction:: whereis_user_temp_base
+
+Other Base Paths
+----------------
+
+.. autofunction:: whereis_preferred_temp_base
+
+Public Derived Paths
 --------------------
 
 .. autofunction:: whereis_my_site_config
 
 .. autofunction:: whereis_my_site_data
 
-Preferred Paths
----------------
+User Derived Paths
+------------------
 
-.. autofunction:: whereis_preferred_temp_base
+.. autofunction:: whereis_my_user_config
+
+.. autofunction:: whereis_my_user_data
+
+.. autofunction:: whereis_my_saves
+
+Other Derived Paths
+-------------------
 
 .. autofunction:: whereis_my_temp
+
 
 .. _SECTION-utilia.filesystem.stdpath-Examples:
 

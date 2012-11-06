@@ -61,7 +61,7 @@
       directory, have the word **user** in their names.
 
     * Functions, which return paths for shared or system-wide directories,
-      associated with a particlar pieces of software, have the word **site** 
+      associated with a particular pieces of software, have the word **site** 
       in their names.
 
     Most of the functions can be instructed to operate in a *return None on
@@ -459,795 +459,6 @@ concatenated_software_path_fragment.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
 
-def whereis_user_home( error_on_none = False ):
-    """
-	Returns the path to the current user's home directory, if it can be
-	determined. Returns ``None``, otherwise.
-
-    """
-
-    user_id		    = None
-    user_home_path	    = None
-    error_reason_foramat    = None
-    error_reason_args	    = [ ]
-
-    fsl = which_fs_layout( )
-    if   fsl in [ "POSIX", "MacOS X", ]:
-	user_id		= envvars.get( "USER", None )
-	user_home_path	= path_expanduser( "~" )
-	if "~" == user_home_path: user_home_path = None
-    elif fsl in [ "Windows", ]:
-	user_id		= envvars.get( "UserName", None )
-	user_home_path	= envvars.get( "UserProfile", None )
-    else:
-	raise UnsupportedFilesystemLayout(
-	    "Unimplemented path determination logic for {0}.", fsl	
-	)
-    
-    if (None is user_home_path) and error_on_none:
-	if user_id:
-	    error_reason_format	= \
-	    __TD( "Unknown home directory for user '{0}'." )
-	    error_reason_args	= [ user_id, ]
-	else:
-	    error_reason_format = __TD( "Unknown ID of current user." )
-	raise UndeterminedFilesystemPath( 
-	    error_reason_format, *error_reason_args
-	)
-    return user_home_path
-
-__autodoc_function_parameters( whereis_user_home, __DOCSTRING_FRAGMENTS( ) )
-whereis_user_home.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_user_home.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
-
-
-def whereis_common_temp_base( error_on_none = False ):
-    """
-	Returns the path to the temporary storage area available for use by
-	everyone on the system.
-	
-	Below is a table of typical paths by filesystem layout classification:
-
-	.. csv-table::
-	   :header: "Classification", "Path"
-	   :widths: 20, 80
-
-	   "POSIX",	"/tmp"
-	   "MacOS X",	"/tmp"
-	   "Windows",	""
-
-    """
-
-    temp_base_path	= None
-    error_reason_format	= None
-    error_reason_args	= [ ]
-
-    fsl = which_fs_layout( )
-    if   fsl in [ "POSIX", "MacOS X" ]:	temp_base_path = "/tmp"
-    elif fsl in [ "Windows", ]:		pass
-    else:
-	raise UnsupportedFilesystemLayout(
-	    "Unimplemented path determination logic for {0}.", fsl	
-	)
-
-    if (None is temp_base_path) and error_on_none:
-	error_reason_format = \
-	__TD( "Unknown path to common temporary storage area." )
-	raise UndeterminedFilesystemPath(
-	    error_reason_format, *error_reason_args
-	)
-    return temp_base_path
-
-__autodoc_function_parameters(
-    whereis_common_temp_base, __DOCSTRING_FRAGMENTS( )
-)
-whereis_common_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_common_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
-
-
-def whereis_user_temp_base( error_on_none = False ):
-    """
-	Returns the path to the current user's temporary storage area.
-
-    """
-
-    utbp_evname		= None
-    user_temp_base_path	= None
-    error_reason_format	= None
-    error_reason_args	= [ ]
-
-    fsl = which_fs_layout( )
-    if   fsl in [ "POSIX", "MacOS X", ]:    pass
-    elif fsl in [ "Windows", ]:
-	utbp_evname = "Temp"
-	user_temp_base_path = envvars.get( utbp_evname, None )
-    else:
-	raise UnsupportedFilesystemLayout(
-	    "Unimplemented path determination logic for {0}.", fsl	
-	)
-
-    if (None is user_temp_base_path) and error_on_none:
-	if utbp_evname:
-	    error_reason_format = \
-	    __TD( "Environment variable, '{0}', not set." )
-	    error_reason_args = [ utbp_evname, ]
-	else:
-	    error_reason_format = \
-	    __TD( "Unknown path to user's temporary storage area." )
-	raise UndeterminedFilesystemPath(
-	    error_reason_format, *error_reason_args
-	)
-    return user_temp_base_path
-
-__autodoc_function_parameters(
-    whereis_user_temp_base, __DOCSTRING_FRAGMENTS( )
-)
-whereis_user_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_user_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
-
-
-def whereis_preferred_temp_base(
-    prefer_common = False,
-    error_on_none = False
-):
-    """
-	Returns:
-	
-	* the result from a call to :py:func:`whereis_common_temp_base`, 
-	  if it is not ``None`` and the ``prefer_common`` argument is 
-	  ``True``;
-	
-	* the result from a call to :py:func:`whereis_user_temp_base`, 
-	  if it is not ``None``;
-
-	* the result from a call to :py:func:`whereis_common_temp_base`, 
-	  if it is not ``None``; 
-	
-	* or ``None``, if all else fails.
-
-    """
-
-    temp_base_path	= None
-    error_reason_format	= None
-    error_reason_args	= [ ]
-
-    utbp = stbp = None
-
-    try: utbp = whereis_user_temp_base( error_on_none = error_on_none )
-    except UndeterminedFilesystemPath as exc:
-	error_reason_format = exc.error_reason_format
-	error_reason_args   = exc.error_reason_args 
-
-    try: stbp = whereis_common_temp_base( error_on_none = error_on_none )
-    except UndeterminedFilesystemPath as exc:
-	error_reason_format = exc.error_reason_format
-	error_reason_args   = exc.error_reason_args 
-
-    if	 stbp and prefer_common:    temp_base_path = stbp
-    elif utbp:			    temp_base_path = utbp
-    elif stbp:			    temp_base_path = stbp
-    
-    if (None is temp_base_path) and error_on_none:
-	error_reason_format = \
-	__TD( "Unknown path to preferred temporary storage." )
-	raise UndeterminedFilesystemPath(
-	    error_reason_format, *error_reason_args
-	)
-    return temp_base_path
-
-__autodoc_function_parameters(
-    whereis_preferred_temp_base, __DOCSTRING_FRAGMENTS( )
-)
-whereis_preferred_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_preferred_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
-
-
-def whereis_my_temp(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None,
-    prefer_common = False, append_path_fragment = True,
-    error_on_none = False
-):
-    """
-	Returns the path to the preferred temporary storage for the software
-	specified by the ``software_name`` argument, if supplied, or else the
-	:envvar:`UTILIA_SOFTWARE_NAME` environment variable, if set. Returns
-	``None``, otherwise.
-
-	The path calculation relies on results from the
-	:py:func:`whereis_preferred_temp_base` and the 
-	:py:func:`concatenated_software_path_fragment` functions.
-
-    """
-
-    temp_path		= None
-    error_reason_format	= None
-    error_reason_args	= [ ]
-
-    if append_path_fragment:
-	mtpf = \
-	concatenated_software_path_fragment(
-	    software_name   = software_name,
-	    vendor_name	    = vendor_name,
-	    version	    = version,
-	    error_on_none   = error_on_none
-	)
-    else: mtpf = ""
-
-    ptbp = alt_base_path
-    if not ptbp:
-	ptbp = \
-	whereis_preferred_temp_base(
-	    error_on_none = error_on_none,
-	    prefer_common = prefer_common
-	)
-    if ptbp: temp_path = path_join( *filter( None, [ ptbp, mtpf ] ) )
-    
-    if (None is temp_path) and error_on_none:
-	error_reason_format = \
-	__TD( "Unknown path to temporary storage for '{0}'." )
-	error_reason_args = [ software_name, ]
-	raise UndeterminedFilesystemPath(
-	    error_reason_format, *error_reason_args
-	)
-    return temp_path
-
-__autodoc_function_parameters(
-    whereis_my_temp, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_temp.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_temp.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
-
-
-def whereis_my_site_config(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None, use_python_prefix = False,
-    append_path_fragment = True,
-    error_on_none = False
-):
-    """
-	Returns a path to shared or site-wide configuration information 
-	or preferences directory for the software product named by the
-	``software_name`` argument.
-
-    """
-
-    my_site_path	= None
-    error_reason_format	= None
-    error_reason_args	= [ ]
-    fsl			= which_fs_layout( )
-    msbp		= None
-    msbp_evname		= None
-
-    if append_path_fragment:
-	mspf = \
-	concatenated_software_path_fragment(
-	    software_name   = software_name,
-	    vendor_name	    = vendor_name,
-	    version	    = version,
-	    error_on_none   = error_on_none
-	)
-    else: mspf = ""
-
-    if not msbp: msbp = alt_base_path
-    if not msbp and use_python_prefix: msbp = sys.prefix
-    if not msbp:
-	if   fsl in [ "POSIX", ]:   msbp = "/usr/local"
-	elif fsl in [ "MacOS X", ]: msbp = "/Library"
-	elif fsl in [ "Windows", ]:
-	    msbp = \
-	    __computed_Windows_program_files_path(
-		error_on_none = error_on_none
-	    )
-	else:
-	    raise UnsupportedFilesystemLayout(
-		"Unimplemented path determination logic for {0}.", fsl
-	    )
-
-    if msbp:
-
-	if   fsl in [ "POSIX", ]:
-	    if "/usr" == msbp: msbp = "/"
-	    my_site_path = \
-	    path_join( *filter( None, [ msbp, "etc", mspf ] ) )
-
-	elif fsl in [ "MacOS X", ]:
-	    msbp_orig = msbp
-	    msbp = __computed_MacOS_X_python_prefix( msbp )
-	    if msbp.startswith( "/System" ): msbp = "/Library"
-	    # MacOS X-flavored
-	    if (mscbp_orig != msbp) or ("/Library" == msbp):
-		my_site_path = \
-		path_join( *filter( None, [ msbp, "Preferences", mspf ] ) )
-	    # POSIX-flavored
-	    else:
-		my_site_path = \
-		path_join( *filter( None, [ msbp, "etc", mspf ] ) )
-
-	elif fsl in [ "Windows", ]:
-	    # Python-flavored
-	    if	 msbp == sys.prefix:
-		my_site_path = \
-		path_join( *filter( None, [ msbp, "Config", mspf ] ) )
-	    # Windows-flavored
-	    else:
-		my_site_path = \
-		path_join( *filter( None, [ msbp, mspf, "Config" ] ) )
-
-	else:
-	    raise UnsupportedFilesystemLayout(
-		"Unimplemented path determination logic for {0}.", fsl
-	    )
-
-    if (None is my_site_path) and error_on_none:
-	if msbp_evname:
-	    error_reason_format = \
-	    __TD( "Environment variable, '{0}', not set." )
-	    error_reason_args = [ msbp_evname, ]
-	else:
-	    error_reason_format = \
-	    __TD( "Unknown path to site config info for '{0}'." )
-	    error_reason_args = [ software_name, ]
-	raise UndeterminedFilesystemPath(
-	    error_reason_format, *error_reason_args
-	)
-    return my_site_path
-
-__autodoc_function_parameters(
-    whereis_my_site_config, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_site_config.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_site_config.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
-
-
-def whereis_my_site_data(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None, use_python_prefix = False,
-    append_path_fragment = True,
-    error_on_none = False
-):
-    """
-	Returns a path to the shared or site-wide data store or resources 
-	directory for the software product named by the ``software_name`` 
-	argument.
-
-    """
-
-    my_site_path	= None
-    error_reason_format	= None
-    error_reason_args	= [ ]
-    fsl			= which_fs_layout( )
-    msbp		= None
-    msbp_evname		= None
-
-    if append_path_fragment:
-	mspf = \
-	concatenated_software_path_fragment(
-	    software_name   = software_name,
-	    vendor_name	    = vendor_name,
-	    version	    = version,
-	    error_on_none   = error_on_none
-	)
-    else: mspf = ""
-
-    if not msbp: msbp = alt_base_path
-    if not msbp and use_python_prefix: msbp = sys.prefix
-    if not msbp:
-	if   fsl in [ "POSIX", ]:   msbp = "/usr/local"
-	elif fsl in [ "MacOS X", ]: msbp = "/Library"
-	elif fsl in [ "Windows", ]:
-	    msbp = \
-	    __computed_Windows_program_files_path(
-		error_on_none = error_on_none 
-	    )
-	else:
-	    raise UnsupportedFilesystemLayout(
-		"Unimplemented path determination logic for {0}.", fsl
-	    )
-
-    if msbp:
-
-	if   fsl in [ "POSIX", ]:
-	    if "/" == msbp:
-		my_site_path = \
-		path_join( *filter( None, [ msbp, "etc", mspf ] ) )
-	    else:
-		my_site_path = \
-		path_join( *filter( None, [ msbp, "share", mspf ] ) )
-
-	elif fsl in [ "MacOS X", ]:
-	    msbp_orig = msbp
-	    msbp = __computed_MacOS_X_python_prefix( msbp )
-	    if msbp.startswith( "/System" ): msbp = "/Library"
-	    # MacOS X-flavored
-	    if (msbp_orig != msbp) or ("/Library" == msbp):
-		my_site_path = \
-		path_join( *filter(
-		    None,
-		    [ msbp, "Application Support", mspf ]
-		) )
-	    # POSIX-flavored
-	    else:
-		if "/" == msbp:
-		    my_site_path = \
-		    path_join( *filter( None, [ msbp, "etc", mspf ] ) )
-		else:
-		    my_site_path = \
-		    path_join( *filter( None, [ msbp, "share", mspf ] ) )
-
-	elif fsl in [ "Windows", ]:
-	    # Python-flavored
-	    if	 msbp == sys.prefix:
-		my_site_path = \
-		path_join( *filter( None, [ msbp, "Data", mspf ] ) )
-	    # Windows-flavored
-	    else:
-		my_site_path = \
-		path_join( *filter( None, [ msbp, mspf, "Data" ] ) )
-
-	else:
-	    raise UnsupportedFilesystemLayout(
-		"Unimplemented path determination logic for {0}.", fsl
-	    )
-
-    if (None is my_site_path) and error_on_none:
-	if msbp_evname:
-	    error_reason_format = \
-	    __TD( "Environment variable, '{0}', not set." )
-	    error_reason_args = [ msbp_evname, ]
-	else:
-	    error_reason_format = \
-	    __TD( "Unknown path to site data store for '{0}'." )
-	    error_reason_args = [ software_name, ]
-	raise UndeterminedFilesystemPath(
-	    error_reason_format, *error_reason_args
-	)
-    return my_site_path
-
-__autodoc_function_parameters(
-    whereis_my_site_data, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_site_data.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_site_data.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
-
-
-# TODO: whereis_my_site_programs
-# TODO: whereis_my_site_docs
-
-
-def whereis_my_user_config(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None, use_python_prefix = False,
-    append_path_fragment = True,
-    error_on_none = False
-):
-    """
-	Returns a path to the user's configuration information or preferences
-	directory for the software product named by the ``software_name`` 
-	argument.
-
-    """
-
-    my_user_path	= None
-    error_reason_format	= None
-    error_reason_args	= [ ]
-    fsl			= which_fs_layout( )
-    mubp		= None
-    mubp_evname		= None
-
-    if append_path_fragment:
-	mupf = \
-	concatenated_software_path_fragment(
-	    software_name   = software_name,
-	    vendor_name	    = vendor_name,
-	    version	    = version,
-	    error_on_none   = error_on_none
-	)
-    else: mupf = ""
-
-    if not mubp: mubp = alt_base_path
-    if not mubp and use_python_prefix: mubp = site.USER_BASE
-    if not mubp:
-	if   fsl in [ "POSIX", ]:
-	    mubp = whereis_user_home( error_on_none = error_on_none )
-	elif fsl in [ "MacOS X", ]:
-	    uhp = whereis_user_home( error_on_none = error_on_none )
-	    if uhp:
-		# MacOS X-flavored
-		if  sys.prefix \
-		    != __computed_MacOS_X_python_prefix( sys.prefix ):
-		    mubp = path_join( uhp, "Library" )
-		# POSIX-flavored
-		else: mubp = uhp
-	elif fsl in [ "Windows", ]:
-	    mubp_evname = "AppData"
-	    mubp = envvars.get( mubp_evname, None )
-	else:
-	    raise UnsupportedFilesystemLayout(
-		"Unimplemented path determination logic for {0}.", fsl
-	    )
-
-    if mubp:
-
-	if   fsl in [ "POSIX", ]:
-	    if use_python_prefix:
-		# NOTE: Possible PEP 370 violation.
-		my_user_path = \
-		path_join( *filter( None, [ mubp, "etc", mupf ] ) )
-	    else:
-		if not mupf: mupf = software_name
-		my_user_path = \
-		path_join( *filter( None, [ mubp, "." + mupf, "etc" ] ) )
-	
-	elif fsl in [ "MacOS X", ]:
-	    # MacOS X-flavored
-	    if  sys.prefix \
-		!= __computed_MacOS_X_python_prefix( sys.prefix ):
-		my_user_path = \
-		path_join( *filter( None, [ mubp, "Preferences", mupf ] ) )
-	    # POSIX-flavored
-	    else:
-		if use_python_prefix:
-		    # NOTE: Possible PEP 370 violation.
-		    my_user_path = \
-		    path_join( *filter( None, [ mubp, "etc", mupf ] ) )
-		else:
-		    if not mupf: mupf = software_name
-		    my_user_path = \
-		    path_join( *filter( None, [ mubp, "." + mupf, "etc" ] ) )
-	
-	elif fsl in [ "Windows", ]:
-	    if use_python_prefix:
-		my_user_path = \
-		path_join( *filter( None, [ mubp, "Config", mupf ] ) )
-	    else:
-		if not mupf: mupf = software_name
-		my_user_path = \
-		path_join( *filter( None, [ mubp, mupf, "Config" ] ) )
-
-	else:
-	    raise UnsupportedFilesystemLayout(
-		"Unimplemented path determination logic for {0}.", fsl
-	    )
-
-    if (None is my_user_path) and error_on_none:
-	if mubp_evname:
-	    error_reason_format = \
-	    __TD( "Environment variable, '{0}', not set." )
-	    error_reason_args = [ mubp_evname, ]
-	else:
-	    error_reason_format = \
-	    __TD( "Unknown path to user config info for '{0}'." )
-	    error_reason_args = [ software_name, ]
-	raise UndeterminedFilesystemPath(
-	    error_reason_format, *error_reason_args
-	)
-    return my_user_path
-
-__autodoc_function_parameters(
-    whereis_my_user_config, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_user_config.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_user_config.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
-
-
-def whereis_my_user_data(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None, use_python_prefix = False,
-    append_path_fragment = True,
-    error_on_none = False
-):
-    """
-	Returns a path to the user's resources or data store directory 
-	for the software product named by the ``software_name`` argument.
-
-    """
-
-    my_user_path	= None
-    error_reason_format	= None
-    error_reason_args	= [ ]
-    fsl			= which_fs_layout( )
-    mubp		= None
-    mubp_evname		= None
-
-    if append_path_fragment:
-	mupf = \
-	concatenated_software_path_fragment(
-	    software_name   = software_name,
-	    vendor_name	    = vendor_name,
-	    version	    = version,
-	    error_on_none   = error_on_none
-	)
-    else: mupf = ""
-
-    if not mubp: mubp = alt_base_path
-    if not mubp and use_python_prefix: mubp = site.getuserbase( )
-    if not mubp:
-	if   fsl in [ "POSIX", ]:
-	    mubp = whereis_user_home( error_on_none = error_on_none )
-	elif fsl in [ "MacOS X", ]:
-	    uhp = whereis_user_home( error_on_none = error_on_none )
-	    if uhp:
-		# MacOS X-flavored
-		if  sys.prefix \
-		    != __computed_MacOS_X_python_prefix( sys.prefix ):
-		    mubp = path_join( uhp, "Library" )
-		# POSIX-flavored
-		else: mubp = uhp
-	elif fsl in [ "Windows", ]:
-	    mubp_evname = "AppData"
-	    mubp = envvars.get( mubp_evname, None )
-	else:
-	    raise UnsupportedFilesystemLayout(
-		"Unimplemented path determination logic for {0}.", fsl
-	    )
-
-    if mubp:
-
-	if   fsl in [ "POSIX", ]:
-	    if use_python_prefix:
-		# NOTE: Possible PEP 370 violation.
-		my_user_path = \
-		path_join( *filter( None, [ mubp, "share", mupf ] ) )
-	    else:
-		if not mupf: mupf = software_name
-		my_user_path = \
-		path_join( *filter( None, [ mubp, "." + mupf, "share" ] ) )
-	
-	elif fsl in [ "MacOS X", ]:
-	    # MacOS X-flavored
-	    if  sys.prefix \
-		!= __computed_MacOS_X_python_prefix( sys.prefix ):
-		my_user_path = \
-		path_join( *filter(
-		    None,
-		    [ mubp, "Application Support", mupf ]
-		) )
-	    # POSIX-flavored
-	    else:
-		if use_python_prefix:
-		    # NOTE: Possible PEP 370 violation.
-		    my_user_path = \
-		    path_join( *filter( None, [ mubp, "share", mupf ] ) )
-		else:
-		    if not mupf: mupf = software_name
-		    my_user_path = \
-		    path_join( *filter( None, [ mubp, "." + mupf, "share" ] ) )
-	
-	elif fsl in [ "Windows", ]:
-	    if use_python_prefix:
-		my_user_path = \
-		path_join( *filter( None, [ mubp, "Data", mupf ] ) )
-	    else:
-		if not mupf: mupf = software_name
-		my_user_path = \
-		path_join( *filter( None, [ mubp, mupf, "Data" ] ) )
-
-	else:
-	    raise UnsupportedFilesystemLayout(
-		"Unimplemented path determination logic for {0}.", fsl
-	    )
-
-    if (None is my_user_path) and error_on_none:
-	if mubp_evname:
-	    error_reason_format = \
-	    __TD( "Environment variable, '{0}', not set." )
-	    error_reason_args = [ mubp_evname, ]
-	else:
-	    error_reason_format = \
-	    __TD( "Unknown path to user data store for '{0}'." )
-	    error_reason_args = [ software_name, ]
-	raise UndeterminedFilesystemPath(
-	    error_reason_format, *error_reason_args
-	)
-    return my_user_path
-
-__autodoc_function_parameters(
-    whereis_my_user_data, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_user_data.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_user_data.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
-
-
-# TODO: whereis_my_user_docs
-
-
-def whereis_my_saves(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None, 
-    append_path_fragment = True,
-    error_on_none = False
-):
-    """
-	Returns a path to the directory where works, created by the user of the
-	software product, named by the ``software_name`` argument, will be
-	stored.
-
-    """
-
-    my_saves_path	= None
-    error_reason_format	= None
-    error_reason_args	= [ ]
-    fsl			= which_fs_layout( )
-    mdbp		= None
-    mdbp_evname		= None
-
-    if append_path_fragment:
-	mdpf = \
-	concatenated_software_path_fragment(
-	    software_name   = software_name,
-	    vendor_name	    = vendor_name,
-	    version	    = version,
-	    error_on_none   = error_on_none
-	)
-    else: mdpf = ""
-
-    if not mdbp: mdbp = alt_base_path
-    if not mdbp:
-	if   fsl in [ "POSIX", "MacOS X", "Windows", ]:
-	    mdbp = whereis_user_home( error_on_none = error_on_none )
-	else:
-	    raise UnsupportedFilesystemLayout(
-		"Unimplemented path determination logic for {0}.", fsl
-	    )
-    
-    if mdbp:
-
-	if   fsl in [ "POSIX", ]:
-	    if not mdpf: mdpf = software_name
-	    my_saves_path = \
-	    path_join( *filter( None, [ mdbp, "." + mdpf, "saves" ] ) )
-	
-	elif fsl in [ "MacOS X", "Windows", ]:
-	    my_saves_path = \
-	    path_join( *filter( None, [ mdbp, "Documents", mdpf ] ) )
-
-	else:
-	    raise UnsupportedFilesystemLayout(
-		"Unimplemented path determination logic for {0}.", fsl
-	    )
-
-    if (None is my_saves_path) and error_on_none:
-	if mdbp_evname:
-	    error_reason_format = \
-	    __TD( "Environment variable, '{0}', not set." )
-	    error_reason_args = [ mdbp_evname, ]
-	else:
-	    error_reason_format = \
-	    __TD( "Unknown path to saves directory for '{0}'." )
-	    error_reason_args = [ software_name, ]
-	raise UndeterminedFilesystemPath(
-	    error_reason_format, *error_reason_args
-	)
-    return my_saves_path
-
-__autodoc_function_parameters(
-    whereis_my_saves, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_saves.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_saves.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
-
-
 def whereis_oscore_install_root( error_on_none = False ):
     """
 	Returns the path to the installation root for the core OS components,
@@ -1590,6 +801,794 @@ __autodoc_function_parameters(
 whereis_common_config_base.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
 whereis_common_config_base.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
+
+
+def whereis_user_home( error_on_none = False ):
+    """
+	Returns the path to the current user's home directory, if it can be
+	determined. Returns ``None``, otherwise.
+
+    """
+
+    user_id		    = None
+    user_home_path	    = None
+    error_reason_foramat    = None
+    error_reason_args	    = [ ]
+
+    fsl = which_fs_layout( )
+    if   fsl in [ "POSIX", "MacOS X", ]:
+	user_id		= envvars.get( "USER", None )
+	user_home_path	= path_expanduser( "~" )
+	if "~" == user_home_path: user_home_path = None
+    elif fsl in [ "Windows", ]:
+	user_id		= envvars.get( "UserName", None )
+	user_home_path	= envvars.get( "UserProfile", None )
+    else:
+	raise UnsupportedFilesystemLayout(
+	    "Unimplemented path determination logic for {0}.", fsl	
+	)
+    
+    if (None is user_home_path) and error_on_none:
+	if user_id:
+	    error_reason_format	= \
+	    __TD( "Unknown home directory for user '{0}'." )
+	    error_reason_args	= [ user_id, ]
+	else:
+	    error_reason_format = __TD( "Unknown ID of current user." )
+	raise UndeterminedFilesystemPath( 
+	    error_reason_format, *error_reason_args
+	)
+    return user_home_path
+
+__autodoc_function_parameters( whereis_user_home, __DOCSTRING_FRAGMENTS( ) )
+whereis_user_home.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
+whereis_user_home.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
+
+
+def whereis_common_temp_base( error_on_none = False ):
+    """
+	Returns the path to the temporary storage area available for use by
+	everyone on the system.
+	
+	Below is a table of typical paths by filesystem layout classification:
+
+	.. csv-table::
+	   :header: "Classification", "Path"
+	   :widths: 20, 80
+
+	   "POSIX",	"/tmp"
+	   "MacOS X",	"/tmp"
+	   "Windows",	""
+
+    """
+
+    temp_base_path	= None
+    error_reason_format	= None
+    error_reason_args	= [ ]
+
+    fsl = which_fs_layout( )
+    if   fsl in [ "POSIX", "MacOS X" ]:	temp_base_path = "/tmp"
+    elif fsl in [ "Windows", ]:		pass
+    else:
+	raise UnsupportedFilesystemLayout(
+	    "Unimplemented path determination logic for {0}.", fsl	
+	)
+
+    if (None is temp_base_path) and error_on_none:
+	error_reason_format = \
+	__TD( "Unknown path to common temporary storage area." )
+	raise UndeterminedFilesystemPath(
+	    error_reason_format, *error_reason_args
+	)
+    return temp_base_path
+
+__autodoc_function_parameters(
+    whereis_common_temp_base, __DOCSTRING_FRAGMENTS( )
+)
+whereis_common_temp_base.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
+whereis_common_temp_base.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
+
+
+def whereis_user_temp_base( error_on_none = False ):
+    """
+	Returns the path to the current user's temporary storage area.
+
+    """
+
+    utbp_evname		= None
+    user_temp_base_path	= None
+    error_reason_format	= None
+    error_reason_args	= [ ]
+
+    fsl = which_fs_layout( )
+    if   fsl in [ "POSIX", "MacOS X", ]:    pass
+    elif fsl in [ "Windows", ]:
+	utbp_evname = "Temp"
+	user_temp_base_path = envvars.get( utbp_evname, None )
+    else:
+	raise UnsupportedFilesystemLayout(
+	    "Unimplemented path determination logic for {0}.", fsl	
+	)
+
+    if (None is user_temp_base_path) and error_on_none:
+	if utbp_evname:
+	    error_reason_format = \
+	    __TD( "Environment variable, '{0}', not set." )
+	    error_reason_args = [ utbp_evname, ]
+	else:
+	    error_reason_format = \
+	    __TD( "Unknown path to user's temporary storage area." )
+	raise UndeterminedFilesystemPath(
+	    error_reason_format, *error_reason_args
+	)
+    return user_temp_base_path
+
+__autodoc_function_parameters(
+    whereis_user_temp_base, __DOCSTRING_FRAGMENTS( )
+)
+whereis_user_temp_base.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
+whereis_user_temp_base.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
+
+
+def whereis_preferred_temp_base(
+    prefer_common = False,
+    error_on_none = False
+):
+    """
+	Returns:
+	
+	* the result from a call to :py:func:`whereis_common_temp_base`, 
+	  if it is not ``None`` and the ``prefer_common`` argument is 
+	  ``True``;
+	
+	* the result from a call to :py:func:`whereis_user_temp_base`, 
+	  if it is not ``None``;
+
+	* the result from a call to :py:func:`whereis_common_temp_base`, 
+	  if it is not ``None``; 
+	
+	* or ``None``, if all else fails.
+
+    """
+
+    temp_base_path	= None
+    error_reason_format	= None
+    error_reason_args	= [ ]
+
+    utbp = stbp = None
+
+    try: utbp = whereis_user_temp_base( error_on_none = error_on_none )
+    except UndeterminedFilesystemPath as exc:
+	error_reason_format = exc.error_reason_format
+	error_reason_args   = exc.error_reason_args 
+
+    try: stbp = whereis_common_temp_base( error_on_none = error_on_none )
+    except UndeterminedFilesystemPath as exc:
+	error_reason_format = exc.error_reason_format
+	error_reason_args   = exc.error_reason_args 
+
+    if	 stbp and prefer_common:    temp_base_path = stbp
+    elif utbp:			    temp_base_path = utbp
+    elif stbp:			    temp_base_path = stbp
+    
+    if (None is temp_base_path) and error_on_none:
+	error_reason_format = \
+	__TD( "Unknown path to preferred temporary storage." )
+	raise UndeterminedFilesystemPath(
+	    error_reason_format, *error_reason_args
+	)
+    return temp_base_path
+
+__autodoc_function_parameters(
+    whereis_preferred_temp_base, __DOCSTRING_FRAGMENTS( )
+)
+whereis_preferred_temp_base.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
+whereis_preferred_temp_base.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
+
+
+def whereis_my_temp(
+    software_name, vendor_name = None, version = None,
+    alt_base_path = None,
+    prefer_common = False, append_path_fragment = True,
+    error_on_none = False
+):
+    """
+	Returns the path to the preferred temporary storage for the software
+	specified by the ``software_name`` argument. Returns ``None``, 
+	otherwise.
+
+	The path calculation relies on results from the
+	:py:func:`whereis_preferred_temp_base` and the 
+	:py:func:`concatenated_software_path_fragment` functions.
+
+    """
+
+    temp_path		= None
+    error_reason_format	= None
+    error_reason_args	= [ ]
+
+    if append_path_fragment:
+	mtpf = \
+	concatenated_software_path_fragment(
+	    software_name   = software_name,
+	    vendor_name	    = vendor_name,
+	    version	    = version,
+	    error_on_none   = error_on_none
+	)
+    else: mtpf = ""
+
+    ptbp = alt_base_path
+    if not ptbp:
+	ptbp = \
+	whereis_preferred_temp_base(
+	    error_on_none = error_on_none,
+	    prefer_common = prefer_common
+	)
+    if ptbp: temp_path = path_join( *filter( None, [ ptbp, mtpf ] ) )
+    
+    if (None is temp_path) and error_on_none:
+	error_reason_format = \
+	__TD( "Unknown path to temporary storage for '{0}'." )
+	error_reason_args = [ software_name, ]
+	raise UndeterminedFilesystemPath(
+	    error_reason_format, *error_reason_args
+	)
+    return temp_path
+
+__autodoc_function_parameters(
+    whereis_my_temp, __DOCSTRING_FRAGMENTS( )
+)
+whereis_my_temp.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
+whereis_my_temp.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
+
+
+def whereis_my_site_config(
+    software_name, vendor_name = None, version = None,
+    alt_base_path = None, use_python_prefix = False,
+    append_path_fragment = True,
+    error_on_none = False
+):
+    """
+	Returns a path to shared or site-wide configuration information 
+	or preferences directory for the software product named by the
+	``software_name`` argument.
+
+    """
+
+    my_site_path	= None
+    error_reason_format	= None
+    error_reason_args	= [ ]
+    fsl			= which_fs_layout( )
+    msbp		= None
+    msbp_evname		= None
+
+    if append_path_fragment:
+	mspf = \
+	concatenated_software_path_fragment(
+	    software_name   = software_name,
+	    vendor_name	    = vendor_name,
+	    version	    = version,
+	    error_on_none   = error_on_none
+	)
+    else: mspf = ""
+
+    if not msbp: msbp = alt_base_path
+    if not msbp and use_python_prefix: msbp = sys.prefix
+    if not msbp:
+	if   fsl in [ "POSIX", ]:   msbp = "/usr/local"
+	elif fsl in [ "MacOS X", ]: msbp = "/Library"
+	elif fsl in [ "Windows", ]:
+	    msbp = \
+	    __computed_Windows_program_files_path(
+		error_on_none = error_on_none
+	    )
+	else:
+	    raise UnsupportedFilesystemLayout(
+		"Unimplemented path determination logic for {0}.", fsl
+	    )
+
+    if msbp:
+
+	if   fsl in [ "POSIX", ]:
+	    if "/usr" == msbp: msbp = "/"
+	    my_site_path = \
+	    path_join( *filter( None, [ msbp, "etc", mspf ] ) )
+
+	elif fsl in [ "MacOS X", ]:
+	    msbp_orig = msbp
+	    msbp = __computed_MacOS_X_python_prefix( msbp )
+	    if msbp.startswith( "/System" ): msbp = "/Library"
+	    # MacOS X-flavored
+	    if (mscbp_orig != msbp) or ("/Library" == msbp):
+		my_site_path = \
+		path_join( *filter( None, [ msbp, "Preferences", mspf ] ) )
+	    # POSIX-flavored
+	    else:
+		my_site_path = \
+		path_join( *filter( None, [ msbp, "etc", mspf ] ) )
+
+	elif fsl in [ "Windows", ]:
+	    # Python-flavored
+	    if	 msbp == sys.prefix:
+		my_site_path = \
+		path_join( *filter( None, [ msbp, "Config", mspf ] ) )
+	    # Windows-flavored
+	    else:
+		my_site_path = \
+		path_join( *filter( None, [ msbp, mspf, "Config" ] ) )
+
+	else:
+	    raise UnsupportedFilesystemLayout(
+		"Unimplemented path determination logic for {0}.", fsl
+	    )
+
+    if (None is my_site_path) and error_on_none:
+	if msbp_evname:
+	    error_reason_format = \
+	    __TD( "Environment variable, '{0}', not set." )
+	    error_reason_args = [ msbp_evname, ]
+	else:
+	    error_reason_format = \
+	    __TD( "Unknown path to site config info for '{0}'." )
+	    error_reason_args = [ software_name, ]
+	raise UndeterminedFilesystemPath(
+	    error_reason_format, *error_reason_args
+	)
+    return my_site_path
+
+__autodoc_function_parameters(
+    whereis_my_site_config, __DOCSTRING_FRAGMENTS( )
+)
+whereis_my_site_config.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
+whereis_my_site_config.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
+
+
+def whereis_my_site_data(
+    software_name, vendor_name = None, version = None,
+    alt_base_path = None, use_python_prefix = False,
+    append_path_fragment = True,
+    error_on_none = False
+):
+    """
+	Returns a path to the shared or site-wide data store or resources 
+	directory for the software product named by the ``software_name`` 
+	argument.
+
+    """
+
+    my_site_path	= None
+    error_reason_format	= None
+    error_reason_args	= [ ]
+    fsl			= which_fs_layout( )
+    msbp		= None
+    msbp_evname		= None
+
+    if append_path_fragment:
+	mspf = \
+	concatenated_software_path_fragment(
+	    software_name   = software_name,
+	    vendor_name	    = vendor_name,
+	    version	    = version,
+	    error_on_none   = error_on_none
+	)
+    else: mspf = ""
+
+    if not msbp: msbp = alt_base_path
+    if not msbp and use_python_prefix: msbp = sys.prefix
+    if not msbp:
+	if   fsl in [ "POSIX", ]:   msbp = "/usr/local"
+	elif fsl in [ "MacOS X", ]: msbp = "/Library"
+	elif fsl in [ "Windows", ]:
+	    msbp = \
+	    __computed_Windows_program_files_path(
+		error_on_none = error_on_none 
+	    )
+	else:
+	    raise UnsupportedFilesystemLayout(
+		"Unimplemented path determination logic for {0}.", fsl
+	    )
+
+    if msbp:
+
+	if   fsl in [ "POSIX", ]:
+	    if "/" == msbp:
+		my_site_path = \
+		path_join( *filter( None, [ msbp, "etc", mspf ] ) )
+	    else:
+		my_site_path = \
+		path_join( *filter( None, [ msbp, "share", mspf ] ) )
+
+	elif fsl in [ "MacOS X", ]:
+	    msbp_orig = msbp
+	    msbp = __computed_MacOS_X_python_prefix( msbp )
+	    if msbp.startswith( "/System" ): msbp = "/Library"
+	    # MacOS X-flavored
+	    if (msbp_orig != msbp) or ("/Library" == msbp):
+		my_site_path = \
+		path_join( *filter(
+		    None,
+		    [ msbp, "Application Support", mspf ]
+		) )
+	    # POSIX-flavored
+	    else:
+		if "/" == msbp:
+		    my_site_path = \
+		    path_join( *filter( None, [ msbp, "etc", mspf ] ) )
+		else:
+		    my_site_path = \
+		    path_join( *filter( None, [ msbp, "share", mspf ] ) )
+
+	elif fsl in [ "Windows", ]:
+	    # Python-flavored
+	    if	 msbp == sys.prefix:
+		my_site_path = \
+		path_join( *filter( None, [ msbp, "Data", mspf ] ) )
+	    # Windows-flavored
+	    else:
+		my_site_path = \
+		path_join( *filter( None, [ msbp, mspf, "Data" ] ) )
+
+	else:
+	    raise UnsupportedFilesystemLayout(
+		"Unimplemented path determination logic for {0}.", fsl
+	    )
+
+    if (None is my_site_path) and error_on_none:
+	if msbp_evname:
+	    error_reason_format = \
+	    __TD( "Environment variable, '{0}', not set." )
+	    error_reason_args = [ msbp_evname, ]
+	else:
+	    error_reason_format = \
+	    __TD( "Unknown path to site data store for '{0}'." )
+	    error_reason_args = [ software_name, ]
+	raise UndeterminedFilesystemPath(
+	    error_reason_format, *error_reason_args
+	)
+    return my_site_path
+
+__autodoc_function_parameters(
+    whereis_my_site_data, __DOCSTRING_FRAGMENTS( )
+)
+whereis_my_site_data.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
+whereis_my_site_data.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
+
+
+# TODO: whereis_my_site_programs
+# TODO: whereis_my_site_docs
+
+
+def whereis_my_user_config(
+    software_name, vendor_name = None, version = None,
+    alt_base_path = None, use_python_prefix = False,
+    append_path_fragment = True,
+    error_on_none = False
+):
+    """
+	Returns a path to the user's configuration information or preferences
+	directory for the software product named by the ``software_name`` 
+	argument.
+
+    """
+
+    my_user_path	= None
+    error_reason_format	= None
+    error_reason_args	= [ ]
+    fsl			= which_fs_layout( )
+    mubp		= None
+    mubp_evname		= None
+
+    if append_path_fragment:
+	mupf = \
+	concatenated_software_path_fragment(
+	    software_name   = software_name,
+	    vendor_name	    = vendor_name,
+	    version	    = version,
+	    error_on_none   = error_on_none
+	)
+    else: mupf = ""
+
+    if not mubp: mubp = alt_base_path
+    if not mubp and use_python_prefix: mubp = site.USER_BASE
+    if not mubp:
+	if   fsl in [ "POSIX", ]:
+	    mubp = whereis_user_home( error_on_none = error_on_none )
+	elif fsl in [ "MacOS X", ]:
+	    uhp = whereis_user_home( error_on_none = error_on_none )
+	    if uhp:
+		# MacOS X-flavored
+		if  sys.prefix \
+		    != __computed_MacOS_X_python_prefix( sys.prefix ):
+		    mubp = path_join( uhp, "Library" )
+		# POSIX-flavored
+		else: mubp = uhp
+	elif fsl in [ "Windows", ]:
+	    mubp_evname = "AppData"
+	    mubp = envvars.get( mubp_evname, None )
+	else:
+	    raise UnsupportedFilesystemLayout(
+		"Unimplemented path determination logic for {0}.", fsl
+	    )
+
+    if mubp:
+
+	if   fsl in [ "POSIX", ]:
+	    if use_python_prefix:
+		# NOTE: Possible PEP 370 violation.
+		my_user_path = \
+		path_join( *filter( None, [ mubp, "etc", mupf ] ) )
+	    else:
+		if not mupf: mupf = software_name
+		my_user_path = \
+		path_join( *filter( None, [ mubp, "." + mupf, "etc" ] ) )
+	
+	elif fsl in [ "MacOS X", ]:
+	    # MacOS X-flavored
+	    if  sys.prefix \
+		!= __computed_MacOS_X_python_prefix( sys.prefix ):
+		my_user_path = \
+		path_join( *filter( None, [ mubp, "Preferences", mupf ] ) )
+	    # POSIX-flavored
+	    else:
+		if use_python_prefix:
+		    # NOTE: Possible PEP 370 violation.
+		    my_user_path = \
+		    path_join( *filter( None, [ mubp, "etc", mupf ] ) )
+		else:
+		    if not mupf: mupf = software_name
+		    my_user_path = \
+		    path_join( *filter( None, [ mubp, "." + mupf, "etc" ] ) )
+	
+	elif fsl in [ "Windows", ]:
+	    if use_python_prefix:
+		my_user_path = \
+		path_join( *filter( None, [ mubp, "Config", mupf ] ) )
+	    else:
+		if not mupf: mupf = software_name
+		my_user_path = \
+		path_join( *filter( None, [ mubp, mupf, "Config" ] ) )
+
+	else:
+	    raise UnsupportedFilesystemLayout(
+		"Unimplemented path determination logic for {0}.", fsl
+	    )
+
+    if (None is my_user_path) and error_on_none:
+	if mubp_evname:
+	    error_reason_format = \
+	    __TD( "Environment variable, '{0}', not set." )
+	    error_reason_args = [ mubp_evname, ]
+	else:
+	    error_reason_format = \
+	    __TD( "Unknown path to user config info for '{0}'." )
+	    error_reason_args = [ software_name, ]
+	raise UndeterminedFilesystemPath(
+	    error_reason_format, *error_reason_args
+	)
+    return my_user_path
+
+__autodoc_function_parameters(
+    whereis_my_user_config, __DOCSTRING_FRAGMENTS( )
+)
+whereis_my_user_config.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
+whereis_my_user_config.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
+
+
+def whereis_my_user_data(
+    software_name, vendor_name = None, version = None,
+    alt_base_path = None, use_python_prefix = False,
+    append_path_fragment = True,
+    error_on_none = False
+):
+    """
+	Returns a path to the user's resources or data store directory 
+	for the software product named by the ``software_name`` argument.
+
+    """
+
+    my_user_path	= None
+    error_reason_format	= None
+    error_reason_args	= [ ]
+    fsl			= which_fs_layout( )
+    mubp		= None
+    mubp_evname		= None
+
+    if append_path_fragment:
+	mupf = \
+	concatenated_software_path_fragment(
+	    software_name   = software_name,
+	    vendor_name	    = vendor_name,
+	    version	    = version,
+	    error_on_none   = error_on_none
+	)
+    else: mupf = ""
+
+    if not mubp: mubp = alt_base_path
+    if not mubp and use_python_prefix: mubp = site.getuserbase( )
+    if not mubp:
+	if   fsl in [ "POSIX", ]:
+	    mubp = whereis_user_home( error_on_none = error_on_none )
+	elif fsl in [ "MacOS X", ]:
+	    uhp = whereis_user_home( error_on_none = error_on_none )
+	    if uhp:
+		# MacOS X-flavored
+		if  sys.prefix \
+		    != __computed_MacOS_X_python_prefix( sys.prefix ):
+		    mubp = path_join( uhp, "Library" )
+		# POSIX-flavored
+		else: mubp = uhp
+	elif fsl in [ "Windows", ]:
+	    mubp_evname = "AppData"
+	    mubp = envvars.get( mubp_evname, None )
+	else:
+	    raise UnsupportedFilesystemLayout(
+		"Unimplemented path determination logic for {0}.", fsl
+	    )
+
+    if mubp:
+
+	if   fsl in [ "POSIX", ]:
+	    if use_python_prefix:
+		# NOTE: Possible PEP 370 violation.
+		my_user_path = \
+		path_join( *filter( None, [ mubp, "share", mupf ] ) )
+	    else:
+		if not mupf: mupf = software_name
+		my_user_path = \
+		path_join( *filter( None, [ mubp, "." + mupf, "share" ] ) )
+	
+	elif fsl in [ "MacOS X", ]:
+	    # MacOS X-flavored
+	    if  sys.prefix \
+		!= __computed_MacOS_X_python_prefix( sys.prefix ):
+		my_user_path = \
+		path_join( *filter(
+		    None,
+		    [ mubp, "Application Support", mupf ]
+		) )
+	    # POSIX-flavored
+	    else:
+		if use_python_prefix:
+		    # NOTE: Possible PEP 370 violation.
+		    my_user_path = \
+		    path_join( *filter( None, [ mubp, "share", mupf ] ) )
+		else:
+		    if not mupf: mupf = software_name
+		    my_user_path = \
+		    path_join( *filter( None, [ mubp, "." + mupf, "share" ] ) )
+	
+	elif fsl in [ "Windows", ]:
+	    if use_python_prefix:
+		my_user_path = \
+		path_join( *filter( None, [ mubp, "Data", mupf ] ) )
+	    else:
+		if not mupf: mupf = software_name
+		my_user_path = \
+		path_join( *filter( None, [ mubp, mupf, "Data" ] ) )
+
+	else:
+	    raise UnsupportedFilesystemLayout(
+		"Unimplemented path determination logic for {0}.", fsl
+	    )
+
+    if (None is my_user_path) and error_on_none:
+	if mubp_evname:
+	    error_reason_format = \
+	    __TD( "Environment variable, '{0}', not set." )
+	    error_reason_args = [ mubp_evname, ]
+	else:
+	    error_reason_format = \
+	    __TD( "Unknown path to user data store for '{0}'." )
+	    error_reason_args = [ software_name, ]
+	raise UndeterminedFilesystemPath(
+	    error_reason_format, *error_reason_args
+	)
+    return my_user_path
+
+__autodoc_function_parameters(
+    whereis_my_user_data, __DOCSTRING_FRAGMENTS( )
+)
+whereis_my_user_data.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
+whereis_my_user_data.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
+
+
+# TODO: whereis_my_user_docs
+
+
+def whereis_my_saves(
+    software_name, vendor_name = None, version = None,
+    alt_base_path = None, 
+    append_path_fragment = True,
+    error_on_none = False
+):
+    """
+	Returns a path to the directory where works, created by the user of the
+	software product, named by the ``software_name`` argument, will be
+	stored.
+
+    """
+
+    my_saves_path	= None
+    error_reason_format	= None
+    error_reason_args	= [ ]
+    fsl			= which_fs_layout( )
+    mdbp		= None
+    mdbp_evname		= None
+
+    if append_path_fragment:
+	mdpf = \
+	concatenated_software_path_fragment(
+	    software_name   = software_name,
+	    vendor_name	    = vendor_name,
+	    version	    = version,
+	    error_on_none   = error_on_none
+	)
+    else: mdpf = ""
+
+    if not mdbp: mdbp = alt_base_path
+    if not mdbp:
+	if   fsl in [ "POSIX", "MacOS X", "Windows", ]:
+	    mdbp = whereis_user_home( error_on_none = error_on_none )
+	else:
+	    raise UnsupportedFilesystemLayout(
+		"Unimplemented path determination logic for {0}.", fsl
+	    )
+    
+    if mdbp:
+
+	if   fsl in [ "POSIX", ]:
+	    if not mdpf: mdpf = software_name
+	    my_saves_path = \
+	    path_join( *filter( None, [ mdbp, "." + mdpf, "saves" ] ) )
+	
+	elif fsl in [ "MacOS X", "Windows", ]:
+	    my_saves_path = \
+	    path_join( *filter( None, [ mdbp, "Documents", mdpf ] ) )
+
+	else:
+	    raise UnsupportedFilesystemLayout(
+		"Unimplemented path determination logic for {0}.", fsl
+	    )
+
+    if (None is my_saves_path) and error_on_none:
+	if mdbp_evname:
+	    error_reason_format = \
+	    __TD( "Environment variable, '{0}', not set." )
+	    error_reason_args = [ mdbp_evname, ]
+	else:
+	    error_reason_format = \
+	    __TD( "Unknown path to saves directory for '{0}'." )
+	    error_reason_args = [ software_name, ]
+	raise UndeterminedFilesystemPath(
+	    error_reason_format, *error_reason_args
+	)
+    return my_saves_path
+
+__autodoc_function_parameters(
+    whereis_my_saves, __DOCSTRING_FRAGMENTS( )
+)
+whereis_my_saves.__doc__ += \
+__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
+whereis_my_saves.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
 
