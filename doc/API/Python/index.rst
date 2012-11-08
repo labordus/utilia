@@ -40,7 +40,6 @@ Table of Topics
    :maxdepth: 2
 
    modules/SELF
-   envvars
 
 Indices and Tables
 ==================
