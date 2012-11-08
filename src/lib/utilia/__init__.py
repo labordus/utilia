@@ -173,7 +173,7 @@ class Error_WithReason( Error_BASE ):
     #: :py:attr:`reason_args`.
     reason_format	= None
     #: Tuple of arguments to be substituted into :py:attr:`reason_format`.
-    reason_args		= ( )
+    reason_args		= [ ]
 
 
     def __init__( self, reason_format, *reason_args ):
