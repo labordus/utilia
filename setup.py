@@ -165,7 +165,7 @@ setup_data[ "install_requires" ]    = \
     [
 	"argparse >= 1.2.1",
     ]
-# TODO: test_suite
+setup_data[ "test_suite" ]	    = "nose.collector"
 # TODO: test_loader
 # TODO: eager_resources
 
