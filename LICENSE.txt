@@ -1,32 +1,58 @@
 ..				   utilia
 
-The *utilia* software is licensed under the Apache License, version 2.0 (the
+This text pertains to the *utilia* project ("the Project"), which creates and
+maintains the *utilia* software ("the Software") and the documentation and
+other works which are distributed with it.
+
+License for the Software
+------------------------
+
+The Software is licensed under the Apache License, version 2.0 (the
 "Software License"). The text of the Software License may be found in the 
-``licenses`` subdirectory of the ``doc`` directory in this software 
-distribution or at the following Internet URL: 
-http://www.apache.org/licenses/LICENSE-2.0 .
+``licenses`` subdirectory of the ``doc`` directory, distributed with the
+Software, or at the following Internet URL:
 
-The documentation distributed with the *utilia* software, excluding
-documentation which is contained with the source code but including attendant
-figures and graphical images, is licensed under the Creative Commons
-Attribution 3.0 Unported License (the "Documentation License"). The text of the
-Documentation License may be found at the following Internet URL:
-http://creativecommons.org/licenses/by/3.0/ .
+  http://www.apache.org/licenses/LICENSE-2.0 
 
-Any file distributed under the ``src`` directory, excluding
-files named with a ``.dat`` suffix, is licensed under the Software License. Any
-file distributed under the ``src`` directory, named with a ``.dat`` suffix, is
-in the public domain. Any file distributed under the ``doc`` directory,
-excluding license files, is licensed under the Documentation License. Licenses
-are reproduced as part of this distribution for your convenience of reference;
-any applicable copyright law and any terms and conditions set forth by the 
-copyright holder(s) of a reproduced license, regarding that license, are 
-considered to be in full effect for that license.
+The contents of any file, distributed under the ``src`` directory, excluding
+files named with a ``.dat`` suffix, are licensed under the Software License.
+The contents of any file, distributed under the ``src`` directory and named
+with a ``.dat`` suffix, is in the public domain. Portions of the Software,
+which reside outside of the ``src`` directory hierarchy, are also licensed
+under the Software License. For example, scripts or source code fragments, 
+residing in a database table, are considered part of the Software, even though
+the database, containing the table, may be distributed outside of the ``src``
+directory hierarchy.
 
-.. note::
-   If you plan on contributing to the *utilia* software or the documentation
-   distributed with it, then please be aware of the terms and conditions of 
-   the Software License and the Documentation License, especially those terms 
-   and conditions concerned with contributions.
+Exemptions to any of the foregoing are noted in the ``NOTICE.txt`` file, which
+is distributed with the Software.
+
+License for Documentation and Other Works
+-----------------------------------------
+
+Any copyrightable work, which is not part of the Software proper but which is
+distributed with the Software, including but not limited to icons, figures,
+graphical images, and separate documentation, is licensed under the Creative
+Commons Attribution 3.0 Unported License (the "Supporting Works License"). The
+text of the Supporting Works License may be found at the following Internet 
+URL:
+
+   http://creativecommons.org/licenses/by/3.0/
+
+The contents of any file, distributed under the ``doc`` directory, excluding 
+license files, are licensed under the Supporting Works License. Translations 
+of message catalogs to various languages are also licensed under the Supporting
+Works License. Icons, figures, and graphical images are also licensed under the
+Supporting Works License. Other copyrightable works, not explicitly mentioned
+in the foregoing statements, are also licensed under the Supporting Works
+License. Documentation, which coexists within the same container as source 
+code for the Software, is under the Software License and not the Supporting 
+Works License. Licenses are reproduced and distributed with the Software for 
+your convenience of reference; any applicable copyright law and any terms and 
+conditions set forth by the author(s) of a reproduced license, regarding that 
+license, are considered to be in full effect for that license.
+
+Exemptions to any of the foregoing are noted in the ``NOTICE.txt`` file, which
+is distributed with the Software.
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

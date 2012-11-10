@@ -1,0 +1,26 @@
+..				   utilia
+
+This text pertains to the *utilia* project ("the Project"), which creates and
+maintains the *utilia* software ("the Software") and the documentation and
+other works which are distributed with it.
+
+.. note::
+   The contributions to the Project listed below have been granted exceptions 
+   to the standard licensing and legal notice polcies of the Project. To 
+   review the standard legal notice and licensing policies of the Project, 
+   please read the ``COPYRIGHT.txt`` and ``LICENSE.txt`` files, distributed 
+   with the Software.
+
+Alternatively-Licensed Contributions
+------------------------------------
+
+There are no alternatively-licensed contributions to the Project on record at 
+this time.
+
+Contributions in the Public Domain
+----------------------------------
+
+There are no contributions to the Project in the public domain on record at 
+this time.
+
+.. vim: set ft=rst sts=3 sw=3 tw=79:

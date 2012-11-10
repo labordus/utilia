@@ -40,6 +40,9 @@ Table of Topics
    :maxdepth: 2
 
    modules/SELF
+   development/index
+   legal/index
+   contrib
 
 Indices and Tables
 ==================

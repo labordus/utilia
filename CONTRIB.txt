@@ -1,0 +1,31 @@
+..				   utilia
+
+This text pertains to the *utilia* project ("the Project"), which creates and
+maintains the *utilia* software ("the Software") and the documentation and
+other works which are distributed with it.
+
+Contributors to the Project
+---------------------------
+
+Below is a list of contributors, given by name, nickname, or handle, and an
+optional PGP/GPG public key ID.
+
++-----------------------------------------------+-----------------------------+
+| Name / Nickname / Handle                      | PGP/GPG Public Key ID       |
++===============================================+=============================+
+| Eric A. McDonald                              | 0xcf627346fb2ad110          |
++-----------------------------------------------+-----------------------------+
+
+.. note::
+   If your name, nickname, or handle is not listed above and you have 
+   contributed, then please email the maintainer(s) of the Software with 
+   details on your contribution(s) and how you would like to be listed.
+
+.. todo::
+   Provide point of contact for project.
+
+
+.. TODO: Add list of sponsors when relevant.
+
+
+.. vim: set ft=rst sts=3 sw=3 tw=79:
