@@ -17,9 +17,14 @@
 ###############################################################################
 
 """
-    Provides the following modules:
+    Provides various utilities pertaining to file systems. These modules
+    provide uniform interfaces for querying information about and 
+    manipulating various aspects of file systems, regardless of file system 
+    type or operating system.
 
-    * :py:mod:`.stdpath`
+    The following modules provide calculated paths:
+
+	* :py:mod:`.stdpath`
 """
 
 

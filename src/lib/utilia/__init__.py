@@ -17,9 +17,18 @@
 ###############################################################################
 
 """
-    Provides the following subpackages:
+    Provides a wide assortment of useful subpackages. These subpackages cover
+    the following areas:
+	
+	* types
 
-    * :py:mod:`.filesystem`
+	* file systems
+
+    The subpackages are as follows:
+	
+	* :py:mod:`.types`
+
+	* :py:mod:`.filesystem`
 """
 
 
