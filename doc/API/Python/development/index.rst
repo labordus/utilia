@@ -12,10 +12,8 @@ Introduction
 ------------
 
 This guide discusses the following topics:
-
+   
    * version control
-
-   * source code
 
    * documentation
 
@@ -30,5 +28,7 @@ Table of Topics
 
 .. toctree::
    :maxdepth: 2
+
+   source-code
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:
