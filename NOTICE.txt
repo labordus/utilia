@@ -21,7 +21,7 @@ OrderedDict
 
 **License**:		MIT
 
-**Publication Info**:	http://code.activestate.com/recipes/576693/
+**Publication Info**:	http://code.activestate.com/recipes/576669/
 
 **Location**:		``src/lib/utilia/types/OrderedDict.py``
 
