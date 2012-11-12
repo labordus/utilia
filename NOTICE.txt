@@ -14,8 +14,16 @@ other works which are distributed with it.
 Alternatively-Licensed Contributions
 ------------------------------------
 
-There are no alternatively-licensed contributions to the Project on record at 
-this time.
+OrderedDict
+~~~~~~~~~~~
+
+**Original Author**:	Raymond Hettinger
+
+**License**:		MIT
+
+**Publication Info**:	http://code.activestate.com/recipes/576693/
+
+**Location**:		``src/lib/utilia/types/OrderedDict.py``
 
 Contributions in the Public Domain
 ----------------------------------
