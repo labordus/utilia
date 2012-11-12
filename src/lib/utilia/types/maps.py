@@ -17,9 +17,8 @@
 ###############################################################################
 
 """
-    Provides various useful map types, using drop-in replacements for cases
-    where they are not natively supported in the standard library for a
-    particular version of Python.
+    Provides various map types with a consistent interface across Python
+    versions.
 """
 
 
@@ -35,15 +34,15 @@ __docformat__ = "reStructuredText"
 
 
 import sys
+import collections
 
 
-if 3 <= sys.version_info.major:
-    from collections	import OrderedDict
-else:
-    # Note: Technically, Python 2.7 has OrderedDict, but it is not clear
-    #	    whether that implementation will be absorbing new features which
-    #	    the latest in the 3.x series might gain.
+__Version = collections.namedtuple( "__Version", "maj min" )
+__python_version = __Version( sys.version_info.major, sys.version_info.minor )
+if __python_version in [ __Version( 2, 6 ), __Version( 3, 0 ) ]:
     from .OrderedDict	import OrderedDict
+else:
+    from collections	import OrderedDict
 
 
 ###############################################################################
