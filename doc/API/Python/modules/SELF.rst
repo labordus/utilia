@@ -38,6 +38,7 @@ Table of Subpackages
 .. toctree::
    :maxdepth: 1
 
+   types/SELF
    filesystem/SELF
 ..   testers/SELF
 

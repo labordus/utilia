@@ -28,7 +28,7 @@
 
     The following modules implement various types:
 	
-	* :py:mod:`.OrderedDict`
+	* OrderedDict
 """
 
 
