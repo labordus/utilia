@@ -161,10 +161,7 @@ setup_data[ "setup_requires" ]	    = \
     ]
 # TODO: extras_require
 # TODO: tests_require
-setup_data[ "install_requires" ]    = \
-    [
-	"argparse >= 1.2.1",
-    ]
+# TODO: install_requires
 setup_data[ "test_suite" ]	    = "nose.collector"
 # TODO: test_loader
 # TODO: eager_resources
