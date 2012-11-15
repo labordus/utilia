@@ -5,15 +5,9 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-Licensing Information
-=====================
+Additional Legal Notices
+========================
 
-.. include:: ../../../../LICENSE.txt
-
-Apache License 2.0
-------------------
-
-.. include:: ../../../licenses/Apache-2_0.txt
-   :literal:
+.. include:: ../../../NOTICE.txt
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

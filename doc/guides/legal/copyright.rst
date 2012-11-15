@@ -5,9 +5,9 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-Additional Legal Notices
-========================
+Copyright Information
+=====================
 
-.. include:: ../../../../NOTICE.txt
+.. include:: ../../../COPYRIGHT.txt
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

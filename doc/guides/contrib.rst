@@ -5,9 +5,9 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-Copyright Information
-=====================
+Acknowledgements
+================
 
-.. include:: ../../../../COPYRIGHT.txt
+.. include:: ../../CONTRIB.txt
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

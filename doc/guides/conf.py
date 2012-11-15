@@ -20,7 +20,7 @@ import sys, os
 sys.path.insert(
     0,
     os.path.abspath( os.path.join(
-	os.path.pardir, os.path.pardir, os.path.pardir, "src", "lib"
+	os.path.pardir, os.path.pardir, "src", "lib"
     ) )
 )
 
