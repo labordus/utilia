@@ -5,30 +5,24 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-Development Guide
-=================
+Installation Guide
+==================
 
 Introduction
 ------------
 
 This guide discusses the following topics:
    
-   * version control
+   * downloading the software
 
-   * documentation
+   * building the software
 
-   * tests
-
-   * patches
-
-   * civil society and "netiquette"
+   * installing the software
 
 Table of Topics
 ---------------
 
 .. toctree::
    :maxdepth: 2
-
-   source-code
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:
