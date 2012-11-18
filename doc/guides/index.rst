@@ -5,9 +5,6 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-.. utilia documentation master file, created by
-   sphinx-quickstart on Sun Oct 21 19:16:05 2012.
-
 *utilia*
 ========
 
@@ -16,10 +13,10 @@ Introduction
 
 **Welcome!**
 
-*utilia* is a development project which produces a software distribution of 
-the same name and provides support infrastructure for this distribution. The 
-*utilia* software distribution consists of two parts: a library of Python 
-modules and a collection of scripts. 
+The *utilia* software development project produces a software distribution 
+of the same name and provides infrastructure for this distribution. 
+The *utilia* software distribution consists of two parts: 
+a library of Python modules and a collection of scripts. 
 
 The word *utilia* is Latin for *useful things*. (For those who care, it can be
 used as either an adjective or a noun in Latin. The noun is a neuter 

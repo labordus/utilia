@@ -8,6 +8,10 @@
 Development Guide
 =================
 
+The target audience for this guide is people wishing to contribute source code
+to the project. However, users of the software may also be interested in the 
+practices discussed in this guide.
+
 Introduction
 ------------
 

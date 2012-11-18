@@ -5,13 +5,8 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-Scripts
-=======
-
-Introduction
-------------
-
-This guide lists all of the scripts included in the software distribution.
+Scripts Collection
+==================
 
 Table of Scripts
 ----------------

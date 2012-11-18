@@ -8,21 +8,26 @@
 Installation Guide
 ==================
 
-Introduction
-------------
-
-This guide discusses the following topics:
-   
-   * downloading the software
-
-   * building the software
-
-   * installing the software
-
-Table of Topics
+Stable Releases
 ---------------
 
-.. toctree::
-   :maxdepth: 2
+.. todo::
+   Mention listing on PyPI.
+
+.. todo::
+   Give examples of easy_install and pip.
+   For both site-wide and user-specific installations.
+
+.. todo::
+   Talk about virtual environments.
+
+.. TODO: Once relevant, add subsection on building extensions.
+	 Include platform-specific notes, such as for x64 Windows.
+
+Tracking Development
+--------------------
+
+.. todo::
+   Detail procedure for building versions off of GitHub.
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:
