@@ -13,19 +13,12 @@ to the project. However, users of the software may also be interested in the
 practices discussed in this guide.
 
 .. toctree::
-   :hidden:
+   :numbered:
 
-   source-code/Python/index.rst
-
-.. contents::
-   :local:
-   :backlinks: entry
+   source-code/index
 
 .. todo::
    Create discussion of version control.
-
-.. todo::
-   Create discussion of source code.
 
 .. todo::
    Create discussion on documentation.

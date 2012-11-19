@@ -5,18 +5,14 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-Python
-======
-
-.. contents:: **Table of Contents**
-   :local:
-   :backlinks: none
-
-.. include:: types.rst
+Source Code
+===========
 
 .. toctree::
-   :hidden:
 
-   types
+   Python/index
+
+.. todo::
+   Create discussions for C and C++ extensions.
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:
