@@ -13,6 +13,7 @@ to the project. However, users of the software may also be interested in the
 practices discussed in this guide.
 
 .. toctree::
+   :maxdepth: 2
    :numbered:
 
    source-code/index
