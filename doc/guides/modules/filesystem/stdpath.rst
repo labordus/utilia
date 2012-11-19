@@ -5,8 +5,8 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-``utilia.filesystem.stdpath`` Module
-====================================
+``stdpath`` Module
+==================
 
 Module Description
 ------------------

@@ -12,27 +12,29 @@ The target audience for this guide is people wishing to contribute source code
 to the project. However, users of the software may also be interested in the 
 practices discussed in this guide.
 
-Introduction
-------------
-
-This guide discusses the following topics:
-   
-   * version control
-
-   * documentation
-
-   * testing
-
-   * patches
-
-   * civility and "netiquette"
-
-Table of Topics
----------------
-
 .. toctree::
-   :maxdepth: 2
+   :hidden:
 
-   source-code
+   source-code/Python/index.rst
+
+.. contents::
+   :local:
+   :backlinks: entry
+
+.. todo::
+   Create discussion of version control.
+
+.. todo::
+   Create discussion of source code.
+
+.. todo::
+   Create discussion on documentation.
+
+.. todo::
+   Create discussion of testing.
+
+.. TODO? Add section on submitting patches.
+
+.. TODO? Add section on civility and "netiquette".
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

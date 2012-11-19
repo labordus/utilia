@@ -5,15 +5,16 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-``utilia.types.OrderedDict`` Module
-===================================
+.. _docfile-utilia.types.OrderedDict:
+
+``OrderedDict`` Module
+======================
 
 Module Description
 ------------------
 
-Official documentation on this module can be found at:
-
-   http://docs.python.org/2.7/library/collections.html#ordereddict-objects
+Official documentation on this module can be found with 
+:py:class:`the standard library <CPython:collections.OrderedDict>`.
 
 .. note::
    The source code for this module comes from a recipe provided by a third

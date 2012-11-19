@@ -17,8 +17,10 @@
 ###############################################################################
 
 """
-    Provides various map types with a consistent interface across Python
-    versions.
+    Provides a collection of various map types with a consistent interface 
+    across Python versions. The collection of map types consists of:
+	
+	* :ref:`OrderedDict <docfile-utilia.types.OrderedDict>`
 """
 
 

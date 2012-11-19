@@ -8,6 +8,18 @@
 *utilia*
 ========
 
+.. toctree::
+   :maxdepth: 3
+   :titlesonly:
+   :hidden:
+
+   install/index
+   modules/SELF
+   scripts/index
+   develop/index
+   legal/index
+   contrib
+
 Introduction
 ------------
 
@@ -26,6 +38,13 @@ proper.)
 
 Project Resources
 -----------------
+
+Indices and Search Facility
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+* :ref:`search`
+* :ref:`genindex`
+* :ref:`modindex`
 
 .. todo::
    Provide URL for project Web site landing page.
@@ -115,30 +134,5 @@ less-polished, unreleased forms):
    
    * Walking a source tree and updating the message catalogs corresponding to
      all translation domains found.
-
-Guides
-------
-
-This documentation is divided into a number of guides, focusing on various
-aspects of the project. Of interest to most users will likely be the guides on
-installing the *utilia* software distribution and using its modules and
-scripts. These guides are listed first.
-
-.. toctree::
-   :maxdepth: 2
-
-   install/index
-   modules/SELF
-   scripts/index
-   develop/index
-   legal/index
-   contrib
-
-Indices and Tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

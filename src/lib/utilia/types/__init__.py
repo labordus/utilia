@@ -28,7 +28,7 @@
 
     The following modules implement various types:
 	
-	* OrderedDict
+	* :ref:`OrderedDict <docfile-utilia.types.OrderedDict>`
 """
 
 

@@ -88,7 +88,7 @@ class Exception_BASE( __builtins_BaseException ):
     """
 	Base class for all :py:mod:`utilia` exceptions.
 	
-	Inherits from the Python built-in ``BaseException``.
+	Inherits from :py:exc:`exceptions.BaseException`.
 
 	Use this for your exception handler signature if you wish to catch any
 	exception raised from within :py:mod:`utilia`.
@@ -108,8 +108,8 @@ class Error_BASE( Exception_BASE, __builtins_StandardError ):
 	Base class for all :py:mod:`utilia` exceptions which are regarded as
 	errors.
 	
-	Inherits from :py:class:`Exception_BASE` and the Python built-in
-	``StandardError``.
+	Inherits from :py:class:`Exception_BASE` and
+	:py:exc:`exceptions.StandardError`. 
 
 	Use this for your exception handler signature if you wish to catch any
 	error condition raised from within :py:mod:`utilia`.
@@ -128,7 +128,7 @@ class Error_WithRC( Error_BASE ):
     """
 	Base class for all :py:mod:`utilia` exceptions which are regarded as
 	errors and which carry a return code that could be supplied to a
-	``SystemExit`` exception.
+	:py:exc:`exceptions.SystemExit` exception.
 
 	Inherits from :py:class:`Error_BASE`.
 

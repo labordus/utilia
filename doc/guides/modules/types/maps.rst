@@ -5,21 +5,17 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-``utilia.types.maps`` Module
-============================
+``maps`` Module
+===============
+
+.. toctree::
+   :hidden:
+
+   OrderedDict
 
 Module Description
 ------------------
 
 .. automodule:: utilia.types.maps
-
-Table of Class Modules
-----------------------
-
-.. toctree::
-   :maxdepth: 1
-
-   OrderedDict
-
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

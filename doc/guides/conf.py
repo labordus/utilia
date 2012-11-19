@@ -31,8 +31,16 @@ sys.path.insert(
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.doctest', 'sphinx.ext.todo', 'sphinx.ext.coverage', 'sphinx.ext.ifconfig']
-# TODO: Add "sphinx.ext.jsmath".
+extensions = \
+[
+    "sphinx.ext.autodoc",
+    "sphinx.ext.doctest",
+    "sphinx.ext.todo",
+    "sphinx.ext.coverage",
+    "sphinx.ext.ifconfig",
+    "sphinx.ext.intersphinx",
+    # TODO: Add "sphinx.ext.jsmath".
+]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -117,7 +125,15 @@ exclude_patterns = ['_build']
 pygments_style = 'sphinx'
 
 # A list of ignored prefixes for module index sorting.
-#modindex_common_prefix = []
+modindex_common_prefix = [ "utilia.", ]
+
+
+intersphinx_mapping = \
+{
+    "CPython": ( "http://docs.python.org/2.7", "_static/CPython-2_7.inv" ),
+}
+
+todo_include_todos = True
 
 
 # -- Options for HTML output ---------------------------------------------------
@@ -138,6 +154,7 @@ html_theme = "agogo"
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
 #html_title = None
+html_title = "{0} {1} Documentation".format( project, version )
 
 # A shorter title for the navigation bar.  Default is the same as html_title.
 #html_short_title = None
@@ -160,6 +177,7 @@ html_static_path = ['_static']
 # If not '', a 'Last updated on:' timestamp is inserted at every page bottom,
 # using the given strftime format.
 #html_last_updated_fmt = '%b %d, %Y'
+html_last_updated_fmt = '%Y/%m/%d %H:%M'
 
 # If true, SmartyPants will be used to convert quotes and dashes to
 # typographically correct entities.
@@ -189,6 +207,7 @@ html_static_path = ['_static']
 
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 #html_show_copyright = True
+html_show_copyright = False
 
 # If true, an OpenSearch description file will be output, and all pages will
 # contain a <link> tag referring to it.  The value of this option must be the
