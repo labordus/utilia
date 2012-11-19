@@ -11,7 +11,7 @@ Below is a list of contributors, given by name, nickname, or handle, and an
 optional PGP/GPG public key ID.
 
 +-----------------------------------------------+-----------------------------+
-| Name / Nickname / Handle                      | PGP/GPG Public Key ID       |
+| Name / Nickname / Handle                      | PGP/GPG Key ID              |
 +===============================================+=============================+
 | Eric A. McDonald                              | 0xcf627346fb2ad110          |
 +-----------------------------------------------+-----------------------------+
