@@ -8,22 +8,43 @@ other works which are distributed with it.
    The contributions to the Project listed below have been granted exceptions 
    to the standard licensing and legal notice policies of the Project. To 
    review the standard legal notice and licensing policies of the Project, 
-   please read the ``COPYRIGHT.txt`` and ``LICENSE.txt`` files, distributed 
-   with the Software.
+   please read the :file:`COPYRIGHT.txt` and :file:`LICENSE.txt` files, 
+   distributed with the Software.
 
 Alternatively-Licensed Contributions
 ------------------------------------
 
+agogo (Sphinx theme)
+~~~~~~~~~~~~~~~~~~~~
+
+**Publication Info**:	https://bitbucket.org/birkenfeld/sphinx/src
+
+**Original Author**:	Andi Albrecht
+
+**Copyright Holder**:	the Sphinx team
+
+**License**:		BSD (2-clause)
+
+**Location**:		:file:`doc/guides/_themes/agogo`
+
+**Notes**:
+   
+   * The :file:`static/agogo.css_t` file was modified by the Project.
+
+   * Please see the :file:`AUTHORS` file and the :file:`LICENSE` file in the 
+     Sphinx software distribution for more information about the pertinent 
+     copyright and license.
+
 OrderedDict
 ~~~~~~~~~~~
+
+**Publication Info**:	http://code.activestate.com/recipes/576669/
 
 **Original Author**:	Raymond Hettinger
 
 **License**:		MIT
 
-**Publication Info**:	http://code.activestate.com/recipes/576669/
-
-**Location**:		``src/lib/utilia/types/OrderedDict.py``
+**Location**:		:file:`src/lib/utilia/types/OrderedDict.py`
 
 Contributions in the Public Domain
 ----------------------------------
