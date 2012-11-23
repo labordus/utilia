@@ -8,15 +8,16 @@
 ``types`` Subpackage
 ====================
 
+Subpackage Description
+----------------------
+
+.. automodule:: utilia.types
+
+
 .. toctree::
    :hidden:
 
    maps
    OrderedDict
-
-Subpackage Description
-----------------------
-
-.. automodule:: utilia.types
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

@@ -8,12 +8,6 @@
 ``utilia`` Package
 ==================
 
-.. toctree::
-   :hidden:
-
-   types/SELF
-   filesystem/SELF
-
 Package Description
 -------------------
 
@@ -37,5 +31,12 @@ Exception Classes
 .. autoclass:: Error_WithReason
    :members:
    :inherited-members:
+
+
+.. toctree::
+   :hidden:
+
+   types/SELF
+   filesystem/SELF
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

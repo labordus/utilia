@@ -8,14 +8,15 @@
 ``maps`` Module
 ===============
 
-.. toctree::
-   :hidden:
-
-   OrderedDict
-
 Module Description
 ------------------
 
 .. automodule:: utilia.types.maps
+
+
+.. toctree::
+   :hidden:
+
+   OrderedDict
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

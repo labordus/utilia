@@ -224,8 +224,10 @@ div.document .descname {
 }
 
 div.document .docutils.literal {
-  background-color: #eeeeec;
+  /* background-color: #eeeeec; */
+  background-color: #f7f7ff;
   padding: 1px;
+  font-size: 1.2em;
 }
 
 div.document .docutils.xref.literal {
@@ -410,11 +412,49 @@ table.citation td {
     border-bottom: none;
 }
 
-/* -- class names ----------------------------------------------------------- */
+/* -- class/function names -------------------------------------------------- */
+
+/* wheat: #f5deb3 */
+/* fawn: #e5aa70 */
+/* burnt sienna: #e97451 */
+/* burgundy: #800020 */
+/* beige: f5f5dc */
+/* cream: fffdd0 */
+
+tt.descclassname {
+    background-color: #f5deb3;
+    border-bottom: 1px solid #e5aa70;
+    font-size: 1.2em;
+}
 
 tt.descname {
-    background-color: #f5deb3;
+    background-color: #e5aa70;
     font-size: 1.2em;
+}
+
+tt.docutils {
+    font-size: 1.0em;
+}
+
+/* -- table of contents ----------------------------------------------------- */
+
+div.toctree-wrapper {
+    background-color: #f5f5dc;
+    padding: 4px;
+    border-left: 1px solid #800020;
+    border-right: 1px solid #800020;
+}
+
+div.contents {
+    background-color: #f5f5dc;
+    padding: 4px;
+    border-left: 1px solid #800020;
+    border-right: 1px solid #800020;
+}
+
+p.topic-title {
+    color: #882d17;
+    /* text-align: center; */
 }
 
 /* -- search page ----------------------------------------------------------- */

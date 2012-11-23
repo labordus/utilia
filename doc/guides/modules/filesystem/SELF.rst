@@ -8,11 +8,6 @@
 ``filesystem`` Subpackage
 =========================
 
-.. toctree::
-   :hidden:
-
-   stdpath
-
 Subpackage Description
 ----------------------
 
@@ -28,5 +23,11 @@ Exception Classes
 .. autoclass:: Error_BASE
    :members:
    :inherited-members:
+
+
+.. toctree::
+   :hidden:
+
+   stdpath
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

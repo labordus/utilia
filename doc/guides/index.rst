@@ -8,18 +8,6 @@
 *utilia*
 ========
 
-.. toctree::
-   :maxdepth: 3
-   :titlesonly:
-   :hidden:
-
-   install/index
-   modules/SELF
-   scripts/index
-   develop/index
-   legal/index
-   contrib
-
 Introduction
 ------------
 
@@ -134,5 +122,18 @@ less-polished, unreleased forms):
    
    * Walking a source tree and updating the message catalogs corresponding to
      all translation domains found.
+
+
+.. toctree::
+   :maxdepth: 3
+   :titlesonly:
+   :hidden:
+
+   install/index
+   modules/SELF
+   scripts/index
+   develop/index
+   legal/index
+   contrib
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:
