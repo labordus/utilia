@@ -22,11 +22,17 @@ proper.)
 Project Resources
 -----------------
 
+.. warning::
+   This project is still in its nascent stages.
+   Much code and documentation still need to be committed before the first
+   official release.
+
 Documentation
 ~~~~~~~~~~~~~
 
-.. todo::
-   Provide URL for project Web site landing page.
+The official documentation for the project is located at:
+
+   http://utilia.github.com/utilia
 
 There is no project wiki at this time.
 

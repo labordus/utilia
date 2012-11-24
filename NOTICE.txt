@@ -11,8 +11,12 @@ other works which are distributed with it.
    please read the :file:`COPYRIGHT.txt` and :file:`LICENSE.txt` files, 
    distributed with the Software.
 
-Alternatively-Licensed Contributions
-------------------------------------
+Licensed Works
+--------------
+
+Copies of some licensed, separately-published works are incorporated into the
+project. The licenses and copyright holders (when known) for these works are
+indicated below.
 
 agogo (Sphinx theme)
 ~~~~~~~~~~~~~~~~~~~~
@@ -35,6 +39,15 @@ agogo (Sphinx theme)
      Sphinx software distribution for more information about the pertinent 
      copyright and license.
 
+distribute_setup
+~~~~~~~~~~~~~~~~
+
+**Publication Info**:	http://python-distribute.org/distribute_setup.py
+
+**License**:		[Uncertain, being researched.]
+
+**Location**:		:file:`distribute_setup.py`
+
 OrderedDict
 ~~~~~~~~~~~
 
@@ -46,10 +59,13 @@ OrderedDict
 
 **Location**:		:file:`src/lib/utilia/types/OrderedDict.py`
 
-Contributions in the Public Domain
-----------------------------------
+Works in the Public Domain
+--------------------------
 
-There are no contributions to the Project in the public domain on record at 
-this time.
+Copies of works incorporated from the public domain by the Project are not 
+captured under the Project's standard licenses; instead they are left in the 
+public domain.
+
+There are no known works incorporated from the public domain at this time.
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

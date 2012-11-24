@@ -5,7 +5,7 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-.. include:: ../../README.rst.txt
+.. include:: ../../README.rst
 
 Indices and Search Facility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
