@@ -24,7 +24,7 @@
     not present, then that package is retrieved from the Internet 
     (if possible).
 
-    The :py:mod:`nose` package is a requisite to provide the :cmd:`nosetests`
+    The :py:mod:`nose` package is a requisite to provide the ``nosetests``
     subcommand for this script.
 
     Please see the accompanying :file:`setup.cfg` file for default options to
@@ -54,6 +54,7 @@ from setuptools import (
 
 # Load some useful modules and functions.
 import sys
+import collections
 from os.path import (
     dirname,
     join		    as path_join,
@@ -64,18 +65,30 @@ __pwd		= dirname( sys.argv[ 0 ] )
 __path_to_lib	= path_join( __pwd, "src", "lib", "utilia" )
 
 
+# Get Python version.
+__Version = collections.namedtuple( "__Version", "maj min" )
+__python_version = __Version( sys.version_info.major, sys.version_info.minor )
+assert 2 <= __python_version.maj
+
+
 # Read the master package's version info from config file.
 # If the release type is "development", then write out a new timestamp.
 # Note: If something goes wrong here, then just let the exception propagate.
-from ConfigParser import (
+if 2 == __python_version.maj:	mname_configparser = "ConfigParser"
+else:				mname_configparser = "configparser"
+exec(
+"""
+from {0} import (
     SafeConfigParser	    as __ConfigParser,
+)
+""".format( mname_configparser )
 )
 from datetime import (
     datetime		    as __DateTime,
 )
 
 __vinfo_CFG	= __ConfigParser( )
-__vinfo_CFG.readfp( file( path_join( __path_to_lib, "version.cfg" ) ) )
+__vinfo_CFG.readfp( open( path_join( __path_to_lib, "version.cfg" ) ) )
 
 __vinfo_release_type	= __vinfo_CFG.get( "control", "release_type" )
 assert __vinfo_release_type in [ "bugfix", "candidate", "development" ]
@@ -90,7 +103,7 @@ elif "development" == __vinfo_release_type: # Development Release
     __version = "{major}.{minor}.0dev{update}".format( **__vinfo_numbers_DICT )
     print(
 	__timestamp_STR, 
-	file = file( path_join( __path_to_lib, "dev-timestamp.dat" ), "w" )
+	file = open( path_join( __path_to_lib, "dev-timestamp.dat" ), "w" )
     )
 
 
