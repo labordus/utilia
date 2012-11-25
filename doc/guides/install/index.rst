@@ -1,4 +1,4 @@
-..				   utilia
+..                                 utilia
 
 .. This work is licensed under the Creative Commons Attribution 3.0 
    Unported License. To view a copy of this license, visit 
@@ -22,7 +22,7 @@ Stable Releases
    Talk about virtual environments.
 
 .. TODO: Once relevant, add subsection on building extensions.
-	 Include platform-specific notes, such as for x64 Windows.
+         Include platform-specific notes, such as for x64 Windows.
 
 Tracking Development
 --------------------

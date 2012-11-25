@@ -1,4 +1,4 @@
-..				   utilia
+..                                 utilia
 
 .. This work is licensed under the Creative Commons Attribution 3.0 
    Unported License. To view a copy of this license, visit 
@@ -72,14 +72,14 @@ Here are some examples of preferred and avoided usages:
       OneTuple = namedtuple( "OneTuple", "u" )
 
       some_dict = { Point( 3, 4 ): "foo" }   # prefer
-      some_dict = { ( 3, 4 ): "foo" }	     # avoid
+      some_dict = { ( 3, 4 ): "foo" }        # avoid
 
-      p = Point( 5, 12 ); p.x**2 + p.y**2	# prefer
-      p = Point( 5, 12 ); p[ 0 ]**2 + p[ 1 ]**2	# avoid
-      p = ( 5, 12 ); p[ 0 ]**2 + p[ 1 ]**2	# avoid
+      p = Point( 5, 12 ); p.x**2 + p.y**2       # prefer
+      p = Point( 5, 12 ); p[ 0 ]**2 + p[ 1 ]**2 # avoid
+      p = ( 5, 12 ); p[ 0 ]**2 + p[ 1 ]**2      # avoid
 
       OneTuple( 42 ) # sequence containing an integer
-      ( 42 )	     # uncontained integer
+      ( 42 )         # uncontained integer
       tuple( 42 )    # ERROR
 
 Syntactic Sugar
@@ -101,22 +101,22 @@ Here are some examples of preferred and avoided usages:
 
    .. code-block:: python
       
-      [ ]	  # prefer
-      tuple( )	  # prefer if sequence immutability is desired
-      ( )	  # avoid
+      [ ]         # prefer
+      tuple( )    # prefer if sequence immutability is desired
+      ( )         # avoid
       
-      [ 1 ]	     # prefer
+      [ 1 ]          # prefer
       tuple( [ 1 ] ) # prefer if sequence immutability is desired
-      ( 1, )	     # avoid
+      ( 1, )         # avoid
       
-      [ 1, 2, 4 ]	   # prefer
+      [ 1, 2, 4 ]          # prefer
       tuple( [ 1, 2, 4 ] ) # prefer if sequence immutability is desired
-      ( 1, 2, 4 )	   # avoid
+      ( 1, 2, 4 )          # avoid
 
       return "a", 1, foo      # prefer
       return ( "a", 1, foo )  # avoid
       
-      for key, val in some_dict.iteritems( )	   # prefer
+      for key, val in some_dict.iteritems( )       # prefer
       for ( key, val ) in some_dict.iteritems( )   # avoid
 
 If you care about linguistic symmetry or code aesthetics, then consider the
@@ -129,8 +129,8 @@ following contrasts:
       { 42 }   # asymmetric with tuple, symmetric with list
       # Note: Sugar for set is only available in Python 2.7 and 3.x.
 
-      tuple( [ 1, 2, 4 ] )	# symmetric with set
-      set( [ 1, 2, 4 ] )	# symmetric with tuple
+      tuple( [ 1, 2, 4 ] )      # symmetric with set
+      set( [ 1, 2, 4 ] )        # symmetric with tuple
 
 Lists
 -----
@@ -154,7 +154,7 @@ is cleaner than appending tuples to a list.
       od[ "baz" ] = 3
       
       for key, value in od.iteritems( ):
-	 # Do stuff.
+         # Do stuff.
 
 In cases where lists of tuples can be generated automatically, then the use of
 a tuple type, produced by the 
@@ -188,7 +188,7 @@ which is available in Python 2.7 and 3.x. Therefore:
 
    .. code-block:: python
       
-      set( [ 1, 2, 4 ] )	# use
-      { 1, 2, 4 }		# do not use
+      set( [ 1, 2, 4 ] )        # use
+      { 1, 2, 4 }               # do not use
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

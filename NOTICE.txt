@@ -1,4 +1,4 @@
-..				   utilia
+..                                 utilia
 
 This text pertains to the *utilia* project ("the Project"), which creates and
 maintains the *utilia* software ("the Software") and the documentation and
@@ -21,15 +21,15 @@ indicated below.
 agogo (Sphinx theme)
 ~~~~~~~~~~~~~~~~~~~~
 
-**Publication Info**:	https://bitbucket.org/birkenfeld/sphinx/src
+**Publication Info**:   https://bitbucket.org/birkenfeld/sphinx/src
 
-**Original Author**:	Andi Albrecht
+**Original Author**:    Andi Albrecht
 
-**Copyright Holder**:	the Sphinx team
+**Copyright Holder**:   the Sphinx team
 
-**License**:		BSD (2-clause)
+**License**:            BSD (2-clause)
 
-**Location**:		:file:`doc/guides/_themes/agogo`
+**Location**:           :file:`doc/guides/_themes/agogo`
 
 **Notes**:
    
@@ -42,22 +42,22 @@ agogo (Sphinx theme)
 distribute_setup
 ~~~~~~~~~~~~~~~~
 
-**Publication Info**:	http://python-distribute.org/distribute_setup.py
+**Publication Info**:   http://python-distribute.org/distribute_setup.py
 
-**License**:		[Uncertain, being researched.]
+**License**:            [Uncertain, being researched.]
 
-**Location**:		:file:`distribute_setup.py`
+**Location**:           :file:`distribute_setup.py`
 
 OrderedDict
 ~~~~~~~~~~~
 
-**Publication Info**:	http://code.activestate.com/recipes/576669/
+**Publication Info**:   http://code.activestate.com/recipes/576669/
 
-**Original Author**:	Raymond Hettinger
+**Original Author**:    Raymond Hettinger
 
-**License**:		MIT
+**License**:            MIT
 
-**Location**:		:file:`src/lib/utilia/types/OrderedDict.py`
+**Location**:           :file:`src/lib/utilia/types/OrderedDict.py`
 
 Works in the Public Domain
 --------------------------

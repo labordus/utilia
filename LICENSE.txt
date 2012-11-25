@@ -1,4 +1,4 @@
-..				   utilia
+..                                 utilia
 
 This text pertains to the *utilia* project ("the Project"), which creates and
 maintains the *utilia* software ("the Software") and the documentation and
