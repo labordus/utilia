@@ -14,6 +14,7 @@ the appropriate options to ``use_setuptools()``.
 This file can also be run as a script to install or upgrade setuptools.
 """
 import os
+import shutil
 import sys
 import time
 import fnmatch
@@ -48,7 +49,7 @@ except ImportError:
             args = [quote(arg) for arg in args]
         return os.spawnl(os.P_WAIT, sys.executable, *args) == 0
 
-DEFAULT_VERSION = "0.6.29"
+DEFAULT_VERSION = "0.6.31"
 DEFAULT_URL = "http://pypi.python.org/packages/source/d/distribute/"
 SETUPTOOLS_FAKED_VERSION = "0.6c11"
 
@@ -90,6 +91,7 @@ def _install(tarball, install_args=()):
             return 2
     finally:
         os.chdir(old_wd)
+        shutil.rmtree(tmpdir)
 
 
 def _build_egg(egg, tarball, to_dir):
@@ -114,6 +116,7 @@ def _build_egg(egg, tarball, to_dir):
 
     finally:
         os.chdir(old_wd)
+        shutil.rmtree(tmpdir)
     # returning the result
     log.warn(egg)
     if not os.path.exists(egg):
@@ -445,7 +448,7 @@ def _relaunch():
     log.warn('Relaunching...')
     # we have to relaunch the process
     # pip marker to avoid a relaunch bug
-    _cmd = ['-c', 'install', '--single-version-externally-managed']
+    _cmd1 = ['-c', 'install', '--single-version-externally-managed']
     _cmd2 = ['-c', 'install', '--record']
     if sys.argv[:3] == _cmd1 or sys.argv[:3] == _cmd2:
         sys.argv[0] = 'setup.py'
