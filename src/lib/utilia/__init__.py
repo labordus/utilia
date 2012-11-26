@@ -51,15 +51,19 @@ from os.path import (
 
 
 # Get Python version.
-__Version = collections.namedtuple( "__Version", "maj min" )
-# Note: Access by index rather than name for Python 2.6 compatibility.
-__python_version = __Version( sys.version_info[ 0 ], sys.version_info[ 1 ] )
-assert 2 <= __python_version.maj
+PythonVersion = collections.namedtuple(
+    "PythonVersion", "flavor major minor"
+)
+# Note: Access 'version_info' members by index rather than name for Python 2.6
+#       compatibility.
+python_version = PythonVersion(
+    sys.subversion[ 0 ], sys.version_info[ 0 ], sys.version_info[ 1 ]
+)
 
 
 # Read the version info from config file.
 # Note: If something goes wrong here, then just let the exception propagate.
-if 2 == __python_version.maj:   __mname_configparser = "ConfigParser"
+if 2 == python_version.major:   __mname_configparser = "ConfigParser"
 else:                           __mname_configparser = "configparser"
 exec(
 """
@@ -87,15 +91,19 @@ elif "development" == __vinfo_release_type: # Development Release
     __version__ = \
     "{major}.{minor}.0dev{update}".format( **__vinfo_numbers_DICT )
 
-del path_join
 del __ConfigParser, __vinfo_CFG, __vinfo_release_type, __vinfo_numbers_DICT
+del __mname_configparser
+
+
+# Cleanup the module namespace.
+del path_join, collections
 
 
 # Exceptions
 
 
 # Note: If something goes wrong here, then just let the exception propagate.
-if 2 == __python_version.maj:
+if 2 == python_version.major:
     __mname_builtins    = "__builtin__"
     __cname_BaseError   = "StandardError"
 else:
@@ -109,6 +117,7 @@ from {0} import (
 )
 """.format( __mname_builtins, __cname_BaseError )
 )
+del __mname_builtins, __cname_BaseError
 
 
 class Exception_BASE( __builtins_BaseException ):

@@ -122,11 +122,16 @@ import re
 
 
 from utilia import (
+    python_version,
     Error_WithReason,
 )
 from . import (
     Error_BASE              as FilesystemError_BASE,
 )
+
+
+# TODO: Move to a compat module.
+if 3 == python_version.major:   xrange = range
 
 
 def __DOCSTRING_FRAGMENTS( ):
@@ -223,8 +228,8 @@ def __autodoc_function_parameters( func, pdict ):
         tuple are the parameters passed on the stack.
     """
 
-    for i in xrange( func.func_code.co_argcount ):
-        docs = pdict.get( func.func_code.co_varnames[ i ], None )
+    for i in xrange( func.__code__.co_argcount ):
+        docs = pdict.get( func.__code__.co_varnames[ i ], None )
         if docs: func.__doc__ += docs
 
 
