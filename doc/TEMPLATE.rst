@@ -5,4 +5,4 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-.. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79 fo+=al:
+.. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

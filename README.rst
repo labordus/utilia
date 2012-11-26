@@ -74,4 +74,4 @@ The source code and supporting works for the software are hosted on GitHub at:
 
    https://github.com/utilia/utilia
 
-.. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79 fo+=al:
+.. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

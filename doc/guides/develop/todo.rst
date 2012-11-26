@@ -1,20 +1,21 @@
-..                                 utilia
+..                                utilia
 
 .. This work is licensed under the Creative Commons Attribution 3.0 
    Unported License. To view a copy of this license, visit 
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-Source Code
+To-Do Lists
 ===========
 
-.. todo::
-   Create discussions for C and C++ extensions.
+Catalog of General To-Do Items
+------------------------------
 
+.. TODO: Place project-wide to-do items here.
 
-.. toctree::
-   :maxdepth: 2
+Catalog of Specific To-Do Items
+-------------------------------
 
-   Python/index
+.. todolist::
 
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:
