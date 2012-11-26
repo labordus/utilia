@@ -43,18 +43,34 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
-# Version
-# Note: If something goes wrong here, then just let the exception propagate.
-
+import sys
+import collections
 from os.path import (
     join                    as path_join,
 )
-from ConfigParser import (
+
+
+# Get Python version.
+__Version = collections.namedtuple( "__Version", "maj min" )
+# Note: Access by index rather than name for Python 2.6 compatibility.
+__python_version = __Version( sys.version_info[ 0 ], sys.version_info[ 1 ] )
+assert 2 <= __python_version.maj
+
+
+# Read the version info from config file.
+# Note: If something goes wrong here, then just let the exception propagate.
+if 2 == __python_version.maj:   __mname_configparser = "ConfigParser"
+else:                           __mname_configparser = "configparser"
+exec(
+"""
+from {0} import (
     SafeConfigParser        as __ConfigParser,
+)
+""".format( __mname_configparser )
 )
 
 __vinfo_CFG     = __ConfigParser( )
-__vinfo_CFG.readfp( file( path_join( __path__[ 0 ], "version.cfg" ) ) )
+__vinfo_CFG.readfp( open( path_join( __path__[ 0 ], "version.cfg" ) ) )
 
 __vinfo_release_type    = __vinfo_CFG.get( "control", "release_type" )
 assert __vinfo_release_type in [ "bugfix", "candidate", "development" ]
@@ -67,7 +83,7 @@ elif "candidate" == __vinfo_release_type: # Release Candidate
     "{major}.{minor}.0rc{update}".format( **__vinfo_numbers_DICT )
 elif "development" == __vinfo_release_type: # Development Release
     __vinfo_numbers_DICT[ "update" ] = \
-    file( path_join( __path__[ 0 ], "dev-timestamp.dat" ) ).read( 12 )
+    open( path_join( __path__[ 0 ], "dev-timestamp.dat" ) ).read( 12 )
     __version__ = \
     "{major}.{minor}.0dev{update}".format( **__vinfo_numbers_DICT )
 
@@ -78,9 +94,20 @@ del __ConfigParser, __vinfo_CFG, __vinfo_release_type, __vinfo_numbers_DICT
 # Exceptions
 
 
-from __builtin__ import (
+# Note: If something goes wrong here, then just let the exception propagate.
+if 2 == __python_version.maj:
+    __mname_builtins    = "__builtin__"
+    __cname_BaseError   = "StandardError"
+else:
+    __mname_builtins    = "builtins"
+    __cname_BaseError   = "Exception"
+exec(
+"""
+from {0} import (
     BaseException           as __builtins_BaseException,
-    StandardError           as __builtins_StandardError,
+    {1}                     as __builtins_BaseError,
+)
+""".format( __mname_builtins, __cname_BaseError )
 )
 
 
@@ -103,7 +130,7 @@ class Exception_BASE( __builtins_BaseException ):
         super( Exception_BASE, self ).__init__( *posargs )
 
 
-class Error_BASE( Exception_BASE, __builtins_StandardError ):
+class Error_BASE( Exception_BASE, __builtins_BaseError ):
     """
         Base class for all :py:mod:`utilia` exceptions which are regarded as
         errors.
@@ -204,4 +231,4 @@ class Error_WithReason( Error_BASE ):
 
 
 ###############################################################################
-# vim: set ft=python sts=4 sw=4 tw=79:                                        #
+# vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #

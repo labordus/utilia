@@ -66,7 +66,7 @@ def test_MODULE_ATTRIBUTES( ):
         [ "__FUTURE_absolute_import",   type( __FUTURE_absolute_import ) ],
         [ "__FUTURE_print_function",    type( __FUTURE_print_function ) ],
         [ "__builtins_BaseException",   type( BaseException ) ],
-        [ "__builtins_StandardError",   type( StandardError ) ],
+        [ "__builtins_BaseError",       type( Exception ) ],
         [ "__version__",                str ],
         [ "Exception_BASE",             type_of_class ],
         [ "Error_BASE",                 type_of_class ],
@@ -85,4 +85,4 @@ def test_MODULE_ATTRIBUTES( ):
 
 
 ###############################################################################
-# vim: set ft=python sts=4 sw=4 tw=79:                                        #
+# vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #

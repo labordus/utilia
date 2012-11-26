@@ -77,14 +77,14 @@ assert 2 <= __python_version.maj
 # Note: If something goes wrong here, then just let the exception propagate.
 # TODO: Look at 'control:frozen' to determine whether new timestamp should be
 #       created.
-if 2 == __python_version.maj:   mname_configparser = "ConfigParser"
-else:                           mname_configparser = "configparser"
+if 2 == __python_version.maj:   __mname_configparser = "ConfigParser"
+else:                           __mname_configparser = "configparser"
 exec(
 """
 from {0} import (
     SafeConfigParser        as __ConfigParser,
 )
-""".format( mname_configparser )
+""".format( __mname_configparser )
 )
 from datetime import (
     datetime                as __DateTime,
