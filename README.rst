@@ -32,7 +32,7 @@ Documentation
 
 The official documentation for the project is located at:
 
-   http://utilia.github.com/utilia
+   http://utilia.readthedocs.org
 
 There is no project wiki at this time.
 
@@ -74,4 +74,4 @@ The source code and supporting works for the software are hosted on GitHub at:
 
    https://github.com/utilia/utilia
 
-.. vim: set ft=rst sts=3 sw=3 tw=79:
+.. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79 fo+=al:
