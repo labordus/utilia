@@ -5,16 +5,8 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-To-Do Lists
-===========
-
-Catalog of General To-Do Items
-------------------------------
-
-.. TODO: Place project-wide to-do items here.
-
-Catalog of Specific To-Do Items
--------------------------------
+To-Do List
+==========
 
 .. todolist::
 

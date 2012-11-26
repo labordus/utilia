@@ -21,11 +21,4 @@ optional PGP/GPG public key ID.
    contributed, then please email the maintainer(s) of the Software with 
    details on your contribution(s) and how you would like to be listed.
 
-.. todo::
-   Provide point of contact for project.
-
-
-.. TODO: Add list of sponsors when relevant.
-
-
-.. vim: set ft=rst sts=3 sw=3 tw=79:
+.. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:
