@@ -67,7 +67,8 @@ __path_to_lib   = path_join( __pwd, "src", "lib", "utilia" )
 
 # Get Python version.
 __Version = collections.namedtuple( "__Version", "maj min" )
-# Note: Access by index rather than name for Python 2.6 compatibility.
+# Note: Access 'version_info' fields by index rather than name for Python 2.6 
+#       compatibility.
 __python_version = __Version( sys.version_info[ 0 ], sys.version_info[ 1 ] )
 assert 2 <= __python_version.maj
 
@@ -145,7 +146,10 @@ setup_data[ "classifiers" ]         = \
         "Programming Language :: Python :: 2",
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
-        # TODO: Add indicators of Python 3.x support, when available.
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.1",
+        "Programming Language :: Python :: 3.2",
+        "Programming Language :: Python :: 3.3",
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Utilities",
     ]
@@ -173,7 +177,8 @@ setup_data[ "package_data" ]        = \
 # TODO: dependency_links
 setup_data[ "setup_requires" ]      = \
     [
-        "nose >= 1.2.1", # Note: Needed for the 'nosetests' subcommand.
+        "nose >= 1.2.1",    # Note: Needed for the 'nosetests' command.
+        "Sphinx >= 1.1.3",  # Note: Needed for the 'build_sphinx' command.
     ]
 # TODO: extras_require
 # TODO: tests_require
