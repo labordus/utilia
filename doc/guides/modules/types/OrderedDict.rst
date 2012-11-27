@@ -5,16 +5,13 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-.. _docfile-utilia.types.OrderedDict:
-
 ``OrderedDict`` Module
 ======================
 
 Module Description
 ------------------
 
-Official documentation on this module can be found with 
-:py:class:`the standard library <CPython:collections.OrderedDict>`.
+Contains the :py:class:`OrderedDict` class.
 
 .. note::
    The source code for this module comes from a recipe provided by a third
@@ -22,5 +19,14 @@ Official documentation on this module can be found with
    Python 3.1 per acceptance of :pep:`372`; it also runs on Python 2.6 and
    Python 3.0.
 
+.. py:module:: utilia.types.OrderedDict
 
-.. vim: set ft=rst sts=3 sw=3 tw=79:
+Class
+-----
+
+.. py:class:: OrderedDict( [items] )
+
+   Official documentation for this class can be found in
+   :py:class:`the standard library <CPython:collections.OrderedDict>`.
+
+.. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

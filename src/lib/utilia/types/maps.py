@@ -20,7 +20,7 @@
     Provides a collection of various map types with a consistent interface 
     across Python versions. The collection of map types consists of:
         
-        * :ref:`OrderedDict <docfile-utilia.types.OrderedDict>`
+        * :py:class:`OrderedDict`
 """
 
 
@@ -48,4 +48,4 @@ else:
 
 
 ###############################################################################
-# vim: set ft=python sts=4 sw=4 tw=79:                                        #
+# vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #

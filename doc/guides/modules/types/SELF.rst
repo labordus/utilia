@@ -20,4 +20,4 @@ Subpackage Description
    maps
    OrderedDict
 
-.. vim: set ft=rst sts=3 sw=3 tw=79:
+.. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

@@ -138,10 +138,10 @@ Lists
 Lists Of Tuples
 ~~~~~~~~~~~~~~~
 
-An :ref:`OrderedDict <docfile-utilia.types.OrderedDict>` can be used to 
-accumulate key-value pairs in an order-preserving manner. These accumulated 
-pairs can later be retrieved as tuples via a standard iteration method. This 
-is cleaner than appending tuples to a list.
+An :py:class:`OrderedDict` can be used to accumulate key-value pairs in an 
+order-preserving manner. These accumulated pairs can later be retrieved as 
+tuples via a standard iteration method. This is cleaner than appending tuples 
+to a list.
 
    .. code-block:: python
       
@@ -191,4 +191,4 @@ which is available in Python 2.7 and 3.x. Therefore:
       set( [ 1, 2, 4 ] )        # use
       { 1, 2, 4 }               # do not use
 
-.. vim: set ft=rst sts=3 sw=3 tw=79:
+.. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

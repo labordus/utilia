@@ -28,7 +28,7 @@
 
     The following modules implement various types:
         
-        * :ref:`OrderedDict <docfile-utilia.types.OrderedDict>`
+        * :py:class:`OrderedDict`
 """
 
 
@@ -44,4 +44,4 @@ __docformat__ = "reStructuredText"
 
 
 ###############################################################################
-# vim: set ft=python sts=4 sw=4 tw=79:                                        #
+# vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #
