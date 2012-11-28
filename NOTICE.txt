@@ -39,6 +39,17 @@ agogo (Sphinx theme)
      Sphinx software distribution for more information about the pertinent 
      copyright and license.
 
+argparse
+~~~~~~~~
+
+**Publication Info**:   http://code.google.com/p/argparse/
+
+**Original Author**:    Steven J. Bethard
+
+**License**:            PSF 2.0
+
+**Location**:           :file:`src/lib/utilia/config_parsers/argparse.py`
+
 distribute_setup
 ~~~~~~~~~~~~~~~~
 

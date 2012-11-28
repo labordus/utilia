@@ -17,18 +17,14 @@
 ###############################################################################
 
 """
-    Provides a wide assortment of useful subpackages. These subpackages cover
-    the following areas:
-        
-        * types
+    Provides a wide assortment of useful subpackages. The subpackages cover
+    these areas:
 
-        * file systems
+        * :py:mod:`configuration parsing <.config_parsers>`
 
-    The subpackages are as follows:
+        * :py:mod:`file systems <.filesystem>`
         
         * :py:mod:`.types`
-
-        * :py:mod:`.filesystem`
 """
 
 
