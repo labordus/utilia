@@ -75,7 +75,7 @@ from ConfigParser import (
 )
 
 __vinfo_CFG	= __ConfigParser( )
-__vinfo_CFG.readfp( file( path_join( sys.path[ 0 ], "utilia", "version.cfg" ) ) )
+__vinfo_CFG.readfp( open( path_join( sys.path[ 0 ], "utilia", "version.cfg" ) ) )
 
 __vinfo_release_type	= __vinfo_CFG.get( "control", "release_type" )
 assert __vinfo_release_type in [ "bugfix", "candidate", "development" ]
@@ -87,7 +87,7 @@ elif "candidate" == __vinfo_release_type: # Release Candidate
     release = "{major}.{minor}.0rc{update}".format( **__vinfo_numbers_DICT )
 elif "development" == __vinfo_release_type: # Development Release
     __vinfo_numbers_DICT[ "update" ] = \
-    file( path_join( sys.path[ 0 ], "utilia", "dev-timestamp.dat" ) ).read( 12 )
+    open( path_join( sys.path[ 0 ], "utilia", "dev-timestamp.dat" ) ).read( 12 )
     release = "{major}.{minor}.0dev{update}".format( **__vinfo_numbers_DICT )
 
 del path_join
