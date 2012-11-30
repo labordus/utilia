@@ -55,7 +55,8 @@ if   3 == python_version.major:
     __doc__ += \
     """
 
-        * :py:exc:`StandardError` is aliased to :py:exc:`Exception`.
+        * :py:exc:`StandardError <CPython:exceptions.StandardError>` is 
+          aliased to :py:exc:`Exception <CPython:exceptions.Exception>`.
     """
 
     # Note: The 'range' function of Python 3 behaves as the 'xrange' function
