@@ -35,17 +35,19 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
-import sys
-import collections
+from utilia import (
+    python_version,
+)
 
 
-__Version = collections.namedtuple( "__Version", "maj min" )
-__python_version = __Version( sys.version_info.major, sys.version_info.minor )
-if __python_version in [ __Version( 2, 6 ), __Version( 3, 0 ) ]:
+if [ python_version.major, python_version.minor ] in [ [ 2, 6 ], [ 3, 0 ] ]:
     from .OrderedDict   import OrderedDict
 else:
     from collections    import OrderedDict
 
+
+# Cleanup the module namespace.
+del python_version
 
 ###############################################################################
 # vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #
