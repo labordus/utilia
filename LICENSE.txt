@@ -9,23 +9,23 @@ License for the Software
 
 The Software is licensed under the Apache License, version 2.0 (the
 "Software License"). The text of the Software License may be found in the 
-``licenses`` subdirectory of the ``doc`` directory, distributed with the
-Software, or at the following Internet URL:
+:file:`licenses` subdirectory of the :file:`doc` directory, 
+distributed with the Software, or at the following Internet URL:
 
   http://www.apache.org/licenses/LICENSE-2.0 
 
-The contents of any file, distributed under the ``src`` directory, excluding
-files named with a ``.dat`` suffix, are licensed under the Software License.
-The contents of any file, distributed under the ``src`` directory and named
-with a ``.dat`` suffix, is in the public domain. Portions of the Software,
-which reside outside of the ``src`` directory hierarchy, are also licensed
-under the Software License. For example, scripts or source code fragments, 
-residing in a database table, are considered part of the Software, even though
-the database, containing the table, may be distributed outside of the ``src``
-directory hierarchy.
+The contents of any file, distributed under the :file:`src` directory, 
+excluding files named with a ``.dat`` suffix, are licensed under the Software
+License. The contents of any file, distributed under the :file:`src` directory
+and named with a ``.dat`` suffix, is in the public domain. Portions of the
+Software, which reside outside of the :file:`src` directory hierarchy, are also
+licensed under the Software License. For example, scripts or source code
+fragments, residing in a database table, are considered part of the Software,
+even though the database, containing the table, may be distributed outside of
+the :file:`src` directory hierarchy.
 
-Exemptions to any of the foregoing are noted in the ``NOTICE.txt`` file, which
-is distributed with the Software.
+Exemptions to any of the foregoing are noted in the :file:`NOTICE.txt` file,
+which is distributed with the Software.
 
 License for Documentation and Other Works
 -----------------------------------------
@@ -39,20 +39,21 @@ URL:
 
    http://creativecommons.org/licenses/by/3.0/
 
-The contents of any file, distributed under the ``doc`` directory, excluding 
-license files, are licensed under the Supporting Works License. Translations 
-of message catalogs to various languages are also licensed under the Supporting
-Works License. Icons, figures, and graphical images are also licensed under the
-Supporting Works License. Other copyrightable works, not explicitly mentioned
-in the foregoing statements, are also licensed under the Supporting Works
-License. Documentation, which coexists within the same container as source 
-code for the Software, is under the Software License and not the Supporting 
-Works License. Licenses are reproduced and distributed with the Software for 
-your convenience of reference; any applicable copyright law and any terms and 
-conditions set forth by the author(s) of a reproduced license, regarding that 
-license, are considered to be in full effect for that license.
+The contents of any file, distributed under the :file:`doc` directory,
+excluding license files, are licensed under the Supporting Works License.
+Translations of message catalogs to various languages are also licensed under
+the Supporting Works License. Icons, figures, and graphical images are also
+licensed under the Supporting Works License. Other copyrightable works, not
+explicitly mentioned in the foregoing statements, are also licensed under the
+Supporting Works License. Documentation, which coexists within the same
+container as source code for the Software, is under the Software License and
+not the Supporting Works License. Licenses are reproduced and distributed with
+the Software for your convenience of reference; any applicable copyright law
+and any terms and conditions set forth by the author(s) of a reproduced
+license, regarding that license, are considered to be in full effect for that
+license.
 
-Exemptions to any of the foregoing are noted in the ``NOTICE.txt`` file, which
-is distributed with the Software.
+Exemptions to any of the foregoing are noted in the :file:`NOTICE.txt` file,
+which is distributed with the Software.
 
-.. vim: set ft=rst sts=3 sw=3 tw=79:
+.. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:
