@@ -58,6 +58,7 @@ import collections
 from os.path import (
     dirname,
     join                    as path_join,
+    exists                  as path_exists,
 )
 # Record path to working directory of the script.
 __pwd           = dirname( sys.argv[ 0 ] )
@@ -91,7 +92,8 @@ from datetime import (
     datetime                as __DateTime,
 )
 
-__vinfo_CFG     = __ConfigParser( )
+__path_to_timestamp = path_join( __path_to_lib, "dev-timestamp.dat" )
+__vinfo_CFG         = __ConfigParser( )
 __vinfo_CFG.readfp( open( path_join( __path_to_lib, "version.cfg" ) ) )
 
 __vinfo_release_type    = __vinfo_CFG.get( "control", "release_type" )
@@ -102,13 +104,14 @@ if   "bugfix" == __vinfo_release_type: # Stable Bugfix Release
 elif "candidate" == __vinfo_release_type: # Release Candidate
     __version = "{major}.{minor}.0rc{update}".format( **__vinfo_numbers_DICT )
 elif "development" == __vinfo_release_type: # Development Release
-    __timestamp_STR = __DateTime.utcnow( ).strftime( "%Y%m%d%H%M" )
+    if      __vinfo_CFG.getboolean( "control", "frozen_timestamp" ) \
+        and path_exists( __path_to_timestamp ):
+        __timestamp_STR = open( __path_to_timestamp ).read( 12 )
+    else:
+        __timestamp_STR = __DateTime.utcnow( ).strftime( "%Y%m%d%H%M" )
+        print( __timestamp_STR, file = open( __path_to_timestamp, "w" ) )
     __vinfo_numbers_DICT[ "update" ] = __timestamp_STR
     __version = "{major}.{minor}.0dev{update}".format( **__vinfo_numbers_DICT )
-    print(
-        __timestamp_STR, 
-        file = open( path_join( __path_to_lib, "dev-timestamp.dat" ), "w" )
-    )
 
 
 # Fill out the metadata for the distribution.
