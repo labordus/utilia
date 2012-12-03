@@ -17,10 +17,19 @@
 ###############################################################################
 
 """
-    Provides a uniform means to access the 
-    :py:mod:`module <CPython3:builtins>` containing Python built-ins 
-    across the various implementations and versions of Python supported by 
-    this project.
+    Imports the contents of the relevant 
+    :py:mod:`built-ins <CPython3:builtins>` module for the current Python
+    implementation and provides some things which may be missing from it.
+
+    For Python 3, these augmentations are performed for 
+    backward-compatibility:
+
+        * :py:exc:`StandardError <CPython2:exceptions.StandardError>` is 
+          aliased to :py:exc:`Exception <CPython3:Exception>`.
+
+        * :py:func:`xrange <CPython2:xrange>` is aliased to 
+          :py:class:`range <CPython3:range>`.
+
 """
 
 
@@ -42,32 +51,15 @@ from utilia import (
 
 if   3 == python_version.major:
     from builtins import *
-    __doc__ += \
-    """
-
-    The following compatibility enhancements have been made:
-    """
 
     # NOTE: Project internals should use 'utilia.Error_BASE'.
     # Note: All error exceptions inherit from 'Exception' rather than
     #       'StandardError' in Python 3.
     StandardError   = Exception
-    __doc__ += \
-    """
-
-        * :py:exc:`StandardError <CPython2:exceptions.StandardError>` is 
-          aliased to :py:exc:`Exception <CPython3:Exception>`.
-    """
 
     # Note: The 'range' function of Python 3 behaves as the 'xrange' function
     #       of Python 2.
     xrange          = range
-    __doc__ += \
-    """
-    
-        * :py:func:`xrange <CPython2:xrange>` is aliased to 
-          :py:class:`range <CPython3:range>`.
-    """
 
 else:
     from __builtin__ import *

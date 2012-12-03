@@ -68,7 +68,7 @@ OrderedDict
 
 **License**:            MIT
 
-**Location**:           :file:`src/lib/utilia/types/OrderedDict.py`
+**Location**:           :file:`src/lib/utilia/types/ordered_dict.py`
 
 Works in the Public Domain
 --------------------------

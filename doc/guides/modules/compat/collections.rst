@@ -5,18 +5,12 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-``types`` Subpackage
-====================
+``collections`` Module
+======================
 
-Subpackage Description
-----------------------
+Module Description
+------------------
 
-.. automodule:: utilia.types
-
-
-.. toctree::
-   :hidden:
-
-   maps
+.. automodule:: utilia.compat.collections
 
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

@@ -23,8 +23,11 @@
 
     The following modules are available:
 
-    * A :py:mod:`built-ins module <.builtins>`, which shadows the appropriate
-      Python one.
+        * A :py:mod:`built-ins <.builtins>` module, which shadows the 
+          appropriate Python one and provides missing pieces.
+
+        * A shadow of the Python :py:mod:`collections <.collections>` module, 
+          which provides missing pieces.
 """
 
 

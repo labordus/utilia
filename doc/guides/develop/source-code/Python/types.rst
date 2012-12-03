@@ -138,10 +138,10 @@ Lists
 Lists Of Tuples
 ~~~~~~~~~~~~~~~
 
-An :py:class:`OrderedDict` can be used to accumulate key-value pairs in an 
-order-preserving manner. These accumulated pairs can later be retrieved as 
-tuples via a standard iteration method. This is cleaner than appending tuples 
-to a list.
+An :py:class:`OrderedDict <CPython2:collections.OrderedDict>` can be used to
+accumulate key-value pairs in an order-preserving manner. These accumulated
+pairs can later be retrieved as tuples via a standard iteration method. This is
+cleaner than appending tuples to a list.
 
    .. code-block:: python
       

@@ -25,10 +25,6 @@
     The following modules provide collections of types:
 
         * :py:mod:`.maps`
-
-    The following modules implement various types:
-        
-        * :py:class:`OrderedDict`
 """
 
 
