@@ -19,6 +19,8 @@
 """
     Provides a wide assortment of useful subpackages. The subpackages cover
     these areas:
+        
+        * :py:mod:`compatibility between Python implementations <.compat>`
 
         * :py:mod:`configuration parsing <.config_parsers>`
 
@@ -120,7 +122,7 @@ class Exception_BASE( __builtins_BaseException ):
     """
         Base class for all :py:mod:`utilia` exceptions.
         
-        Inherits from :py:exc:`exceptions.BaseException`.
+        Inherits from :py:exc:`BaseException <CPython3:BaseException>`.
 
         Use this for your exception handler signature if you wish to catch any
         exception raised from within :py:mod:`utilia`.
@@ -141,7 +143,7 @@ class Error_BASE( Exception_BASE, __builtins_BaseError ):
         errors.
         
         Inherits from :py:class:`Exception_BASE` and
-        :py:exc:`exceptions.StandardError`. 
+        :py:exc:`StandardError <CPython2:exceptions.StandardError>`. 
 
         Use this for your exception handler signature if you wish to catch any
         error condition raised from within :py:mod:`utilia`.
@@ -160,7 +162,7 @@ class Error_WithRC( Error_BASE ):
     """
         Base class for all :py:mod:`utilia` exceptions which are regarded as
         errors and which carry a return code that could be supplied to a
-        :py:exc:`exceptions.SystemExit` exception.
+        :py:exc:`SystemExit <CPython3:SystemExit>` exception.
 
         Inherits from :py:class:`Error_BASE`.
 

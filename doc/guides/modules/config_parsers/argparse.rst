@@ -20,6 +20,6 @@ Module Description
 .. py:module:: utilia.config_parsers.argparse
 
 Official documentation for this module can be found in 
-:py:mod:`the standard library <CPython:argparse>`.
+:py:mod:`the standard library <CPython3:argparse>`.
 
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

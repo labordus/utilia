@@ -27,6 +27,6 @@ Class
 .. py:class:: OrderedDict( [items] )
 
    Official documentation for this class can be found in
-   :py:class:`the standard library <CPython:collections.OrderedDict>`.
+   :py:class:`the standard library <CPython3:collections.OrderedDict>`.
 
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

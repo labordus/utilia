@@ -18,7 +18,7 @@
 
 """
     Provides a uniform means to access the 
-    :py:mod:`module <CPython:__builtin__>` containing Python built-ins 
+    :py:mod:`module <CPython3:builtins>` containing Python built-ins 
     across the various implementations and versions of Python supported by 
     this project.
 """
@@ -55,8 +55,8 @@ if   3 == python_version.major:
     __doc__ += \
     """
 
-        * :py:exc:`StandardError <CPython:exceptions.StandardError>` is 
-          aliased to :py:exc:`Exception <CPython:exceptions.Exception>`.
+        * :py:exc:`StandardError <CPython2:exceptions.StandardError>` is 
+          aliased to :py:exc:`Exception <CPython3:Exception>`.
     """
 
     # Note: The 'range' function of Python 3 behaves as the 'xrange' function
@@ -65,7 +65,8 @@ if   3 == python_version.major:
     __doc__ += \
     """
     
-        * :py:func:`xrange` is aliased to :py:func:`range`.
+        * :py:func:`xrange <CPython2:xrange>` is aliased to 
+          :py:class:`range <CPython3:range>`.
     """
 
 else:

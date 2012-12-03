@@ -8,20 +8,20 @@
 Tuples
 ------
 
-The :py:func:`tuple <CPython:tuple>` type is somewhat controversial in Python. 
-The following discussion is not intended to be an attack on this type, but 
-will highlight some of the elements of the controversy.
+The :py:class:`tuple <CPython3:tuple>` type is somewhat controversial 
+in Python. The following discussion is not intended to be an attack on this 
+type, but will highlight some of the elements of the controversy.
 
 Versus Lists
 ~~~~~~~~~~~~
 
 From a strictly functional perspective, the major difference between a
-:py:func:`tuple <CPython:tuple>` and a :py:func:`list <CPython:list>` is that 
-a :py:func:`tuple <CPython:tuple>` contains an immutable sequence whereas a 
-:py:func:`list <CPython:list>` does not. Beyond this, some people in the 
-Python community claim that the :py:func:`list <CPython:list>` type is 
+:py:class:`tuple <CPython3:tuple>` and a :py:class:`list <CPython3:list>` is
+that a :py:class:`tuple <CPython3:tuple>` contains an immutable sequence
+whereas a :py:class:`list <CPython3:list>` does not. Beyond this, some people
+in the Python community claim that the :py:class:`list <CPython3:list>` type is
 intended for homogeneous collections whereas the 
-:py:func:`tuple <CPython:tuple>` type is intended for heterogeneous 
+:py:class:`tuple <CPython3:tuple>` type is intended for heterogeneous 
 collections with a fixed ordering. For example, see the discussions at:
 
   http://third-bit.com/blog/archives/000450.html#comment-380
@@ -38,24 +38,24 @@ semantics of something is in the eye of the beholder.
 Named Tuples
 ~~~~~~~~~~~~
 
-In Python 2.6, the :py:func:`namedtuple <CPython:collections.namedtuple>` 
+In Python 2.6, the :py:func:`namedtuple <CPython3:collections.namedtuple>` 
 type factory was introduced into the :py:mod:`collections` package of the 
 standard library. Types, created with this factory, contain collections with 
 a fixed ordering. Thus, the claims made about this property of the 
-:py:func:`tuple <CPython:tuple>` type can be enforced in types out 
-of the :py:func:`namedtuple <CPython:collections.namedtuple>` factory. 
+:py:class:`tuple <CPython3:tuple>` type can be enforced in types out 
+of the :py:func:`namedtuple <CPython3:collections.namedtuple>` factory. 
 Therefore, if you need the fixed ordering property, it is recommended that 
-you create types with this factory and use them. These types can be used in 
-nearly any situation in which a plain :py:func:`tuple <CPython:tuple>` can be 
-used.
+you create types with this factory and use them. These types can be used in
+nearly any situation in which a plain :py:class:`tuple <CPython3:tuple>` can 
+be used.
 
-Types, created with :py:func:`namedtuple <CPython:collections.namedtuple>`, 
-have some additional advantages over the :py:func:`tuple <CPython:tuple>` 
+Types, created with :py:func:`namedtuple <CPython3:collections.namedtuple>`,
+have some additional advantages over the :py:class:`tuple <CPython3:tuple>`
 type:
 
    * They are named, and their names are reflected in the strings returned by
-     functions such as :py:func:`repr <CPython:repr>` and 
-     :py:func:`type <CPython:type>`.
+     functions such as :py:func:`repr <CPython3:repr>` and 
+     :py:func:`type <CPython3:type>`.
 
    * They can be instantiated with positional or keyword arguments, where the
      keywords are the names of their sequence members.
@@ -158,7 +158,7 @@ to a list.
 
 In cases where lists of tuples can be generated automatically, then the use of
 a tuple type, produced by the 
-:py:func:`namedtuple <CPython:collections.namedtuple>` factory, is preferred. 
+:py:func:`namedtuple <CPython3:collections.namedtuple>` factory, is preferred. 
 If anonymity and mutability are acceptable, then using a list of lists is
 preferred.
 
@@ -183,7 +183,7 @@ Syntactic Sugar
 ~~~~~~~~~~~~~~~
 
 As the present aim is to support Python 2.6 in addition to higher versions, we
-cannot use the syntactic sugar for the :py:func:`set <CPython:set>` type, 
+cannot use the syntactic sugar for the :py:class:`set <CPython3:set>` type, 
 which is available in Python 2.7 and 3.x. Therefore:
 
    .. code-block:: python
