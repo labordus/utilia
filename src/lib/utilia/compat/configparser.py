@@ -17,20 +17,9 @@
 ###############################################################################
 
 """
-    Provides a compatibility layer among the different implementations and
-    versions of Python. This is achieved by providing access to modules,
-    classes, and functions via a uniform naming convention.
-
-    The following modules are available:
-
-        * A :py:mod:`built-ins <.builtins>` module, which shadows the 
-          appropriate Python one and provides missing pieces.
-
-        * A shadow of the Python :py:mod:`collections <.collections>` module, 
-          which provides missing pieces.
-
-        * A :py:mod:`configuration file parser <.configparser>` module, which
-          shadows the appropriate Python one.
+    Imports the contents of the relevant 
+    :py:mod:`configuration file parser <CPython3:configparser>` module from the
+    Python standard library.
 """
 
 
@@ -43,6 +32,22 @@ from __future__ import (
 
 
 __docformat__ = "reStructuredText"
+
+
+from utilia import (
+    python_version          as __python_version,
+)
+
+
+if   3 == __python_version.major:
+    from configparser import *
+
+else:
+    from ConfigParser import *
+
+
+# Cleanup the module namespace.
+del __python_version
 
 
 ###############################################################################

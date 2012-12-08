@@ -45,11 +45,11 @@ __docformat__ = "reStructuredText"
 
 
 from utilia import (
-    python_version,
+    python_version          as __python_version,
 )
 
 
-if   3 == python_version.major:
+if   3 == __python_version.major:
     from builtins import *
 
     # NOTE: Project internals should use 'utilia.Error_BASE'.
@@ -66,7 +66,7 @@ else:
 
 
 # Cleanup the module namespace.
-del python_version
+del __python_version
 
 ###############################################################################
 # vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #

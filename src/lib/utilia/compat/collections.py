@@ -44,20 +44,21 @@ __docformat__ = "reStructuredText"
 
 
 from utilia import (
-    python_version,
+    python_version          as __python_version,
 )
 
 
 from collections import *
 
-if [ python_version.major, python_version.minor ] in [ [ 2, 6 ], [ 3, 0 ] ]:
+if  [ __python_version.major, __python_version.minor ] \
+    in [ [ 2, 6 ], [ 3, 0 ] ]:
     from utilia.types.ordered_dict import (
         OrderedDict,
     )
 
 
 # Cleanup the module namespace.
-del python_version
+del __python_version
 
 ###############################################################################
 # vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #

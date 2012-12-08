@@ -33,7 +33,7 @@ you do not already have one.
 General Git Clients: Linux, BSD, Solaris
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
    
-You may have already have a Git cleint installed, if you are using a Linux or 
+You may have already have a Git client installed, if you are using a Linux or 
 BSD-like OS distribution. If you need to install one and can acquire superuser 
 privileges, then here are instructions for some popular distributions:
    
