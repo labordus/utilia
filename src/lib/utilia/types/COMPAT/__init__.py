@@ -17,13 +17,7 @@
 ###############################################################################
 
 """
-    Provides the :py:mod:`argparse <CPython3:argparse>` module, as it is 
-    missing from the standard library of some Python implementations.
-
-    .. note::
-       The source code for this module is published independently by a third
-       party. This code or a near variant of it was included into Python 2.7
-       and Python 3.2 per acceptance of :pep:`389`.
+    Compatibility layer.
 """
 
 
@@ -36,9 +30,6 @@ from __future__ import (
 
 
 __docformat__ = "reStructuredText"
-
-
-from utilia.config_parsers.COMPAT.argparse import *
 
 
 ###############################################################################
