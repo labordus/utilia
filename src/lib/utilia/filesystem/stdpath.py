@@ -29,7 +29,7 @@
         * Windows [#]_, [#]_, [#]_
 
     The calculation of paths, relative to a Python installation, is also
-    supported (see the `use_python_prefix` parameter below). This is done in
+    supported (see the ``use_python_prefix`` parameter below). This is done in
     accordance with :pep:`370` and may rely upon the 
     :py:mod:`site <CPython3:site>` module.
 
