@@ -22,6 +22,10 @@
     classes, and functions via a uniform naming convention.
 
     The following modules are available:
+        
+        * A :py:mod:`command-line argument parser <.argparse>` module, which
+          provides a uniform implementation across Pythons, regardless of
+          whether they have one in their standard library.
 
         * A :py:mod:`built-ins <.builtins>` module, which shadows the 
           appropriate Python one and provides missing pieces.

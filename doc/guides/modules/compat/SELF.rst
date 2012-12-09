@@ -17,6 +17,7 @@ Subpackage Description
 .. toctree::
    :hidden:
 
+   argparse
    builtins
    collections
    configparser
