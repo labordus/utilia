@@ -20,18 +20,21 @@
     Provides functionality for calculating paths which are compliant with the 
     standard filesystem layout of a particular OS platform. Significant effort
     is made to comply with published filesystem standards as well as Python
-    conventions.
+    conventions. Currently, the following OS platforms are supported:
 
-    Currently, the following OS platforms are supported:
+        * Linux [#]_
 
-    * Linux
+        * MacOS X [#]_, [#]_
 
-    * MacOS X
+        * Windows [#]_, [#]_, [#]_
 
-    * Windows
+    The calculation of paths, relative to a Python installation, is also
+    supported (see the `use_python_prefix` parameter below). This is done in
+    accordance with :pep:`370` and may rely upon the 
+    :py:mod:`site <CPython3:site>` module.
 
-    The functions contained in this module following a regular naming
-    convention, which provides hints as to their function. This convention can
+    The functions contained in this module follow a regular naming
+    convention, which provides hints as to their purpose. This convention can
     be expressed as follows.
     
     * Functions, which return paths where the core OS files are 
@@ -47,12 +50,12 @@
     
     * The suffix **install_root** denotes that a returned path refers to a 
       top-level directory under which other directories for things, such as 
-      configuration information and data stores, can be found.
+      configuration information and package resources, can be found.
 
     * The suffix **base** denotes that a returned path refers to an upper-level
       directory of a certain flavor, such as for configuration information or 
-      data stores, which is potentially common to many pieces of software 
-      and not tied to a particular one.
+      package resources, which is potentially common to many pieces of 
+      software and not tied to a particular one.
     
     * Functions, which return paths associated with the location of a 
       particular piece of software, have the word **my** in their names. 
@@ -76,15 +79,15 @@
 
     * :py:func:`whereis_my_user_config`
 
-    * :py:func:`whereis_my_user_data`
+    * :py:func:`whereis_my_user_resources`
 
     * :py:func:`whereis_my_site_config`
 
-    * :py:func:`whereis_my_site_data`
+    * :py:func:`whereis_my_site_resources`
 
     * :py:func:`whereis_my_temp`
 
-    * :py:func:`whereis_my_saves`
+    * :py:func:`whereis_my_saved_data`
 
     Please see their documentation and the
     :ref:`SECTION-utilia.filesystem.stdpath-Examples` section for details on 
@@ -125,13 +128,12 @@ from utilia import (
     python_version,
     Error_WithReason,
 )
+from utilia.compat.builtins import (
+    xrange,
+)
 from . import (
     Error_BASE              as FilesystemError_BASE,
 )
-
-
-# TODO: Move to a compat module.
-if 3 == python_version.major:   xrange = range
 
 
 def __DOCSTRING_FRAGMENTS( ):
@@ -233,6 +235,7 @@ def __autodoc_function_parameters( func, pdict ):
         if docs: func.__doc__ += docs
 
 
+# TODO: move to a different module.
 def __TD( s ):
     """
         Dummy translator function.
@@ -1161,7 +1164,7 @@ whereis_my_site_config.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
 
-def whereis_my_site_data(
+def whereis_my_site_resources(
     software_name, vendor_name = None, version = None,
     alt_base_path = None, use_python_prefix = False,
     append_path_fragment = True,
@@ -1240,11 +1243,11 @@ def whereis_my_site_data(
             # Python-flavored
             if   msbp == sys.prefix:
                 my_site_path = \
-                path_join( *filter( None, [ msbp, "Data", mspf ] ) )
+                path_join( *filter( None, [ msbp, "Resources", mspf ] ) )
             # Windows-flavored
             else:
                 my_site_path = \
-                path_join( *filter( None, [ msbp, mspf, "Data" ] ) )
+                path_join( *filter( None, [ msbp, mspf, "Resources" ] ) )
 
         else:
             raise UnsupportedFilesystemLayout(
@@ -1258,7 +1261,7 @@ def whereis_my_site_data(
             error_reason_args = [ msbp_evname, ]
         else:
             error_reason_format = \
-            __TD( "Unknown path to site data store for '{0}'." )
+            __TD( "Unknown path to site resources for '{0}'." )
             error_reason_args = [ software_name, ]
         raise UndeterminedFilesystemPath(
             error_reason_format, *error_reason_args
@@ -1266,11 +1269,11 @@ def whereis_my_site_data(
     return my_site_path
 
 __autodoc_function_parameters(
-    whereis_my_site_data, __DOCSTRING_FRAGMENTS( )
+    whereis_my_site_resources, __DOCSTRING_FRAGMENTS( )
 )
-whereis_my_site_data.__doc__ += \
+whereis_my_site_resources.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_site_data.__doc__ += \
+whereis_my_site_resources.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
 
@@ -1396,7 +1399,7 @@ whereis_my_user_config.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
 
-def whereis_my_user_data(
+def whereis_my_user_resources(
     software_name, vendor_name = None, version = None,
     alt_base_path = None, use_python_prefix = False,
     append_path_fragment = True,
@@ -1426,7 +1429,7 @@ def whereis_my_user_data(
     else: mupf = ""
 
     if not mubp: mubp = alt_base_path
-    if not mubp and use_python_prefix: mubp = site.getuserbase( )
+    if not mubp and use_python_prefix: mubp = site.USER_BASE
     if not mubp:
         if   fsl in [ "POSIX", ]:
             mubp = whereis_user_home( error_on_none = error_on_none )
@@ -1482,11 +1485,11 @@ def whereis_my_user_data(
         elif fsl in [ "Windows", ]:
             if use_python_prefix:
                 my_user_path = \
-                path_join( *filter( None, [ mubp, "Data", mupf ] ) )
+                path_join( *filter( None, [ mubp, "Resources", mupf ] ) )
             else:
                 if not mupf: mupf = software_name
                 my_user_path = \
-                path_join( *filter( None, [ mubp, mupf, "Data" ] ) )
+                path_join( *filter( None, [ mubp, mupf, "Resources" ] ) )
 
         else:
             raise UnsupportedFilesystemLayout(
@@ -1500,7 +1503,7 @@ def whereis_my_user_data(
             error_reason_args = [ mubp_evname, ]
         else:
             error_reason_format = \
-            __TD( "Unknown path to user data store for '{0}'." )
+            __TD( "Unknown path to user resources for '{0}'." )
             error_reason_args = [ software_name, ]
         raise UndeterminedFilesystemPath(
             error_reason_format, *error_reason_args
@@ -1508,18 +1511,18 @@ def whereis_my_user_data(
     return my_user_path
 
 __autodoc_function_parameters(
-    whereis_my_user_data, __DOCSTRING_FRAGMENTS( )
+    whereis_my_user_resources, __DOCSTRING_FRAGMENTS( )
 )
-whereis_my_user_data.__doc__ += \
+whereis_my_user_resources.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_user_data.__doc__ += \
+whereis_my_user_resources.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
 
 # TODO: whereis_my_user_docs
 
 
-def whereis_my_saves(
+def whereis_my_saved_data(
     software_name, vendor_name = None, version = None,
     alt_base_path = None, 
     append_path_fragment = True,
@@ -1589,11 +1592,11 @@ def whereis_my_saves(
     return my_saves_path
 
 __autodoc_function_parameters(
-    whereis_my_saves, __DOCSTRING_FRAGMENTS( )
+    whereis_my_saved_data, __DOCSTRING_FRAGMENTS( )
 )
-whereis_my_saves.__doc__ += \
+whereis_my_saved_data.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_saves.__doc__ += \
+whereis_my_saved_data.__doc__ += \
 __DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
 

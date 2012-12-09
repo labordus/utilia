@@ -29,6 +29,8 @@ Elementary Functions
 
 .. autofunction:: which_fs_layout
 
+.. autofunction:: concatenated_software_path_fragment
+
 Public Base Paths
 -----------------
 
@@ -63,19 +65,19 @@ Public Derived Paths
 
 .. autofunction:: whereis_my_site_config
 
-.. autofunction:: whereis_my_site_data
+.. autofunction:: whereis_my_site_resources
 
 User Derived Paths
 ------------------
 
 .. autofunction:: whereis_my_user_config
 
-.. autofunction:: whereis_my_user_data
-
-.. autofunction:: whereis_my_saves
+.. autofunction:: whereis_my_user_resources
 
 Other Derived Paths
 -------------------
+
+.. autofunction:: whereis_my_saved_data
 
 .. autofunction:: whereis_my_temp
 
@@ -87,5 +89,37 @@ Examples
 
 TODO: Put some examples here.
 
+References
+----------
+
+.. [#] `Linux Filesystem Hierarchy Standard 2.3`_
+
+.. _Linux Filesystem Hierarchy Standard 2.3:
+   http://www.pathname.com/fhs/pub/fhs-2.3.html
+
+.. [#] `Mac OS X and iOS File System Basics`_
+
+.. _Mac OS X and iOS File System Basics:
+   http://developer.apple.com/library/mac/#documentation/FileManagement/Conceptual/FileSystemProgrammingGUide/FileSystemOverview/FileSystemOverview.html
+
+.. [#] `BSD Filesystem Hierarchy for Darwin`_
+
+.. _BSD Filesystem Hierarchy for Darwin:
+   https://developer.apple.com/library/mac/#documentation/Darwin/Reference/ManPages/man7/hier.7.html
+
+.. [#] `Windows XP Command Shell Overview`_
+
+.. _Windows XP Command Shell Overview:
+   http://www.microsoft.com/resources/documentation/windows/xp/all/proddocs/en-us/ntcmds_shelloverview.mspx?mfr=true
+
+.. [#] `Windows CSIDL Values`_
+
+.. _Windows CSIDL Values:
+   http://msdn.microsoft.com/en-us/library/windows/desktop/bb762494(v=vs.85).aspx
+
+.. [#] `Windows KNOWNFOLDERID Reference`_
+
+.. _Windows KNOWNFOLDERID Reference:
+   http://msdn.microsoft.com/en-us/library/windows/desktop/dd378457(v=vs.85).aspx
 
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:
