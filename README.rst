@@ -24,8 +24,7 @@ Project Resources
 
 .. warning::
    This project is still in its nascent stages.
-   Much code and documentation still need to be committed before the first
-   official release.
+   An official release has not yet been made.
 
 Documentation
 ~~~~~~~~~~~~~
