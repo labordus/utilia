@@ -105,45 +105,62 @@ img {
   border: 0;
 }
 
-div.admonition {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 2px 7px 1px 7px;
-  border-radius: 10px;
-}
-
-p.admonition-title {
-  font-weight: bold;
-  border-bottom: 1px dashed white;
-  padding-bottom: 5px;
-}
-
 /* Rosewood: #65000b */
 /* Cordovan: #893f45 */
 /* Old Rose: #c08081 */
 /* Tea Rose: #f4c2c2 */
 
-div.warning {
-  color: #882d17;
-  background-color: #f4c2c2;
-  border-left: 1px solid #800020;
-  border-right: 1px solid #800020;
-}
-
 /* Light Blue: #add8e6 */
 /* Celeste: #b2ffff */
 
-div.note {
-  color: #882d17;
-  background-color: #f7f7ff;
-  border-left: 1px solid {{theme_headercolor1}};
-  border-right: 1px solid {{theme_headercolor1}};
+div.admonition {
+    margin: 10px;
+    padding: 0;
+    /* padding: 2px 7px 1px 7px; */
+    /* border-radius: 10px; */
+}
+
+div.admonition p {
+    font-size: 0.9em;
+    margin: 0.5em 1em 0.5em 1em;
+}
+
+div.admonition pre {
+    font-size: 0.9em;
+    margin: 0.4em 1em 0.4em 1em;
+}
+
+div.admonition p.admonition-title {
+    font-size: 1.0em;
+    font-weight: bold;
+    margin: 0;
+    padding: 0.2em 0.5em 0.2em 0.5em;
+}
+
+div.warning {
+    background-color: #f4c2c2;
+    color: #882d17;
+    border: 1px solid #c08081;
+}
+
+div.warning p.admonition-title {
+    background-color: #c08081;
+    color: #f5f5dc;
+}
+
+div.note, div.admonition-todo {
+    background-color: #f7f7ff;
+    color: #882d17;
+    border: 1px solid #add8e6;
+}
+
+div.note p.admonition-title, div.admonition-todo p.admonition-title {
+    background-color: #add8e6;
+    color: #882d17;
 }
 
 div.admonition-todo {
-  color: #882d17;
-  background-color: #add8e6;
-  opacity: 0.3;
+    opacity: 0.3;
 }
 
 dt:target, .highlighted {
@@ -467,25 +484,15 @@ tt.docutils {
 
 /* -- table of contents ----------------------------------------------------- */
 
-div.toctree-wrapper {
+div.contents, div.toctree-wrapper {
     background-color: #f5f5dc;
     margin: 10px;
     padding: 8px 20px;
-    border: 1px solid #800020;
-    border-radius: 10px;
-}
-
-div.contents {
-    background-color: #f5f5dc;
-    margin: 10px;
-    padding: 8px 20px;
-    border: 1px solid #800020;
-    border-radius: 10px;
+    border: 1px solid #e5aa70;
 }
 
 p.topic-title {
     color: #882d17;
-    /* text-align: center; */
 }
 
 /* -- search page ----------------------------------------------------------- */
