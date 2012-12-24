@@ -138,6 +138,10 @@ intersphinx_mapping = \
 todo_include_todos = True
 
 
+mathjax_path = \
+"https://c328740.ssl.cf1.rackcdn.com/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"
+
+
 # -- Options for HTML output ---------------------------------------------------
 
 # The theme to use for HTML and HTML Help pages.  See the documentation for
