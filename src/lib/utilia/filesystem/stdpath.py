@@ -246,8 +246,8 @@ def __TD( s ):
 
 
 # Character Translators for Names
-__whitespace_to_underscore  = functools.partial( re.sub, "\s+", "_" )
-__dot_to_underscore         = functools.partial( re.sub, "\.{1,1}", "_" )
+__whitespace_to_underscore  = functools.partial( re.sub, r"\s+", "_" )
+__dot_to_underscore         = functools.partial( re.sub, r"\.{1,1}", "_" )
 
 
 class UnsupportedFilesystemLayout( FilesystemError_BASE, Error_WithReason ):
@@ -360,7 +360,7 @@ def __computed_Windows_program_files_path( error_on_none = False ):
     """
 
     common_base_path        = None
-    error_reason_foramat    = None
+    error_reason_format     = None
     error_reason_args       = [ ]
     evname                  = None
 
@@ -402,7 +402,7 @@ def concatenated_software_path_fragment(
     #       name extensions.
     
     path_fragment           = None
-    error_reason_foramat    = None
+    error_reason_format     = None
     error_reason_args       = [ ]
 
     fsl = which_fs_layout( )
@@ -816,7 +816,7 @@ def whereis_user_home( error_on_none = False ):
 
     user_id                 = None
     user_home_path          = None
-    error_reason_foramat    = None
+    error_reason_format     = None
     error_reason_args       = [ ]
 
     fsl = which_fs_layout( )
@@ -1596,4 +1596,4 @@ __DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
 
 ###############################################################################
-# vim: set ft=python sts=4 sw=4 tw=79:                                        #
+# vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #
