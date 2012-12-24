@@ -178,17 +178,16 @@ setup_data[ "package_data" ]        = \
 # TODO: provides
 # TODO: obsoletes
 # TODO: dependency_links
-setup_data[ "setup_requires" ]      = \
-    [
-        # Note: Needed for the 'flakes' command.
-        "setuptools_pyflakes >= 1.1.0",
-        # Note: Needed for the 'lint' command.
-        "setuptools-lint >= 0.1",
-        # Note: Needed for the 'nosetests' command.
-        "nose >= 1.2.1",
-        # Note: Needed for the 'build_sphinx' command.
-        "Sphinx >= 1.1.3",
-    ]
+setup_data[ "setup_requires" ]      = [ ]
+if 2 == __python_version.maj:
+    # Note: Needed for the 'flakes' command.
+    setup_data[ "setup_requires" ].append( "setuptools_pyflakes >= 1.1.0" )
+# Note: Needed for the 'lint' command.
+setup_data[ "setup_requires" ].append( "setuptools-lint >= 0.1" )
+# Note: Needed for the 'nosetests' command.
+setup_data[ "setup_requires" ].append( "nose >= 1.2.1" )
+# Note: Needed for the 'build_sphinx' command.
+setup_data[ "setup_requires" ].append( "Sphinx >= 1.1.3" )
 # TODO: extras_require
 # TODO: tests_require
 # TODO: install_requires
