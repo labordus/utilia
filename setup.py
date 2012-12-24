@@ -182,6 +182,8 @@ setup_data[ "setup_requires" ]      = \
     [
         # Note: Needed for the 'flakes' command.
         "setuptools_pyflakes >= 1.1.0",
+        # Note: Needed for the 'lint' command.
+        "setuptools-lint >= 0.1",
         # Note: Needed for the 'nosetests' command.
         "nose >= 1.2.1",
         # Note: Needed for the 'build_sphinx' command.
