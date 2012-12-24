@@ -180,8 +180,12 @@ setup_data[ "package_data" ]        = \
 # TODO: dependency_links
 setup_data[ "setup_requires" ]      = \
     [
-        "nose >= 1.2.1",    # Note: Needed for the 'nosetests' command.
-        "Sphinx >= 1.1.3",  # Note: Needed for the 'build_sphinx' command.
+        # Note: Needed for the 'flakes' command.
+        "setuptools_pyflakes >= 1.1.0",
+        # Note: Needed for the 'nosetests' command.
+        "nose >= 1.2.1",
+        # Note: Needed for the 'build_sphinx' command.
+        "Sphinx >= 1.1.3",
     ]
 # TODO: extras_require
 # TODO: tests_require
