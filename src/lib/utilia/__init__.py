@@ -63,15 +63,14 @@ python_version = PythonVersion(
 
 # Read the version info from config file.
 # Note: If something goes wrong here, then just let the exception propagate.
-if 2 == python_version.major:   __mname_configparser = "ConfigParser"
-else:                           __mname_configparser = "configparser"
-exec(
-"""
-from {0} import (
-    SafeConfigParser        as __ConfigParser,
-)
-""".format( __mname_configparser )
-)
+if 2 == python_version.major:
+    from ConfigParser import (
+        SafeConfigParser        as __ConfigParser,
+    )
+else:
+    from configparser import (
+        SafeConfigParser        as __ConfigParser,
+    )
 
 __vinfo_CFG     = __ConfigParser( )
 __vinfo_CFG.readfp( open( path_join( __path__[ 0 ], "version.cfg" ) ) )
@@ -92,7 +91,6 @@ elif "development" == __vinfo_release_type: # Development Release
     "{major}.{minor}.0dev{update}".format( **__vinfo_numbers_DICT )
 
 del __ConfigParser, __vinfo_CFG, __vinfo_release_type, __vinfo_numbers_DICT
-del __mname_configparser
 
 
 # Cleanup the module namespace.
@@ -104,20 +102,15 @@ del path_join, collections
 
 # Note: If something goes wrong here, then just let the exception propagate.
 if 2 == python_version.major:
-    __mname_builtins    = "__builtin__"
-    __cname_BaseError   = "StandardError"
+    from __builtin__ import (
+        BaseException           as __builtins_BaseException,
+        StandardError           as __builtins_BaseError,
+    )
 else:
-    __mname_builtins    = "builtins"
-    __cname_BaseError   = "Exception"
-exec(
-"""
-from {0} import (
-    BaseException           as __builtins_BaseException,
-    {1}                     as __builtins_BaseError,
-)
-""".format( __mname_builtins, __cname_BaseError )
-)
-del __mname_builtins, __cname_BaseError
+    from builtins import (
+        BaseException           as __builtins_BaseException,
+        Exception               as __builtins_BaseError,
+    )
 
 
 class Exception_BASE( __builtins_BaseException ):
