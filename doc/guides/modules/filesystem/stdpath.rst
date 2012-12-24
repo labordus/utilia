@@ -87,7 +87,8 @@ Other Derived Paths
 Examples
 --------
 
-TODO: Put some examples here.
+.. todo::
+   Create examples.
 
 References
 ----------

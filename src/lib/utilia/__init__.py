@@ -25,6 +25,8 @@
         * :py:mod:`configuration parsing <.config_parsers>`
 
         * :py:mod:`file systems <.filesystem>`
+
+        * :py:mod:`functional programming <.functional>`
         
         * :py:mod:`.types`
 """

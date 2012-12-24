@@ -39,6 +39,7 @@ Exception Classes
    compat/SELF
    config_parsers/SELF
    filesystem/SELF
+   functional/SELF
    types/SELF
 
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

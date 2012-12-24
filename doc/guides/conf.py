@@ -39,7 +39,7 @@ extensions = \
     "sphinx.ext.coverage",
     "sphinx.ext.ifconfig",
     "sphinx.ext.intersphinx",
-    # TODO: Add "sphinx.ext.jsmath".
+    "sphinx.ext.mathjax",
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -133,6 +133,7 @@ intersphinx_mapping = \
     "CPython2": ( "http://docs.python.org/2.7", "_static/CPython-2_7.inv" ),
     "CPython3": ( "http://docs.python.org/3.3", "_static/CPython-3_3.inv" ),
 }
+
 
 todo_include_todos = True
 

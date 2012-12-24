@@ -146,40 +146,40 @@ def __DOCSTRING_FRAGMENTS( ):
     """
         :param error_on_none: If ``True``, cause an exception to be raised 
                               if the return value would be ``None``.
-        :type error_on_none: boolean
+        :type error_on_none: :py:func:`boolean <CPython3:bool>`
     """,
         "software_name": \
     """
         :param software_name: Consider the name of this software product when
                               constructing a path fragment which identifies 
                               it.
-        :type software_name: string
+        :type software_name: :py:class:`string <CPython3:str>`
     """,
         "vendor_name": \
     """
         :param vendor_name: Consider the name of this software vendor when 
                             constructing a path fragment which identifies a 
                             software product.
-        :type vendor_name: string
+        :type vendor_name: :py:class:`string <CPython3:str>`
     """,
         "version": \
     """
         :param version: Consider this version string when constructing a path
                         fragment which identifies a software product.
-        :type version: string
+        :type version: :py:class:`string <CPython3:str>`
     """,
         "alt_base_path": \
     """
         :param alt_base_path: Calculate path, using this base path as a prefix
                               rather than deriving a base path to use as a
                               prefix.
-        :type alt_base_path: string
+        :type alt_base_path: :py:class:`string <CPython3:str>`
     """,
         "prefer_common": \
     """
         :param prefer_common: If ``True``, the common path, if it exists, 
                               will be preferred over the user path.
-        :type prefer_common: boolean
+        :type prefer_common: :py:func:`boolean <CPython3:bool>`
     """,
         "append_path_fragment": \
     """
@@ -187,7 +187,7 @@ def __DOCSTRING_FRAGMENTS( ):
                                      of the software vendor and the software,
                                      along with the software version, will be
                                      injected into the calculated path.
-        :type append_path_fragment: boolean
+        :type append_path_fragment: :py:func:`boolean <CPython3:bool>`
     """,
         "use_python_prefix": \
     """
@@ -195,11 +195,11 @@ def __DOCSTRING_FRAGMENTS( ):
                                   attempt adherence to the Python file system
                                   standard rather than the standard for the 
                                   OS distribution.
-        :type use_python_prefix: boolean
+        :type use_python_prefix: :py:func:`boolean <CPython3:bool>`
     """,
         "RTYPE_string_or_None": \
     """
-        :rtype: string or ``None``
+        :rtype: :py:class:`string <CPython3:str>` or ``None``
     """,
         "RAISES_Undetermined": \
     """
@@ -322,7 +322,7 @@ def which_fs_layout( ):
            "MacOS X",   "Darwin"
            "Windows",   "Windows"
 
-        :rtype: string
+        :rtype: :py:class:`string <CPython3:str>`
         :raises: :py:class:`UnsupportedFilesystemLayout`, if there is no 
                  classifier implemented for the OS in use.
     """
