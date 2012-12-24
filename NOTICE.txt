@@ -15,7 +15,7 @@ Licensed Works
 --------------
 
 Copies of some licensed, separately-published works are incorporated into the
-project. The licenses and copyright holders (when known) for these works are
+Project. The licenses and copyright holders (when known) for these works are
 indicated below.
 
 agogo (Sphinx theme)
@@ -74,7 +74,7 @@ Works in the Public Domain
 --------------------------
 
 Copies of works incorporated from the public domain by the Project are not 
-captured under the Project's standard licenses; instead they are left in the 
+captured under the Project's standard licenses; instead, they are left in the 
 public domain.
 
 There are no known works incorporated from the public domain at this time.
