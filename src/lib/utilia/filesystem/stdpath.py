@@ -110,12 +110,8 @@ from os import (
     environ                 as envvars,
 )
 from os.path import (
-    sep                     as path_dirsep,
     join                    as path_join,
     dirname                 as path_dirname,
-    normpath                as path_norm,
-    abspath                 as path_xform_to_absolute,
-    commonprefix            as path_calc_common_prefix,
     expanduser              as path_expanduser,
 )
 import platform
@@ -125,7 +121,6 @@ import re
 
 
 from utilia import (
-    python_version,
     Error_WithReason,
 )
 from utilia.compat.builtins import (
@@ -1118,7 +1113,7 @@ def whereis_my_site_config(
             msbp = __computed_MacOS_X_python_prefix( msbp )
             if msbp.startswith( "/System" ): msbp = "/Library"
             # MacOS X-flavored
-            if (mscbp_orig != msbp) or ("/Library" == msbp):
+            if (msbp_orig != msbp) or ("/Library" == msbp):
                 my_site_path = \
                 path_join( *filter( None, [ msbp, "Preferences", mspf ] ) )
             # POSIX-flavored
