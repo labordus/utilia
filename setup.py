@@ -187,6 +187,13 @@ if 2 == __python_version.maj:
     # Note: Needed for the following commands:
     #           extract_messages, init_catalog, compile_catalog, update_catalog
     setup_data[ "setup_requires" ].append( "Babel >= 0.9.6" )
+    # NOTE: Hard-wired hack for Babel.
+    #       (Cannot get correct behavior from 'setup.cfg'.)
+    #       (See 'setup.cfg' for details.)
+    setup_data[ "message_extractors" ] = \
+    {
+        __path_to_lib: """[python: **.py]"""
+    }
 # Note: Needed for the 'lint' command.
 setup_data[ "setup_requires" ].append( "setuptools-lint >= 0.1" )
 # Note: Needed for the 'nosetests' command.
