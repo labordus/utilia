@@ -178,10 +178,15 @@ setup_data[ "package_data" ]        = \
 # TODO: provides
 # TODO: obsoletes
 # TODO: dependency_links
+# TODO: Wrap the lint and translation tools to only show up in development
+#       mode.
 setup_data[ "setup_requires" ]      = [ ]
 if 2 == __python_version.maj:
     # Note: Needed for the 'flakes' command.
     setup_data[ "setup_requires" ].append( "setuptools_pyflakes >= 1.1.0" )
+    # Note: Needed for the following commands:
+    #           extract_messages, init_catalog, compile_catalog, update_catalog
+    setup_data[ "setup_requires" ].append( "Babel >= 0.9.6" )
 # Note: Needed for the 'lint' command.
 setup_data[ "setup_requires" ].append( "setuptools-lint >= 0.1" )
 # Note: Needed for the 'nosetests' command.

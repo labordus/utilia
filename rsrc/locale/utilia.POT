@@ -1,0 +1,111 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-12-25 00:52-0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: filesystem/stdpath.py:263
+msgid ""
+"Undetermined path to {0} for '{1}'. (Environment variable, '{2}', not set.)"
+msgstr ""
+
+#: filesystem/stdpath.py:269
+msgid "Undetermined path to {0} for '{1}'."
+msgstr ""
+
+#: filesystem/stdpath.py:275
+msgid "Undetermined path to {0}. (Environment variable, '{1}', not set.)"
+msgstr ""
+
+#: filesystem/stdpath.py:280
+msgid "Undetermined path to {0}."
+msgstr ""
+
+#: filesystem/stdpath.py:403
+msgid "Windows program files"
+msgstr ""
+
+#: filesystem/stdpath.py:441
+msgid "Empty software-specific path fragment."
+msgstr ""
+
+#: filesystem/stdpath.py:446
+msgid "Software name is unspecified."
+msgstr ""
+
+#: filesystem/stdpath.py:513
+msgid "OS core installation root"
+msgstr ""
+
+#: filesystem/stdpath.py:557
+msgid "OS distribution installation root"
+msgstr ""
+
+#: filesystem/stdpath.py:600
+msgid "common installation root"
+msgstr ""
+
+#: filesystem/stdpath.py:640
+msgid "OS core configuration information"
+msgstr ""
+
+#: filesystem/stdpath.py:683
+msgid "OS distribution configuration information"
+msgstr ""
+
+#: filesystem/stdpath.py:722 filesystem/stdpath.py:1014
+msgid "common configuration information"
+msgstr ""
+
+#: filesystem/stdpath.py:766
+msgid "Unknown home directory for user '{0}'."
+msgstr ""
+
+#: filesystem/stdpath.py:769
+msgid "Unknown ID of current user."
+msgstr ""
+
+#: filesystem/stdpath.py:796
+msgid "common temporary storage area"
+msgstr ""
+
+#: filesystem/stdpath.py:821
+msgid "user-specific temporary storage area"
+msgstr ""
+
+#: filesystem/stdpath.py:863
+msgid "Undetermined path to preferred temporary storage."
+msgstr ""
+
+#: filesystem/stdpath.py:908
+msgid "temporary storage area"
+msgstr ""
+
+#: filesystem/stdpath.py:1110
+msgid "common resources"
+msgstr ""
+
+#: filesystem/stdpath.py:1215
+msgid "user-specific configuration information"
+msgstr ""
+
+#: filesystem/stdpath.py:1318
+msgid "user-specific resources"
+msgstr ""
+
+#: filesystem/stdpath.py:1382
+msgid "saved data"
+msgstr ""
