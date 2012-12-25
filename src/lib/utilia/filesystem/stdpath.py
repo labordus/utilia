@@ -121,6 +121,7 @@ import re
 
 
 from utilia import (
+    _TD_,
     Error_WithReason,
 )
 from utilia.compat.builtins import (
@@ -244,21 +245,6 @@ def __decorate_docstring( func ):
     return func
 
 
-# TODO: move to a different module.
-def __TD( s ):
-    """
-        Dummy translator function.
-
-        Passes its argument through without translation at runtime, 
-        but allows it to be collected into a message catalog during a scan for
-        translatable strings. This allows for an active runtime translator to
-        translate the string when it is encountered as the contents of a
-        variable.
-    """
-
-    return s
-
-
 def __decide_upon_error_on_none(
     error_on_none, path,
     location, evname = None, software_name = None
@@ -272,25 +258,25 @@ def __decide_upon_error_on_none(
 
         if software_name:
             if evname:
-                error_reason_format = __TD(
+                error_reason_format = _TD_(
                     "Undetermined path to {0} for '{1}'."
                     " (Environment variable, '{2}', not set.)"
                 )
                 error_reason_args   = [ location, software_name, evname ]
             else:
-                error_reason_format = __TD(
+                error_reason_format = _TD_(
                     "Undetermined path to {0} for '{1}'."
                 )
                 error_reason_args   = [ location, software_name ]
         else:
             if evname:
-                error_reason_format = __TD(
+                error_reason_format = _TD_(
                     "Undetermined path to {0}."
                     " (Environment variable, '{1}', not set.)"
                 )
                 error_reason_args   = [ location, evname ]
             else:
-                error_reason_format = __TD( "Undetermined path to {0}." )
+                error_reason_format = _TD_( "Undetermined path to {0}." )
                 error_reason_args   = [ location ]
 
         raise UndeterminedFilesystemPath(
@@ -413,7 +399,7 @@ def __computed_Windows_program_files_path( error_on_none = False ):
     """
 
     common_base_path    = None
-    location            = __TD( "Windows program files" )
+    location            = _TD_( "Windows program files" )
     evname              = None
 
     if "64bit" in platform.architecture( ):
@@ -451,12 +437,12 @@ def concatenated_software_path_fragment(
     #       name extensions.
     
     path_fragment       = None
-    error_reason_format = __TD( "Empty software-specific path fragment." )
+    error_reason_format = _TD_( "Empty software-specific path fragment." )
 
     fsl = which_fs_layout( )
 
     if not software_name:
-        error_reason_format = __TD( "Software name is unspecified." )
+        error_reason_format = _TD_( "Software name is unspecified." )
 
     else:
 
@@ -523,7 +509,7 @@ def whereis_oscore_install_root( error_on_none = False ):
 
     irp_evname          = None
     install_root_path   = None
-    location            = __TD( "OS core installation root" )
+    location            = _TD_( "OS core installation root" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", "MacOS X", ]:
@@ -567,7 +553,7 @@ def whereis_osdist_install_root( error_on_none = False ):
 
     irp_evname          = None
     install_root_path   = None
-    location            = __TD( "OS distribution installation root" )
+    location            = _TD_( "OS distribution installation root" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", ]:   install_root_path = "/usr"
@@ -610,7 +596,7 @@ def whereis_common_install_root( error_on_none = False ):
 
     irp_evname          = None
     install_root_path   = None
-    location            = __TD( "common installation root" )
+    location            = _TD_( "common installation root" )
 
     fsl = which_fs_layout( )
     if   "POSIX" == fsl:    install_root_path = "/usr/local"
@@ -650,7 +636,7 @@ def whereis_oscore_config_base( error_on_none = False ):
 
     cbp_evname          = None
     config_base_path    = None
-    location            = __TD( "OS core configuration information" )
+    location            = _TD_( "OS core configuration information" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", ]:   config_base_path = "/etc"
@@ -693,7 +679,7 @@ def whereis_osdist_config_base( error_on_none = False ):
 
     cbp_evname          = None
     config_base_path    = None
-    location            = __TD( "OS distribution configuration information" )
+    location            = _TD_( "OS distribution configuration information" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", ]:   config_base_path = "/etc"
@@ -732,7 +718,7 @@ def whereis_common_config_base( error_on_none = False ):
 
     cbp_evname          = None
     config_base_path    = None
-    location            = __TD( "common configuration information" )
+    location            = _TD_( "common configuration information" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", ]:   config_base_path = "/usr/local/etc"
@@ -776,10 +762,10 @@ def whereis_user_home( error_on_none = False ):
     if (None is user_home_path) and error_on_none:
         if user_id:
             error_reason_format = \
-            __TD( "Unknown home directory for user '{0}'." )
+            _TD_( "Unknown home directory for user '{0}'." )
             error_reason_args   = [ user_id ]
         else:
-            error_reason_format = __TD( "Unknown ID of current user." )
+            error_reason_format = _TD_( "Unknown ID of current user." )
             error_reason_args   = [ ]
         raise UndeterminedFilesystemPath( 
             error_reason_format, *error_reason_args
@@ -806,7 +792,7 @@ def whereis_common_temp_base( error_on_none = False ):
     """
 
     temp_base_path  = None
-    location        = __TD( "common temporary storage area" )
+    location        = _TD_( "common temporary storage area" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", "MacOS X" ]: temp_base_path = "/tmp"
@@ -831,7 +817,7 @@ def whereis_user_temp_base( error_on_none = False ):
 
     utbp_evname         = None
     user_temp_base_path = None
-    location            = __TD( "user-specific temporary storage area" )
+    location            = _TD_( "user-specific temporary storage area" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", "MacOS X", ]:    pass
@@ -873,7 +859,7 @@ def whereis_preferred_temp_base(
 
     temp_base_path      = None
     error_reason_format = \
-    __TD( "Undetermined path to preferred temporary storage." )
+    _TD_( "Undetermined path to preferred temporary storage." )
     error_reason_args   = [ ]
 
     utbp = stbp = None
@@ -918,7 +904,7 @@ def whereis_my_temp(
     """
 
     temp_path   = None
-    location    = __TD( "temporary storage area" )
+    location    = _TD_( "temporary storage area" )
 
     if append_path_fragment:
         mtpf = \
@@ -1024,7 +1010,7 @@ def whereis_my_site_config(
                 "Unimplemented path determination logic for {0}.", fsl
             )
 
-    location = __TD( "common configuration information" )
+    location = _TD_( "common configuration information" )
     __decide_upon_error_on_none(
         error_on_none, my_site_path, location, msbp_evname, software_name
     )
@@ -1120,7 +1106,7 @@ def whereis_my_site_resources(
                 "Unimplemented path determination logic for {0}.", fsl
             )
 
-    location = __TD( "common resources" )
+    location = _TD_( "common resources" )
     __decide_upon_error_on_none(
         error_on_none, my_site_path, location, msbp_evname, software_name
     )
@@ -1225,7 +1211,7 @@ def whereis_my_user_config(
                 "Unimplemented path determination logic for {0}.", fsl
             )
 
-    location = __TD( "user-specific configuration information" )
+    location = _TD_( "user-specific configuration information" )
     __decide_upon_error_on_none(
         error_on_none, my_user_path, location, mubp_evname, software_name
     )
@@ -1328,7 +1314,7 @@ def whereis_my_user_resources(
                 "Unimplemented path determination logic for {0}.", fsl
             )
 
-    location = __TD( "user-specific resources" )
+    location = _TD_( "user-specific resources" )
     __decide_upon_error_on_none(
         error_on_none, my_user_path, location, mubp_evname, software_name
     )
@@ -1392,7 +1378,7 @@ def whereis_my_saved_data(
                 "Unimplemented path determination logic for {0}.", fsl
             )
 
-    location = __TD( "saved data" )
+    location = _TD_( "saved data" )
     __decide_upon_error_on_none(
         error_on_none, my_saves_path, location, mdbp_evname, software_name
     )

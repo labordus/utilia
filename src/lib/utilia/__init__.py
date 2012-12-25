@@ -97,6 +97,26 @@ del __ConfigParser, __vinfo_CFG, __vinfo_release_type, __vinfo_numbers_DICT
 del path_join, collections
 
 
+# Utility Functions
+# (Assorted functions used throughout the package.)
+
+
+def _TD_( s ):
+    """
+        Dummy translator function.
+
+        Passes its argument through without translation at runtime, 
+        but marks it to be collected into a message catalog during a scan for
+        translatable strings. This allows for it to be translated when it is 
+        referenced.
+
+        One use for this is to collect exception messages to be translated
+        without immediate display.
+    """
+
+    return s
+
+
 # Exceptions
 
 
