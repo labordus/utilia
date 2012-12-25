@@ -222,7 +222,7 @@ def __autodoc_function_parameters( func, pdict ):
         the supplied dictionary has entries for their names.
 
         Note: This function assumes that the first entries of the 'co_varnames'
-        tuple are the parameters passed on the stack.
+              tuple are the parameters passed on the stack.
     """
 
     for i in xrange( func.__code__.co_argcount ):
@@ -243,6 +243,45 @@ def __TD( s ):
     """
 
     return s
+
+
+def __decide_upon_error_on_none(
+    error_on_none, path,
+    location, evname = None, software_name = None
+):
+    """
+        Raises an 'UndeterminedFilesystemPath' exception, if the
+        'error_on_none' argument is true and the supplied path is empty.
+    """
+
+    if error_on_none and (None is path):
+
+        if software_name:
+            if evname:
+                error_reason_format = __TD(
+                    "Undetermined path to {0} for '{1}'."
+                    " (Environment variable, '{2}', not set.)"
+                )
+                error_reason_args   = [ location, software_name, evname ]
+            else:
+                error_reason_format = __TD(
+                    "Undetermined path to {0} for '{1}'."
+                )
+                error_reason_args   = [ location, software_name ]
+        else:
+            if evname:
+                error_reason_format = __TD(
+                    "Undetermined path to {0}."
+                    " (Environment variable, '{1}', not set.)"
+                )
+                error_reason_args   = [ location, evname ]
+            else:
+                error_reason_format = __TD( "Undetermined path to {0}." )
+                error_reason_args   = [ location ]
+
+        raise UndeterminedFilesystemPath(
+            error_reason_format, *error_reason_args
+        )
 
 
 # Character Translators for Names
@@ -359,10 +398,9 @@ def __computed_Windows_program_files_path( error_on_none = False ):
         is 32-bit or 64-bit.
     """
 
-    common_base_path        = None
-    error_reason_format     = None
-    error_reason_args       = [ ]
-    evname                  = None
+    common_base_path    = None
+    location            = __TD( "Windows program files" )
+    evname              = None
 
     if "64bit" in platform.architecture( ):
         if sys.maxsize > 2**32: evname = "ProgramFiles"
@@ -370,13 +408,9 @@ def __computed_Windows_program_files_path( error_on_none = False ):
     else:                       evname = "ProgramFiles"
     common_base_path = envvars.get( evname, None )
 
-    if error_on_none and (None is common_base_path):
-        error_reason_format = \
-        __TD( "Environment variable, '{0}', not set." )
-        error_reason_args = [ evname, ]
-        raise UndeterminedFilesystemPath( 
-            error_reason_format, *error_reason_args
-        )
+    __decide_upon_error_on_none(
+        error_on_none, common_base_path, location, evname
+    )
     return common_base_path
 
 
@@ -401,14 +435,13 @@ def concatenated_software_path_fragment(
     #       returned rather than file names and so there are no concerns about
     #       name extensions.
     
-    path_fragment           = None
-    error_reason_format     = None
-    error_reason_args       = [ ]
+    path_fragment       = None
+    error_reason_format = __TD( "Empty software-specific path fragment." )
 
     fsl = which_fs_layout( )
 
     if not software_name:
-        error_reason_format = "Software name is unspecified."
+        error_reason_format = __TD( "Software name is unspecified." )
 
     else:
 
@@ -448,9 +481,7 @@ def concatenated_software_path_fragment(
         path_join( *filter( None, [ vendor_name, software_name, version ] ) )
 
     if error_on_none and (None is path_fragment):
-        raise UndeterminedFilesystemPath( 
-            error_reason_format, *error_reason_args
-        )
+        raise UndeterminedFilesystemPath( error_reason_format, *[ ] )
     return path_fragment
 
 __autodoc_function_parameters(
@@ -484,8 +515,7 @@ def whereis_oscore_install_root( error_on_none = False ):
 
     irp_evname          = None
     install_root_path   = None
-    error_reason_format = None
-    error_reason_args   = [ ]
+    location            = __TD( "OS core installation root" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", "MacOS X", ]:
@@ -500,17 +530,9 @@ def whereis_oscore_install_root( error_on_none = False ):
             "Unimplemented path determination logic for {0}.", fsl      
         )
 
-    if (None is install_root_path) and error_on_none:
-        if irp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ irp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Undetermined system installation root." )
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    __decide_upon_error_on_none(
+        error_on_none, install_root_path, location, irp_evname
+    )
     return install_root_path
 
 __autodoc_function_parameters( 
@@ -544,8 +566,7 @@ def whereis_osdist_install_root( error_on_none = False ):
 
     irp_evname          = None
     install_root_path   = None
-    error_reason_format = None
-    error_reason_args   = [ ]
+    location            = __TD( "OS distribution installation root" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", ]:   install_root_path = "/usr"
@@ -558,17 +579,9 @@ def whereis_osdist_install_root( error_on_none = False ):
             "Unimplemented path determination logic for {0}.", fsl      
         )
 
-    if (None is install_root_path) and error_on_none:
-        if irp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ irp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Undetermined system installation root." )
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    __decide_upon_error_on_none(
+        error_on_none, install_root_path, location, irp_evname
+    )
     return install_root_path
 
 __autodoc_function_parameters( 
@@ -603,8 +616,7 @@ def whereis_common_install_root( error_on_none = False ):
 
     irp_evname          = None
     install_root_path   = None
-    error_reason_format = None
-    error_reason_args   = [ ]
+    location            = __TD( "common installation root" )
 
     fsl = which_fs_layout( )
     if   "POSIX" == fsl:    install_root_path = "/usr/local"
@@ -617,17 +629,9 @@ def whereis_common_install_root( error_on_none = False ):
             "Unimplemented path determination logic for {0}.", fsl      
         )
 
-    if (None is install_root_path) and error_on_none:
-        if irp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ irp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Undetermined common installation root." )
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    __decide_upon_error_on_none(
+        error_on_none, install_root_path, location, irp_evname
+    )
     return install_root_path
 
 __autodoc_function_parameters( 
@@ -659,8 +663,7 @@ def whereis_oscore_config_base( error_on_none = False ):
 
     cbp_evname          = None
     config_base_path    = None
-    error_reason_format = None
-    error_reason_args   = [ ]
+    location            = __TD( "OS core configuration information" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", ]:   config_base_path = "/etc"
@@ -676,17 +679,9 @@ def whereis_oscore_config_base( error_on_none = False ):
             "Unimplemented path determination logic for {0}.", fsl      
         )
 
-    if (None is config_base_path) and error_on_none:
-        if cbp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ cbp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Unknown path to OS core config info." )
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    __decide_upon_error_on_none(
+        error_on_none, config_base_path, location, cbp_evname
+    )
     return config_base_path
 
 __autodoc_function_parameters(
@@ -718,8 +713,7 @@ def whereis_osdist_config_base( error_on_none = False ):
 
     cbp_evname          = None
     config_base_path    = None
-    error_reason_format = None
-    error_reason_args   = [ ]
+    location            = __TD( "OS distribution configuration information" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", ]:   config_base_path = "/etc"
@@ -730,17 +724,9 @@ def whereis_osdist_config_base( error_on_none = False ):
             "Unimplemented path determination logic for {0}.", fsl      
         )
 
-    if (None is config_base_path) and error_on_none:
-        if cbp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ cbp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Unknown path to OS distribution config info." )
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    __decide_upon_error_on_none(
+        error_on_none, config_base_path, location, cbp_evname
+    )
     return config_base_path
 
 __autodoc_function_parameters(
@@ -773,8 +759,7 @@ def whereis_common_config_base( error_on_none = False ):
 
     cbp_evname          = None
     config_base_path    = None
-    error_reason_format = None
-    error_reason_args   = [ ]
+    location            = __TD( "common configuration information" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", ]:   config_base_path = "/usr/local/etc"
@@ -785,17 +770,9 @@ def whereis_common_config_base( error_on_none = False ):
             "Unimplemented path determination logic for {0}.", fsl      
         )
 
-    if (None is config_base_path) and error_on_none:
-        if cbp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ cbp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Unknown path to common config info." )
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    __decide_upon_error_on_none(
+        error_on_none, config_base_path, location, cbp_evname
+    )
     return config_base_path
 
 __autodoc_function_parameters(
@@ -816,8 +793,6 @@ def whereis_user_home( error_on_none = False ):
 
     user_id                 = None
     user_home_path          = None
-    error_reason_format     = None
-    error_reason_args       = [ ]
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", "MacOS X", ]:
@@ -836,9 +811,10 @@ def whereis_user_home( error_on_none = False ):
         if user_id:
             error_reason_format = \
             __TD( "Unknown home directory for user '{0}'." )
-            error_reason_args   = [ user_id, ]
+            error_reason_args   = [ user_id ]
         else:
             error_reason_format = __TD( "Unknown ID of current user." )
+            error_reason_args   = [ ]
         raise UndeterminedFilesystemPath( 
             error_reason_format, *error_reason_args
         )
@@ -868,9 +844,8 @@ def whereis_common_temp_base( error_on_none = False ):
 
     """
 
-    temp_base_path      = None
-    error_reason_format = None
-    error_reason_args   = [ ]
+    temp_base_path  = None
+    location        = __TD( "common temporary storage area" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", "MacOS X" ]: temp_base_path = "/tmp"
@@ -880,12 +855,9 @@ def whereis_common_temp_base( error_on_none = False ):
             "Unimplemented path determination logic for {0}.", fsl      
         )
 
-    if (None is temp_base_path) and error_on_none:
-        error_reason_format = \
-        __TD( "Unknown path to common temporary storage area." )
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    __decide_upon_error_on_none(
+        error_on_none, temp_base_path, location
+    )
     return temp_base_path
 
 __autodoc_function_parameters(
@@ -905,30 +877,21 @@ def whereis_user_temp_base( error_on_none = False ):
 
     utbp_evname         = None
     user_temp_base_path = None
-    error_reason_format = None
-    error_reason_args   = [ ]
+    location            = __TD( "user-specific temporary storage area" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", "MacOS X", ]:    pass
     elif fsl in [ "Windows", ]:
         utbp_evname = "Temp"
-        user_temp_base_path = envvars.get( utbp_evname, None )
+        temp_base_path = envvars.get( utbp_evname, None )
     else:
         raise UnsupportedFilesystemLayout(
             "Unimplemented path determination logic for {0}.", fsl      
         )
 
-    if (None is user_temp_base_path) and error_on_none:
-        if utbp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ utbp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Unknown path to user's temporary storage area." )
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    __decide_upon_error_on_none(
+        error_on_none, temp_base_path, location, utbp_evname
+    )
     return user_temp_base_path
 
 __autodoc_function_parameters(
@@ -962,7 +925,8 @@ def whereis_preferred_temp_base(
     """
 
     temp_base_path      = None
-    error_reason_format = None
+    error_reason_format = \
+    __TD( "Undetermined path to preferred temporary storage." )
     error_reason_args   = [ ]
 
     utbp = stbp = None
@@ -982,8 +946,6 @@ def whereis_preferred_temp_base(
     elif stbp:                      temp_base_path = stbp
     
     if (None is temp_base_path) and error_on_none:
-        error_reason_format = \
-        __TD( "Unknown path to preferred temporary storage." )
         raise UndeterminedFilesystemPath(
             error_reason_format, *error_reason_args
         )
@@ -1015,9 +977,8 @@ def whereis_my_temp(
 
     """
 
-    temp_path           = None
-    error_reason_format = None
-    error_reason_args   = [ ]
+    temp_path   = None
+    location    = __TD( "temporary storage area" )
 
     if append_path_fragment:
         mtpf = \
@@ -1038,13 +999,9 @@ def whereis_my_temp(
         )
     if ptbp: temp_path = path_join( *filter( None, [ ptbp, mtpf ] ) )
     
-    if (None is temp_path) and error_on_none:
-        error_reason_format = \
-        __TD( "Unknown path to temporary storage for '{0}'." )
-        error_reason_args = [ software_name, ]
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    __decide_upon_error_on_none(
+        error_on_none, temp_path, location, software_name = software_name
+    )
     return temp_path
 
 __autodoc_function_parameters(
@@ -1070,8 +1027,6 @@ def whereis_my_site_config(
     """
 
     my_site_path        = None
-    error_reason_format = None
-    error_reason_args   = [ ]
     fsl                 = which_fs_layout( )
     msbp                = None
     msbp_evname         = None
@@ -1136,18 +1091,10 @@ def whereis_my_site_config(
                 "Unimplemented path determination logic for {0}.", fsl
             )
 
-    if (None is my_site_path) and error_on_none:
-        if msbp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ msbp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Unknown path to site config info for '{0}'." )
-            error_reason_args = [ software_name, ]
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    location = __TD( "common configuration information" )
+    __decide_upon_error_on_none(
+        error_on_none, my_site_path, location, msbp_evname, software_name
+    )
     return my_site_path
 
 __autodoc_function_parameters(
@@ -1173,8 +1120,6 @@ def whereis_my_site_resources(
     """
 
     my_site_path        = None
-    error_reason_format = None
-    error_reason_args   = [ ]
     fsl                 = which_fs_layout( )
     msbp                = None
     msbp_evname         = None
@@ -1249,18 +1194,10 @@ def whereis_my_site_resources(
                 "Unimplemented path determination logic for {0}.", fsl
             )
 
-    if (None is my_site_path) and error_on_none:
-        if msbp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ msbp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Unknown path to site resources for '{0}'." )
-            error_reason_args = [ software_name, ]
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    location = __TD( "common resources" )
+    __decide_upon_error_on_none(
+        error_on_none, my_site_path, location, msbp_evname, software_name
+    )
     return my_site_path
 
 __autodoc_function_parameters(
@@ -1290,8 +1227,6 @@ def whereis_my_user_config(
     """
 
     my_user_path        = None
-    error_reason_format = None
-    error_reason_args   = [ ]
     fsl                 = which_fs_layout( )
     mubp                = None
     mubp_evname         = None
@@ -1371,18 +1306,10 @@ def whereis_my_user_config(
                 "Unimplemented path determination logic for {0}.", fsl
             )
 
-    if (None is my_user_path) and error_on_none:
-        if mubp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ mubp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Unknown path to user config info for '{0}'." )
-            error_reason_args = [ software_name, ]
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    location = __TD( "user-specific configuration information" )
+    __decide_upon_error_on_none(
+        error_on_none, my_user_path, location, mubp_evname, software_name
+    )
     return my_user_path
 
 __autodoc_function_parameters(
@@ -1407,8 +1334,6 @@ def whereis_my_user_resources(
     """
 
     my_user_path        = None
-    error_reason_format = None
-    error_reason_args   = [ ]
     fsl                 = which_fs_layout( )
     mubp                = None
     mubp_evname         = None
@@ -1491,18 +1416,10 @@ def whereis_my_user_resources(
                 "Unimplemented path determination logic for {0}.", fsl
             )
 
-    if (None is my_user_path) and error_on_none:
-        if mubp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ mubp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Unknown path to user resources for '{0}'." )
-            error_reason_args = [ software_name, ]
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    location = __TD( "user-specific resources" )
+    __decide_upon_error_on_none(
+        error_on_none, my_user_path, location, mubp_evname, software_name
+    )
     return my_user_path
 
 __autodoc_function_parameters(
@@ -1531,8 +1448,6 @@ def whereis_my_saved_data(
     """
 
     my_saves_path       = None
-    error_reason_format = None
-    error_reason_args   = [ ]
     fsl                 = which_fs_layout( )
     mdbp                = None
     mdbp_evname         = None
@@ -1572,18 +1487,10 @@ def whereis_my_saved_data(
                 "Unimplemented path determination logic for {0}.", fsl
             )
 
-    if (None is my_saves_path) and error_on_none:
-        if mdbp_evname:
-            error_reason_format = \
-            __TD( "Environment variable, '{0}', not set." )
-            error_reason_args = [ mdbp_evname, ]
-        else:
-            error_reason_format = \
-            __TD( "Unknown path to saves directory for '{0}'." )
-            error_reason_args = [ software_name, ]
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
+    location = __TD( "saved data" )
+    __decide_upon_error_on_none(
+        error_on_none, my_saves_path, location, mdbp_evname, software_name
+    )
     return my_saves_path
 
 __autodoc_function_parameters(
