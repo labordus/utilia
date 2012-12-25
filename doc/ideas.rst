@@ -16,6 +16,23 @@ Modules Library
 
 *  Unified parsing of command-line and config file options.
 
+*  Extensions to the 
+   :py:mod:`distutils.ccompiler <CPython2:distutils.ccompiler>` 
+   module for proper support of standalone Mingw32 and Mingw64.
+
+*  An extension to the :py:mod:`logging <CPython3:logging>` module, which
+   allows for logging to GUI message boxes. (Useful for showing critical errors
+   before intended GUI subsytem is initialized or when operating in a headless
+   or minimized-to-tray mode, in some cases.) Would try toolkit for current
+   window manager first, before attempting to fallback to others.
+
+*  Wrapper for the `PDCurses <http://pdcurses.sourceforge.net/>`_ library to 
+   provide a more-portable *curses* implementation with some interesting 
+   back-end options (e.g., SDL).
+
+*  Wrapper for the `AAlib <http://aa-project.sourceforge.net/aalib/>`_ or 
+   `libcaca <http://caca.zoy.org/wiki/libcaca>`_ library.
+
 
 Scripts Collections
 -------------------
