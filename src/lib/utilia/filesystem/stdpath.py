@@ -230,6 +230,20 @@ def __autodoc_function_parameters( func, pdict ):
         if docs: func.__doc__ += docs
 
 
+def __decorate_docstring( func ):
+    """
+        Appends additional documentation to a docstring.
+    """
+
+    docs_DICT = __DOCSTRING_FRAGMENTS( )
+
+    __autodoc_function_parameters( func, docs_DICT )
+    func.__doc__ += docs_DICT[ "RTYPE_string_or_None" ]
+    func.__doc__ += docs_DICT[ "RAISES_Unsupported_and_Undetermined" ]
+
+    return func
+
+
 # TODO: move to a different module.
 def __TD( s ):
     """
@@ -414,6 +428,7 @@ def __computed_Windows_program_files_path( error_on_none = False ):
     return common_base_path
 
 
+@__decorate_docstring
 def concatenated_software_path_fragment(
     software_name, vendor_name = None, version = None,
     error_on_none = False
@@ -484,15 +499,8 @@ def concatenated_software_path_fragment(
         raise UndeterminedFilesystemPath( error_reason_format, *[ ] )
     return path_fragment
 
-__autodoc_function_parameters(
-    concatenated_software_path_fragment, __DOCSTRING_FRAGMENTS( )
-)
-concatenated_software_path_fragment.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-concatenated_software_path_fragment.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_oscore_install_root( error_on_none = False ):
     """
         Returns the path to the installation root for the core OS components,
@@ -535,15 +543,8 @@ def whereis_oscore_install_root( error_on_none = False ):
     )
     return install_root_path
 
-__autodoc_function_parameters( 
-    whereis_oscore_install_root, __DOCSTRING_FRAGMENTS( )
-)
-whereis_oscore_install_root.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_oscore_install_root.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_osdist_install_root( error_on_none = False ):
     """
         Returns the path to the installation root of the OS distribution,
@@ -584,15 +585,8 @@ def whereis_osdist_install_root( error_on_none = False ):
     )
     return install_root_path
 
-__autodoc_function_parameters( 
-    whereis_osdist_install_root, __DOCSTRING_FRAGMENTS( )
-)
-whereis_osdist_install_root.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_osdist_install_root.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_common_install_root( error_on_none = False ):
     """
         Returns the path to the typical default root for a shared or sitewide 
@@ -634,15 +628,8 @@ def whereis_common_install_root( error_on_none = False ):
     )
     return install_root_path
 
-__autodoc_function_parameters( 
-    whereis_common_install_root, __DOCSTRING_FRAGMENTS( )
-)
-whereis_common_install_root.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_common_install_root.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_oscore_config_base( error_on_none = False ):
     """
         Returns the path to the typical top-level directory under which the
@@ -684,15 +671,8 @@ def whereis_oscore_config_base( error_on_none = False ):
     )
     return config_base_path
 
-__autodoc_function_parameters(
-    whereis_oscore_config_base, __DOCSTRING_FRAGMENTS( )
-)
-whereis_oscore_config_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_oscore_config_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_osdist_config_base( error_on_none = False ):
     """
         Returns the path to the typical top-level directory under which the
@@ -729,15 +709,8 @@ def whereis_osdist_config_base( error_on_none = False ):
     )
     return config_base_path
 
-__autodoc_function_parameters(
-    whereis_osdist_config_base, __DOCSTRING_FRAGMENTS( )
-)
-whereis_osdist_config_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_osdist_config_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_common_config_base( error_on_none = False ):
     """
         Returns the path to the typical top-level directory under which the
@@ -775,15 +748,8 @@ def whereis_common_config_base( error_on_none = False ):
     )
     return config_base_path
 
-__autodoc_function_parameters(
-    whereis_common_config_base, __DOCSTRING_FRAGMENTS( )
-)
-whereis_common_config_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_common_config_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_user_home( error_on_none = False ):
     """
         Returns the path to the current user's home directory, if it can be
@@ -820,13 +786,8 @@ def whereis_user_home( error_on_none = False ):
         )
     return user_home_path
 
-__autodoc_function_parameters( whereis_user_home, __DOCSTRING_FRAGMENTS( ) )
-whereis_user_home.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_user_home.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_common_temp_base( error_on_none = False ):
     """
         Returns the path to the temporary storage area available for use by
@@ -860,15 +821,8 @@ def whereis_common_temp_base( error_on_none = False ):
     )
     return temp_base_path
 
-__autodoc_function_parameters(
-    whereis_common_temp_base, __DOCSTRING_FRAGMENTS( )
-)
-whereis_common_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_common_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_user_temp_base( error_on_none = False ):
     """
         Returns the path to the current user's temporary storage area.
@@ -894,15 +848,8 @@ def whereis_user_temp_base( error_on_none = False ):
     )
     return user_temp_base_path
 
-__autodoc_function_parameters(
-    whereis_user_temp_base, __DOCSTRING_FRAGMENTS( )
-)
-whereis_user_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_user_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_preferred_temp_base(
     prefer_common = False,
     error_on_none = False
@@ -951,15 +898,8 @@ def whereis_preferred_temp_base(
         )
     return temp_base_path
 
-__autodoc_function_parameters(
-    whereis_preferred_temp_base, __DOCSTRING_FRAGMENTS( )
-)
-whereis_preferred_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_preferred_temp_base.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_my_temp(
     software_name, vendor_name = None, version = None,
     alt_base_path = None,
@@ -1004,15 +944,8 @@ def whereis_my_temp(
     )
     return temp_path
 
-__autodoc_function_parameters(
-    whereis_my_temp, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_temp.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_temp.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_my_site_config(
     software_name, vendor_name = None, version = None,
     alt_base_path = None, use_python_prefix = False,
@@ -1097,15 +1030,8 @@ def whereis_my_site_config(
     )
     return my_site_path
 
-__autodoc_function_parameters(
-    whereis_my_site_config, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_site_config.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_site_config.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_my_site_resources(
     software_name, vendor_name = None, version = None,
     alt_base_path = None, use_python_prefix = False,
@@ -1200,19 +1126,12 @@ def whereis_my_site_resources(
     )
     return my_site_path
 
-__autodoc_function_parameters(
-    whereis_my_site_resources, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_site_resources.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_site_resources.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
-
 
 # TODO: whereis_my_site_programs
 # TODO: whereis_my_site_docs
 
 
+@__decorate_docstring
 def whereis_my_user_config(
     software_name, vendor_name = None, version = None,
     alt_base_path = None, use_python_prefix = False,
@@ -1312,15 +1231,8 @@ def whereis_my_user_config(
     )
     return my_user_path
 
-__autodoc_function_parameters(
-    whereis_my_user_config, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_user_config.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_user_config.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
-
+@__decorate_docstring
 def whereis_my_user_resources(
     software_name, vendor_name = None, version = None,
     alt_base_path = None, use_python_prefix = False,
@@ -1422,18 +1334,11 @@ def whereis_my_user_resources(
     )
     return my_user_path
 
-__autodoc_function_parameters(
-    whereis_my_user_resources, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_user_resources.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_user_resources.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
-
 
 # TODO: whereis_my_user_docs
 
 
+@__decorate_docstring
 def whereis_my_saved_data(
     software_name, vendor_name = None, version = None,
     alt_base_path = None, 
@@ -1492,14 +1397,6 @@ def whereis_my_saved_data(
         error_on_none, my_saves_path, location, mdbp_evname, software_name
     )
     return my_saves_path
-
-__autodoc_function_parameters(
-    whereis_my_saved_data, __DOCSTRING_FRAGMENTS( )
-)
-whereis_my_saved_data.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RTYPE_string_or_None" ]
-whereis_my_saved_data.__doc__ += \
-__DOCSTRING_FRAGMENTS( )[ "RAISES_Unsupported_and_Undetermined" ]
 
 
 ###############################################################################
