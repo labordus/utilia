@@ -57,6 +57,10 @@ if   3 == __python_version.major:
     #       'StandardError' in Python 3.
     StandardError   = Exception
 
+    # Note: The 'reduce' function has been moved to the 'functools' module in 
+    #       Python 3.
+    from functools import reduce
+
     # Note: The 'range' function of Python 3 behaves as the 'xrange' function
     #       of Python 2.
     xrange          = range

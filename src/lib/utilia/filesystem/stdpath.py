@@ -125,6 +125,7 @@ from utilia import (
     Error_WithReason,
 )
 from utilia.compat.builtins import (
+    reduce,
     xrange,
 )
 from . import (

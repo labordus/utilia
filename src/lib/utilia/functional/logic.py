@@ -54,6 +54,11 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
+from utilia.compat.builtins import (
+    reduce,
+)
+
+
 def __DOCSTRING_FRAGMENTS( ):
     """
         Returns a dictionary of common docstring fragments.
