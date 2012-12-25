@@ -14,7 +14,4 @@ Module Description
 .. automodule:: utilia.types.maps
 
 
-.. toctree::
-   :hidden:
-
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

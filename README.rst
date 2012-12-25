@@ -13,12 +13,6 @@ of the same name and provides infrastructure for this distribution.
 The *utilia* software distribution consists of two parts: 
 a library of Python modules and a collection of scripts. 
 
-The word *utilia* is Latin for *useful things*. (For those who care, it can be
-used as either an adjective or a noun in Latin. The noun is a neuter 
-nominative or accusative plural from the third declension. It is shorter to 
-say or type than *rebus utilibus*, which some might consider to be more 
-proper.)
-
 Project Resources
 -----------------
 

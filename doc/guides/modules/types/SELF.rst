@@ -13,9 +13,11 @@ Subpackage Description
 
 .. automodule:: utilia.types
 
+Subpackages and Modules
+-----------------------
 
 .. toctree::
-   :hidden:
+   :titlesonly:
 
    maps
 

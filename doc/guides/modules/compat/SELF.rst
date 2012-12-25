@@ -13,9 +13,11 @@ Subpackage Description
 
 .. automodule:: utilia.compat
 
+Subpackages and Modules
+-----------------------
 
 .. toctree::
-   :hidden:
+   :titlesonly:
 
    argparse
    builtins

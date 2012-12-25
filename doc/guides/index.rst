@@ -38,29 +38,10 @@ are united by a common theme, which has the following features:
    * Seamless interoperability amongst components, when such interoperability
      is desirable and meaningful.
 
-The modules library currently provides the following:
-
-   * Useful, portable data structures, such as ordered dictionaries.
-
-   * Awareness of the standard filesystem layouts of various operating 
-     systems; reporting of standard paths to configuration information, 
-     application data stores, temporary spaces, saved documents, etc....
-
-Much more functionality is planned (and already exists as less polished,
-unreleased code). This includes:
-
-   * Enhanced support for finding and utilizing localization resources, 
-     such as translations.
-
-   * Generic tester functions, which may be used with testing frameworks or 
-     for other purposes.
-
-   * Unified parsing of command-line and config file options.
-
 Scripts Collection
 ------------------
 
-The collected scripts serve a wide variety of purposes, but the following
+The collected scripts serve a wide variety of purposes, but have the following
 features in common:
 
    * Written in Python with the same compatibility level as the 
@@ -76,20 +57,12 @@ features in common:
    * Seamless interoperability amongst scripts, when such interoperability is
      desirable and meaningful.
 
-Currently, no scripts exist in the collection, but ones implementing the 
-following functionality are planned (some of which already exist in 
-less-polished, unreleased forms):
-   
-   * Walking a source tree and updating the message catalogs corresponding to
-     all translation domains found.
-
-   * Searching inventories used by Sphinx's Intersphinx extension.
-
+Table of Contents
+-----------------
 
 .. toctree::
    :maxdepth: 3
    :titlesonly:
-   :hidden:
 
    install/index
    modules/SELF
@@ -97,5 +70,6 @@ less-polished, unreleased forms):
    develop/index
    legal/index
    contrib
+   answers
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

@@ -5,20 +5,9 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-``functional`` Subpackage
-=========================
+Ideas for Further Development
+=============================
 
-Subpackage Description
-----------------------
-
-.. automodule:: utilia.functional
-
-Subpackages and Modules
------------------------
-
-.. toctree::
-   :titlesonly:
-
-   logic
+.. include:: ../../ideas.rst
 
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

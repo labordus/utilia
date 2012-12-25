@@ -32,9 +32,11 @@ Exception Classes
    :members:
    :inherited-members:
 
+Subpackages and Modules
+-----------------------
 
 .. toctree::
-   :hidden:
+   :titlesonly:
 
    compat/SELF
    config_parsers/SELF

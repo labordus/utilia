@@ -27,6 +27,9 @@
         * :py:exc:`StandardError <CPython2:exceptions.StandardError>` is 
           aliased to :py:exc:`Exception <CPython3:Exception>`.
 
+        * :py:func:`reduce <CPython2:reduce>` is imported from 
+          :py:mod:`functools <CPython3:functools>`.
+
         * :py:func:`xrange <CPython2:xrange>` is aliased to 
           :py:class:`range <CPython3:range>`.
 

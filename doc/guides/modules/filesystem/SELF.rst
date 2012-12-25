@@ -24,9 +24,11 @@ Exception Classes
    :members:
    :inherited-members:
 
+Subpackages and Modules
+-----------------------
 
 .. toctree::
-   :hidden:
+   :titlesonly:
 
    stdpath
 
