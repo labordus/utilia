@@ -101,6 +101,25 @@ del path_join, collections
 # (Assorted functions used throughout the package.)
 
 
+# Alias 'range' built-in function to 'xrange' for Python 2 compatibility.
+if 3 == python_version.major:
+    xrange = range
+
+
+def _autodoc_function_parameters( func, pdict ):
+    """
+        Automatically document a function's parameters, if
+        the supplied dictionary has entries for their names.
+
+        Note: This function assumes that the first entries of the 'co_varnames'
+              tuple are the parameters passed on the stack.
+    """
+
+    for i in xrange( func.__code__.co_argcount ):
+        docs = pdict.get( func.__code__.co_varnames[ i ], None )
+        if docs: func.__doc__ += docs
+
+
 def _TD_( s ):
     """
         Dummy translator function.

@@ -121,12 +121,12 @@ import re
 
 
 from utilia import (
+    _autodoc_function_parameters,
     _TD_,
     Error_WithReason,
 )
 from utilia.compat.builtins import (
     reduce,
-    xrange,
 )
 from . import (
     Error_BASE              as FilesystemError_BASE,
@@ -217,21 +217,6 @@ def __DOCSTRING_FRAGMENTS( ):
     }
 
 
-# TODO: Move to a different module.
-def __autodoc_function_parameters( func, pdict ):
-    """
-        Automatically document a function's parameters, if
-        the supplied dictionary has entries for their names.
-
-        Note: This function assumes that the first entries of the 'co_varnames'
-              tuple are the parameters passed on the stack.
-    """
-
-    for i in xrange( func.__code__.co_argcount ):
-        docs = pdict.get( func.__code__.co_varnames[ i ], None )
-        if docs: func.__doc__ += docs
-
-
 def __decorate_docstring( func ):
     """
         Appends additional documentation to a docstring.
@@ -239,7 +224,7 @@ def __decorate_docstring( func ):
 
     docs_DICT = __DOCSTRING_FRAGMENTS( )
 
-    __autodoc_function_parameters( func, docs_DICT )
+    _autodoc_function_parameters( func, docs_DICT )
     func.__doc__ += docs_DICT[ "RTYPE_string_or_None" ]
     func.__doc__ += docs_DICT[ "RAISES_Unsupported_and_Undetermined" ]
 
@@ -375,7 +360,7 @@ def which_fs_layout( ):
             "Unimplemented filesystem layout classifier for {0}.", osa
         )
 
-__autodoc_function_parameters( which_fs_layout, __DOCSTRING_FRAGMENTS( ) )
+_autodoc_function_parameters( which_fs_layout, __DOCSTRING_FRAGMENTS( ) )
 
 
 def __computed_MacOS_X_python_prefix( prefix ):
