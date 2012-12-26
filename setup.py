@@ -138,6 +138,7 @@ setup_data[ "author" ]              = "Eric A. McDonald"
 setup_data[ "author_email" ]        = "the.eric.mcdonald@gmail.com"
 # TODO: url
 # TODO: download_url
+
 setup_data[ "classifiers" ]         = \
     [
         "Development Status :: 2 - Pre-Alpha",
@@ -156,6 +157,7 @@ setup_data[ "classifiers" ]         = \
         "Topic :: Software Development :: Libraries :: Python Modules",
         "Topic :: Utilities",
     ]
+
 # TODO: namespace_packages
 setup_data[ "packages" ]            = find_packages( dirname( __path_to_lib ) )
 setup_data[ "package_dir" ]         = { "": dirname( __path_to_lib ) }
@@ -163,8 +165,10 @@ setup_data[ "package_dir" ]         = { "": dirname( __path_to_lib ) }
 # TODO: ext_modules
 # TODO: scripts
 # TODO: entry_points
+
 # TODO: options
 # TODO: keywords
+
 # TODO: platforms
 # TODO: data_files
 # TODO: include_package_data
@@ -174,28 +178,30 @@ setup_data[ "package_data" ]        = \
         "utilia": [ "*.cfg", "*.dat", ],
     }
 # TODO: zip_safe
+
 # TODO: requires
 # TODO: provides
 # TODO: obsoletes
 # TODO: dependency_links
-# TODO: Wrap the lint and translation tools to only show up in development
-#       mode.
 setup_data[ "setup_requires" ]      = [ ]
-if 2 == __python_version.maj:
-    # Note: Needed for the 'flakes' command.
-    setup_data[ "setup_requires" ].append( "setuptools_pyflakes >= 1.1.0" )
-    # Note: Needed for the following commands:
-    #           extract_messages, init_catalog, compile_catalog, update_catalog
-    setup_data[ "setup_requires" ].append( "Babel >= 0.9.6" )
-    # NOTE: Hard-wired hack for Babel.
-    #       (Cannot get correct behavior from 'setup.cfg'.)
-    #       (See 'setup.cfg' for details.)
-    setup_data[ "message_extractors" ] = \
-    {
-        __path_to_lib: """[python: **.py]"""
-    }
-# Note: Needed for the 'lint' command.
-setup_data[ "setup_requires" ].append( "setuptools-lint >= 0.1" )
+# Only expose lint and translation tools in development mode.
+if "development" == __vinfo_release_type:
+    if 2 == __python_version.maj:
+        # Note: Needed for the 'flakes' command.
+        setup_data[ "setup_requires" ].append( "setuptools_pyflakes >= 1.1.0" )
+        # Note: Needed for the following commands:
+        #           extract_messages, init_catalog, update_catalog,
+        #           compile_catalog
+        setup_data[ "setup_requires" ].append( "Babel >= 0.9.6" )
+        # NOTE: Hard-wired hack for Babel.
+        #       (Cannot get correct behavior from 'setup.cfg'.)
+        #       (See 'setup.cfg' for details.)
+        setup_data[ "message_extractors" ] = \
+        {
+            __path_to_lib: """[python: **.py]"""
+        }
+    # Note: Needed for the 'lint' command.
+    setup_data[ "setup_requires" ].append( "setuptools-lint >= 0.1" )
 # Note: Needed for the 'nosetests' command.
 setup_data[ "setup_requires" ].append( "nose >= 1.2.1" )
 # Note: Needed for the 'build_sphinx' command.
@@ -203,6 +209,7 @@ setup_data[ "setup_requires" ].append( "Sphinx >= 1.1.3" )
 # TODO: extras_require
 # TODO: tests_require
 # TODO: install_requires
+
 setup_data[ "test_suite" ]          = "nose.collector"
 # TODO: test_loader
 # TODO: eager_resources
