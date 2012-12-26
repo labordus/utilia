@@ -231,45 +231,6 @@ def __decorate_docstring( func ):
     return func
 
 
-def __decide_upon_error_on_none(
-    error_on_none, path,
-    location, evname = None, software_name = None
-):
-    """
-        Raises an 'UndeterminedFilesystemPath' exception, if the
-        'error_on_none' argument is true and the supplied path is empty.
-    """
-
-    if error_on_none and (None is path):
-
-        if software_name:
-            if evname:
-                error_reason_format = _TD_(
-                    "Undetermined path to {0} for '{1}'."
-                    " (Environment variable, '{2}', not set.)"
-                )
-                error_reason_args   = [ location, software_name, evname ]
-            else:
-                error_reason_format = _TD_(
-                    "Undetermined path to {0} for '{1}'."
-                )
-                error_reason_args   = [ location, software_name ]
-        else:
-            if evname:
-                error_reason_format = _TD_(
-                    "Undetermined path to {0}."
-                    " (Environment variable, '{1}', not set.)"
-                )
-                error_reason_args   = [ location, evname ]
-            else:
-                error_reason_format = _TD_( "Undetermined path to {0}." )
-                error_reason_args   = [ location ]
-
-        raise UndeterminedFilesystemPath(
-            error_reason_format, *error_reason_args
-        )
-
-
 # Character Translators for Names
 __whitespace_to_underscore  = functools.partial( re.sub, r"\s+", "_" )
 __dot_to_underscore         = functools.partial( re.sub, r"\.{1,1}", "_" )
@@ -324,6 +285,55 @@ class UndeterminedFilesystemPath( FilesystemError_BASE, Error_WithReason ):
             reason_format, *reason_args
         )
         # TODO: Set appropriate exit status.
+
+
+def __decide_upon_error_on_none(
+    error_on_none, path,
+    location, evname = None, software_name = None
+):
+    """
+        Raises an 'UndeterminedFilesystemPath' exception, if the
+        'error_on_none' argument is true and the supplied path is empty.
+    """
+
+    if error_on_none and (None is path):
+
+        if software_name:
+            if evname:
+                error_reason_format = _TD_(
+                    "Undetermined path to {0} for '{1}'."
+                    " (Environment variable, '{2}', not set.)"
+                )
+                error_reason_args   = [ location, software_name, evname ]
+            else:
+                error_reason_format = _TD_(
+                    "Undetermined path to {0} for '{1}'."
+                )
+                error_reason_args   = [ location, software_name ]
+        else:
+            if evname:
+                error_reason_format = _TD_(
+                    "Undetermined path to {0}."
+                    " (Environment variable, '{1}', not set.)"
+                )
+                error_reason_args   = [ location, evname ]
+            else:
+                error_reason_format = _TD_( "Undetermined path to {0}." )
+                error_reason_args   = [ location ]
+
+        raise UndeterminedFilesystemPath(
+            error_reason_format, *error_reason_args
+        )
+
+
+def __raise_UnsupportedFilesystemLayout( fsl ):
+    """
+        Raise an 'UnsupportedFilesystemLayout' error with a standard message.
+    """
+
+    raise UnsupportedFilesystemLayout(
+        "Unimplemented path determination logic for {0}.", fsl
+    )
 
 
 # TODO: Return dictionary of values rather than simple string.
@@ -438,20 +448,14 @@ def concatenated_software_path_fragment(
                 vendor_name = __whitespace_to_underscore( vendor_name )
             elif fsl in [ "MacOS X", ]: pass
             elif fsl in [ "Windows", ]: pass
-            else:
-                raise UnsupportedFilesystemLayout(
-                    "Unimplemented path determination logic for {0}.", fsl
-                )
+            else: __raise_UnsupportedFilesystemLayout( fsl )
         
         software_name = software_name.strip( )
         if   fsl in [ "POSIX", ]:
             software_name = __whitespace_to_underscore( software_name )
         elif fsl in [ "MacOS X", ]: pass
         elif fsl in [ "Windows", ]: pass
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
         
         if version:
             version = version.strip( )
@@ -459,10 +463,7 @@ def concatenated_software_path_fragment(
                 version = __whitespace_to_underscore( version )
             elif fsl in [ "MacOS X", ]: pass
             elif fsl in [ "Windows", ]:  pass
-            else:
-                raise UnsupportedFilesystemLayout(
-                    "Unimplemented path determination logic for {0}.", fsl
-                )
+            else: __raise_UnsupportedFilesystemLayout( fsl )
         
         path_fragment = \
         path_join( *filter( None, [ vendor_name, software_name, version ] ) )
@@ -505,10 +506,7 @@ def whereis_oscore_install_root( error_on_none = False ):
         install_root_path = envvars.get( irp_evname, None )
         if install_root_path:
             install_root_path = path_join( install_root_path, "System32" )
-    else:
-        raise UnsupportedFilesystemLayout(
-            "Unimplemented path determination logic for {0}.", fsl      
-        )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
     __decide_upon_error_on_none(
         error_on_none, install_root_path, location, irp_evname
@@ -547,10 +545,7 @@ def whereis_osdist_install_root( error_on_none = False ):
     elif fsl in [ "Windows", ]:
         irp_evname = "SystemRoot"
         install_root_path = envvars.get( irp_evname, None )
-    else:
-        raise UnsupportedFilesystemLayout(
-            "Unimplemented path determination logic for {0}.", fsl      
-        )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
     __decide_upon_error_on_none(
         error_on_none, install_root_path, location, irp_evname
@@ -590,10 +585,7 @@ def whereis_common_install_root( error_on_none = False ):
     elif "Windows" == fsl:
         install_root_path = \
         __computed_Windows_program_files_path( error_on_none = error_on_none )
-    else:
-        raise UnsupportedFilesystemLayout(
-            "Unimplemented path determination logic for {0}.", fsl      
-        )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
     __decide_upon_error_on_none(
         error_on_none, install_root_path, location, irp_evname
@@ -633,10 +625,7 @@ def whereis_oscore_config_base( error_on_none = False ):
         if config_base_path:
             config_base_path = \
             path_join( config_base_path, "System32", "Config"  )
-    else:
-        raise UnsupportedFilesystemLayout(
-            "Unimplemented path determination logic for {0}.", fsl      
-        )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
     __decide_upon_error_on_none(
         error_on_none, config_base_path, location, cbp_evname
@@ -671,10 +660,7 @@ def whereis_osdist_config_base( error_on_none = False ):
     if   fsl in [ "POSIX", ]:   config_base_path = "/etc"
     elif fsl in [ "MacOS X", ]: config_base_path = "/System/Preferences"
     elif fsl in [ "Windows", ]: pass
-    else:
-        raise UnsupportedFilesystemLayout(
-            "Unimplemented path determination logic for {0}.", fsl      
-        )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
     __decide_upon_error_on_none(
         error_on_none, config_base_path, location, cbp_evname
@@ -710,10 +696,7 @@ def whereis_common_config_base( error_on_none = False ):
     if   fsl in [ "POSIX", ]:   config_base_path = "/usr/local/etc"
     elif fsl in [ "MacOS X", ]: config_base_path = "/Library/Preferences"
     elif fsl in [ "Windows", ]: pass
-    else:
-        raise UnsupportedFilesystemLayout(
-            "Unimplemented path determination logic for {0}.", fsl      
-        )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
     __decide_upon_error_on_none(
         error_on_none, config_base_path, location, cbp_evname
@@ -740,10 +723,7 @@ def whereis_user_home( error_on_none = False ):
     elif fsl in [ "Windows", ]:
         user_id         = envvars.get( "UserName", None )
         user_home_path  = envvars.get( "UserProfile", None )
-    else:
-        raise UnsupportedFilesystemLayout(
-            "Unimplemented path determination logic for {0}.", fsl      
-        )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
     
     if (None is user_home_path) and error_on_none:
         if user_id:
@@ -783,10 +763,7 @@ def whereis_common_temp_base( error_on_none = False ):
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", "MacOS X" ]: temp_base_path = "/tmp"
     elif fsl in [ "Windows", ]:         pass
-    else:
-        raise UnsupportedFilesystemLayout(
-            "Unimplemented path determination logic for {0}.", fsl      
-        )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
     __decide_upon_error_on_none(
         error_on_none, temp_base_path, location
@@ -810,10 +787,7 @@ def whereis_user_temp_base( error_on_none = False ):
     elif fsl in [ "Windows", ]:
         utbp_evname = "Temp"
         temp_base_path = envvars.get( utbp_evname, None )
-    else:
-        raise UnsupportedFilesystemLayout(
-            "Unimplemented path determination logic for {0}.", fsl      
-        )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
     __decide_upon_error_on_none(
         error_on_none, temp_base_path, location, utbp_evname
@@ -956,10 +930,7 @@ def whereis_my_site_config(
             __computed_Windows_program_files_path(
                 error_on_none = error_on_none
             )
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
 
     if msbp:
 
@@ -991,10 +962,7 @@ def whereis_my_site_config(
                 my_site_path = \
                 path_join( *filter( None, [ msbp, mspf, "Config" ] ) )
 
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
 
     location = _TD_( "common configuration information" )
     __decide_upon_error_on_none(
@@ -1042,10 +1010,7 @@ def whereis_my_site_resources(
             __computed_Windows_program_files_path(
                 error_on_none = error_on_none 
             )
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
 
     if msbp:
 
@@ -1087,10 +1052,7 @@ def whereis_my_site_resources(
                 my_site_path = \
                 path_join( *filter( None, [ msbp, mspf, "Resources" ] ) )
 
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
 
     location = _TD_( "common resources" )
     __decide_upon_error_on_none(
@@ -1149,10 +1111,7 @@ def whereis_my_user_config(
         elif fsl in [ "Windows", ]:
             mubp_evname = "AppData"
             mubp = envvars.get( mubp_evname, None )
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
 
     if mubp:
 
@@ -1192,10 +1151,7 @@ def whereis_my_user_config(
                 my_user_path = \
                 path_join( *filter( None, [ mubp, mupf, "Config" ] ) )
 
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
 
     location = _TD_( "user-specific configuration information" )
     __decide_upon_error_on_none(
@@ -1249,10 +1205,7 @@ def whereis_my_user_resources(
         elif fsl in [ "Windows", ]:
             mubp_evname = "AppData"
             mubp = envvars.get( mubp_evname, None )
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
 
     if mubp:
 
@@ -1295,10 +1248,7 @@ def whereis_my_user_resources(
                 my_user_path = \
                 path_join( *filter( None, [ mubp, mupf, "Resources" ] ) )
 
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
 
     location = _TD_( "user-specific resources" )
     __decide_upon_error_on_none(
@@ -1343,10 +1293,7 @@ def whereis_my_saved_data(
     if not mdbp:
         if   fsl in [ "POSIX", "MacOS X", "Windows", ]:
             mdbp = whereis_user_home( error_on_none = error_on_none )
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
     
     if mdbp:
 
@@ -1359,10 +1306,7 @@ def whereis_my_saved_data(
             my_saves_path = \
             path_join( *filter( None, [ mdbp, "Documents", mdpf ] ) )
 
-        else:
-            raise UnsupportedFilesystemLayout(
-                "Unimplemented path determination logic for {0}.", fsl
-            )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
 
     location = _TD_( "saved data" )
     __decide_upon_error_on_none(
