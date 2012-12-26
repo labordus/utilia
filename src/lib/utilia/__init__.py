@@ -64,11 +64,11 @@ python_version = PythonVersion(
 # Read the version info from config file.
 # Note: If something goes wrong here, then just let the exception propagate.
 if 2 == python_version.major:
-    from ConfigParser import (
+    from ConfigParser import ( # pylint: disable=F0401
         SafeConfigParser        as __ConfigParser,
     )
 else:
-    from configparser import (
+    from configparser import ( # pylint: disable=F0401
         SafeConfigParser        as __ConfigParser,
     )
 
@@ -103,7 +103,7 @@ del path_join, collections
 
 # Alias 'range' built-in function to 'xrange' for Python 2 compatibility.
 if 3 == python_version.major:
-    xrange = range
+    xrange = range # pylint: disable=W0622
 
 
 def _autodoc_function_parameters( func, pdict ):
@@ -141,12 +141,12 @@ def _TD_( s ):
 
 # Note: If something goes wrong here, then just let the exception propagate.
 if 2 == python_version.major:
-    from __builtin__ import (
+    from __builtin__ import ( # pylint: disable=F0401
         BaseException           as __builtins_BaseException,
         StandardError           as __builtins_BaseError,
     )
 else:
-    from builtins import (
+    from builtins import ( # pylint: disable=F0401
         BaseException           as __builtins_BaseException,
         Exception               as __builtins_BaseError,
     )

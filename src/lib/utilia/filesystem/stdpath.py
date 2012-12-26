@@ -125,7 +125,7 @@ from utilia import (
     _TD_,
     Error_WithReason,
 )
-from utilia.compat.builtins import (
+from utilia.compat.builtins import ( # pylint: disable=W0622
     reduce,
 )
 from . import (

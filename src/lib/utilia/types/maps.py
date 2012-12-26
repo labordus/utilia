@@ -35,11 +35,9 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
-from utilia.compat.collections import (
+from utilia.compat.collections import ( # pylint: disable=W0611
     OrderedDict,
 )
-
-
 
 
 ###############################################################################

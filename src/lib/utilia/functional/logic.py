@@ -54,7 +54,7 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
-from utilia.compat.builtins import (
+from utilia.compat.builtins import ( # pylint: disable=W0622
     reduce,
 )
 
