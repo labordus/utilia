@@ -110,9 +110,9 @@ from os import (
     environ                 as envvars,
 )
 from os.path import (
-    join                    as path_join,
-    dirname                 as path_dirname,
-    expanduser              as path_expanduser,
+    join                    as join_path,
+    dirname                 as dirname_of_path,
+    expanduser              as expand_user_path,
 )
 import platform
 import site
@@ -131,6 +131,16 @@ from utilia.compat.builtins import ( # pylint: disable=W0622
 from . import (
     Error_BASE              as FilesystemError_BASE,
 )
+
+
+# TODO: Move to another module.
+def join_filtered_path( *posargs ):
+    """
+        Returns a path, composed of all of the supplied elements.
+        Any empty elements are dropped prior to joining them.
+    """
+
+    return join_path( *filter( None, posargs ) )
 
 
 def __DOCSTRING_FRAGMENTS( ):
@@ -382,7 +392,7 @@ def __computed_MacOS_X_python_prefix( prefix ):
 
     match = re.findall( r".*/Python\.framework/Versions/.*", prefix )
     if match:
-        return reduce( lambda x, f: f( x ), [ path_dirname ] * 4, prefix )
+        return reduce( lambda x, f: f( x ), [ dirname_of_path ] * 4, prefix )
     
     return prefix
 
@@ -419,7 +429,7 @@ def concatenated_software_path_fragment(
         Returns a concatenation of the name of a software product with an  
         optional name of the software product's vendor and an optional version 
         string for the software product as a filesystem path fragment typical
-        of the operating system architecture.
+        for the operating system architecture.
     """
 
     # Note: Conversion of whitespaces to underscores is performed on POSIX
@@ -466,10 +476,10 @@ def concatenated_software_path_fragment(
             else: __raise_UnsupportedFilesystemLayout( fsl )
         
         path_fragment = \
-        path_join( *filter( None, [ vendor_name, software_name, version ] ) )
+        join_filtered_path( vendor_name, software_name, version )
 
     if error_on_none and (None is path_fragment):
-        raise UndeterminedFilesystemPath( error_reason_format, *[ ] )
+        raise UndeterminedFilesystemPath( error_reason_format )
     return path_fragment
 
 
@@ -505,7 +515,7 @@ def whereis_oscore_install_root( error_on_none = False ):
         irp_evname = "SystemRoot"
         install_root_path = envvars.get( irp_evname, None )
         if install_root_path:
-            install_root_path = path_join( install_root_path, "System32" )
+            install_root_path = join_path( install_root_path, "System32" )
     else: __raise_UnsupportedFilesystemLayout( fsl )
 
     __decide_upon_error_on_none(
@@ -624,7 +634,7 @@ def whereis_oscore_config_base( error_on_none = False ):
         config_base_path = envvars.get( cbp_evname, None )
         if config_base_path:
             config_base_path = \
-            path_join( config_base_path, "System32", "Config"  )
+            join_path( config_base_path, "System32", "Config"  )
     else: __raise_UnsupportedFilesystemLayout( fsl )
 
     __decide_upon_error_on_none(
@@ -718,7 +728,7 @@ def whereis_user_home( error_on_none = False ):
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", "MacOS X", ]:
         user_id         = envvars.get( "USER", None )
-        user_home_path  = path_expanduser( "~" )
+        user_home_path  = expand_user_path( "~" )
         if "~" == user_home_path: user_home_path = None
     elif fsl in [ "Windows", ]:
         user_id         = envvars.get( "UserName", None )
@@ -883,7 +893,7 @@ def whereis_my_temp(
             error_on_none = error_on_none,
             prefer_common = prefer_common
         )
-    if ptbp: temp_path = path_join( *filter( None, [ ptbp, mtpf ] ) )
+    if ptbp: temp_path = join_filtered_path( ptbp, mtpf  )
     
     __decide_upon_error_on_none(
         error_on_none, temp_path, location, software_name = software_name
@@ -936,8 +946,7 @@ def whereis_my_site_config(
 
         if   fsl in [ "POSIX", ]:
             if "/usr" == msbp: msbp = "/"
-            my_site_path = \
-            path_join( *filter( None, [ msbp, "etc", mspf ] ) )
+            my_site_path = join_filtered_path( msbp, "etc", mspf )
 
         elif fsl in [ "MacOS X", ]:
             msbp_orig = msbp
@@ -945,22 +954,18 @@ def whereis_my_site_config(
             if msbp.startswith( "/System" ): msbp = "/Library"
             # MacOS X-flavored
             if (msbp_orig != msbp) or ("/Library" == msbp):
-                my_site_path = \
-                path_join( *filter( None, [ msbp, "Preferences", mspf ] ) )
+                my_site_path = join_filtered_path( msbp, "Preferences", mspf )
             # POSIX-flavored
             else:
-                my_site_path = \
-                path_join( *filter( None, [ msbp, "etc", mspf ] ) )
+                my_site_path = join_filtered_path( msbp, "etc", mspf )
 
         elif fsl in [ "Windows", ]:
             # Python-flavored
             if   msbp == sys.prefix:
-                my_site_path = \
-                path_join( *filter( None, [ msbp, "Config", mspf ] ) )
+                my_site_path = join_filtered_path( msbp, "Config", mspf )
             # Windows-flavored
             else:
-                my_site_path = \
-                path_join( *filter( None, [ msbp, mspf, "Config" ] ) )
+                my_site_path = join_filtered_path( msbp, mspf, "Config" )
 
         else: __raise_UnsupportedFilesystemLayout( fsl )
 
@@ -1016,11 +1021,9 @@ def whereis_my_site_resources(
 
         if   fsl in [ "POSIX", ]:
             if "/" == msbp:
-                my_site_path = \
-                path_join( *filter( None, [ msbp, "etc", mspf ] ) )
+                my_site_path = join_filtered_path( msbp, "etc", mspf )
             else:
-                my_site_path = \
-                path_join( *filter( None, [ msbp, "share", mspf ] ) )
+                my_site_path = join_filtered_path( msbp, "share", mspf )
 
         elif fsl in [ "MacOS X", ]:
             msbp_orig = msbp
@@ -1029,28 +1032,21 @@ def whereis_my_site_resources(
             # MacOS X-flavored
             if (msbp_orig != msbp) or ("/Library" == msbp):
                 my_site_path = \
-                path_join( *filter(
-                    None,
-                    [ msbp, "Application Support", mspf ]
-                ) )
+                join_filtered_path( msbp, "Application Support", mspf )
             # POSIX-flavored
             else:
                 if "/" == msbp:
-                    my_site_path = \
-                    path_join( *filter( None, [ msbp, "etc", mspf ] ) )
+                    my_site_path = join_filtered_path( msbp, "etc", mspf )
                 else:
-                    my_site_path = \
-                    path_join( *filter( None, [ msbp, "share", mspf ] ) )
+                    my_site_path = join_filtered_path( msbp, "share", mspf )
 
         elif fsl in [ "Windows", ]:
             # Python-flavored
             if   msbp == sys.prefix:
-                my_site_path = \
-                path_join( *filter( None, [ msbp, "Resources", mspf ] ) )
+                my_site_path = join_filtered_path( msbp, "Resources", mspf )
             # Windows-flavored
             else:
-                my_site_path = \
-                path_join( *filter( None, [ msbp, mspf, "Resources" ] ) )
+                my_site_path = join_filtered_path( msbp, mspf, "Resources" )
 
         else: __raise_UnsupportedFilesystemLayout( fsl )
 
@@ -1105,7 +1101,7 @@ def whereis_my_user_config(
                 # MacOS X-flavored
                 if  sys.prefix \
                     != __computed_MacOS_X_python_prefix( sys.prefix ):
-                    mubp = path_join( uhp, "Library" )
+                    mubp = join_path( uhp, "Library" )
                 # POSIX-flavored
                 else: mubp = uhp
         elif fsl in [ "Windows", ]:
@@ -1118,38 +1114,32 @@ def whereis_my_user_config(
         if   fsl in [ "POSIX", ]:
             if use_python_prefix:
                 # NOTE: Possible PEP 370 violation.
-                my_user_path = \
-                path_join( *filter( None, [ mubp, "etc", mupf ] ) )
+                my_user_path = join_filtered_path( mubp, "etc", mupf )
             else:
                 if not mupf: mupf = software_name
-                my_user_path = \
-                path_join( *filter( None, [ mubp, "." + mupf, "etc" ] ) )
+                my_user_path = join_filtered_path( mubp, "." + mupf, "etc" )
         
         elif fsl in [ "MacOS X", ]:
             # MacOS X-flavored
             if  sys.prefix \
                 != __computed_MacOS_X_python_prefix( sys.prefix ):
-                my_user_path = \
-                path_join( *filter( None, [ mubp, "Preferences", mupf ] ) )
+                my_user_path = join_filtered_path( mubp, "Preferences", mupf )
             # POSIX-flavored
             else:
                 if use_python_prefix:
                     # NOTE: Possible PEP 370 violation.
-                    my_user_path = \
-                    path_join( *filter( None, [ mubp, "etc", mupf ] ) )
+                    my_user_path = join_filtered_path( mubp, "etc", mupf )
                 else:
                     if not mupf: mupf = software_name
                     my_user_path = \
-                    path_join( *filter( None, [ mubp, "." + mupf, "etc" ] ) )
+                    join_filtered_path( mubp, "." + mupf, "etc" )
         
         elif fsl in [ "Windows", ]:
             if use_python_prefix:
-                my_user_path = \
-                path_join( *filter( None, [ mubp, "Config", mupf ] ) )
+                my_user_path = join_filtered_path( mubp, "Config", mupf )
             else:
                 if not mupf: mupf = software_name
-                my_user_path = \
-                path_join( *filter( None, [ mubp, mupf, "Config" ] ) )
+                my_user_path = join_filtered_path( mubp, mupf, "Config" )
 
         else: __raise_UnsupportedFilesystemLayout( fsl )
 
@@ -1199,7 +1189,7 @@ def whereis_my_user_resources(
                 # MacOS X-flavored
                 if  sys.prefix \
                     != __computed_MacOS_X_python_prefix( sys.prefix ):
-                    mubp = path_join( uhp, "Library" )
+                    mubp = join_path( uhp, "Library" )
                 # POSIX-flavored
                 else: mubp = uhp
         elif fsl in [ "Windows", ]:
@@ -1212,41 +1202,33 @@ def whereis_my_user_resources(
         if   fsl in [ "POSIX", ]:
             if use_python_prefix:
                 # NOTE: Possible PEP 370 violation.
-                my_user_path = \
-                path_join( *filter( None, [ mubp, "share", mupf ] ) )
+                my_user_path = join_filtered_path( mubp, "share", mupf )
             else:
                 if not mupf: mupf = software_name
-                my_user_path = \
-                path_join( *filter( None, [ mubp, "." + mupf, "share" ] ) )
+                my_user_path = join_filtered_path( mubp, "." + mupf, "share" )
         
         elif fsl in [ "MacOS X", ]:
             # MacOS X-flavored
             if  sys.prefix \
                 != __computed_MacOS_X_python_prefix( sys.prefix ):
                 my_user_path = \
-                path_join( *filter(
-                    None,
-                    [ mubp, "Application Support", mupf ]
-                ) )
+                join_filtered_path( mubp, "Application Support", mupf )
             # POSIX-flavored
             else:
                 if use_python_prefix:
                     # NOTE: Possible PEP 370 violation.
-                    my_user_path = \
-                    path_join( *filter( None, [ mubp, "share", mupf ] ) )
+                    my_user_path = join_filtered_path( mubp, "share", mupf )
                 else:
                     if not mupf: mupf = software_name
                     my_user_path = \
-                    path_join( *filter( None, [ mubp, "." + mupf, "share" ] ) )
+                    join_filtered_path( mubp, "." + mupf, "share" )
         
         elif fsl in [ "Windows", ]:
             if use_python_prefix:
-                my_user_path = \
-                path_join( *filter( None, [ mubp, "Resources", mupf ] ) )
+                my_user_path = join_filtered_path( mubp, "Resources", mupf )
             else:
                 if not mupf: mupf = software_name
-                my_user_path = \
-                path_join( *filter( None, [ mubp, mupf, "Resources" ] ) )
+                my_user_path = join_filtered_path( mubp, mupf, "Resources" )
 
         else: __raise_UnsupportedFilesystemLayout( fsl )
 
@@ -1299,12 +1281,10 @@ def whereis_my_saved_data(
 
         if   fsl in [ "POSIX", ]:
             if not mdpf: mdpf = software_name
-            my_saves_path = \
-            path_join( *filter( None, [ mdbp, "." + mdpf, "saves" ] ) )
+            my_saves_path = join_filtered_path( mdbp, "." + mdpf, "saves" )
         
         elif fsl in [ "MacOS X", "Windows", ]:
-            my_saves_path = \
-            path_join( *filter( None, [ mdbp, "Documents", mdpf ] ) )
+            my_saves_path = join_filtered_path( mdbp, "Documents", mdpf )
 
         else: __raise_UnsupportedFilesystemLayout( fsl )
 
