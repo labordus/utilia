@@ -12,6 +12,18 @@ The target audience for this guide is people wishing to contribute source code
 to the project. However, users of the software may also be interested in the 
 practices discussed in this guide.
 
+Table of Contents
+-----------------
+
+.. toctree::
+   :maxdepth: 2
+   :numbered:
+   :titlesonly:
+
+   source-code/index
+   ideas
+   todo
+
 .. todo::
    Create discussion of version control.
 
@@ -24,13 +36,5 @@ practices discussed in this guide.
 .. TODO? Add section on submitting patches.
 
 .. TODO? Add section on civility and "netiquette".
-
-.. toctree::
-   :maxdepth: 2
-   :numbered:
-
-   source-code/index
-   ideas
-   todo
 
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:

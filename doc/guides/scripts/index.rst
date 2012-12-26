@@ -8,6 +8,25 @@
 Scripts Collection
 ==================
 
+Overview
+--------
+
+The collected scripts serve a wide variety of purposes, but have the following
+features in common:
+
+   * Written in Python with the same compatibility level as the 
+     accompanying modules library.
+
+   * Flexible execution in an OS-independent manner.
+
+   * Well-documented invocation arguments and options, operations, and exit
+     codes. Usage examples are also included in the documentation.
+
+   * Useful, general purpose functionality.
+
+   * Seamless interoperability amongst scripts, when such interoperability is
+     desirable and meaningful.
+
 Table of Scripts
 ----------------
 
