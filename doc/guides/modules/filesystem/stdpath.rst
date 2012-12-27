@@ -63,19 +63,37 @@ Other Base Paths
 Public Derived Paths
 --------------------
 
-.. autofunction:: whereis_my_site_config
+.. autofunction:: whereis_my_common_config_at_base
 
-.. autofunction:: whereis_my_site_resources
+.. autofunction:: whereis_my_common_config
+
+.. autofunction:: whereis_my_common_config_pythonic
+
+.. autofunction:: whereis_my_common_resources_at_base
+
+.. autofunction:: whereis_my_common_resources
+
+.. autofunction:: whereis_my_common_resources_pythonic
 
 User Derived Paths
 ------------------
 
+.. autofunction:: whereis_my_user_config_at_base
+
 .. autofunction:: whereis_my_user_config
+
+.. autofunction:: whereis_my_user_config_pythonic
+
+.. autofunction:: whereis_my_user_resources_at_base
 
 .. autofunction:: whereis_my_user_resources
 
+.. autofunction:: whereis_my_user_resources_pythonic
+
 Other Derived Paths
 -------------------
+
+.. autofunction:: whereis_my_saved_data_at_base
 
 .. autofunction:: whereis_my_saved_data
 
@@ -97,6 +115,11 @@ References
 
 .. _Linux Filesystem Hierarchy Standard 2.3:
    http://www.pathname.com/fhs/pub/fhs-2.3.html
+
+.. [#] `XDG Base Directory Specification 0.8`_
+
+.. _XDG Base Directory Specification 0.8:
+   http://standards.freedesktop.org/basedir-spec/0.8/
 
 .. [#] `Mac OS X and iOS File System Basics`_
 

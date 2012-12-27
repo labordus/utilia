@@ -22,16 +22,11 @@
     is made to comply with published filesystem standards as well as Python
     conventions. Currently, the following OS platforms are supported:
 
-        * Linux [#]_
+        * Linux [#]_, [#]_
 
         * MacOS X [#]_, [#]_
 
         * Windows [#]_, [#]_, [#]_
-
-    The calculation of paths, relative to a Python installation, is also
-    supported (see the ``use_python_prefix`` parameter below). This is done in
-    accordance with :pep:`370` and may rely upon the 
-    :py:mod:`site <CPython3:site>` module.
 
     The functions contained in this module follow a regular naming
     convention, which provides hints as to their purpose. This convention can
@@ -52,6 +47,10 @@
       top-level directory under which other directories for things, such as 
       configuration information and package resources, can be found.
 
+    * The suffix **pythonic** denotes that a returned path is calculated in
+      accordance with :pep:`370` and may rely upon the 
+      :py:mod:`site <CPython3:site>` module.
+
     * The suffix **base** denotes that a returned path refers to an upper-level
       directory of a certain flavor, such as for configuration information or 
       package resources, which is potentially common to many pieces of 
@@ -62,10 +61,6 @@
     
     * Functions, which return paths relative to the current user's home 
       directory, have the word **user** in their names.
-
-    * Functions, which return paths for shared or system-wide directories,
-      associated with a particular pieces of software, have the word **site** 
-      in their names.
 
     Most of the functions can be instructed to operate in a *return None on
     failure* mode or a *raise exception on failure* mode. By default, these
@@ -81,9 +76,9 @@
 
     * :py:func:`whereis_my_user_resources`
 
-    * :py:func:`whereis_my_site_config`
+    * :py:func:`whereis_my_common_config`
 
-    * :py:func:`whereis_my_site_resources`
+    * :py:func:`whereis_my_common_resources`
 
     * :py:func:`whereis_my_temp`
 
@@ -175,34 +170,22 @@ def __DOCSTRING_FRAGMENTS( ):
                         fragment which identifies a software product.
         :type version: :py:class:`string <CPython3:str>`
     """,
-        "alt_base_path": \
+        "base_path": \
     """
-        :param alt_base_path: Calculate path, using this base path as a prefix
-                              rather than deriving a base path to use as a
-                              prefix.
-        :type alt_base_path: :py:class:`string <CPython3:str>`
+        :param base_path: Calculate path, using this path as the base.
+        :type base_path: :py:class:`string <CPython3:str>`
+    """,
+        "specific_path": \
+    """
+        :param specific_path: Calculate path, using this path as the most
+                              specific part.
+        :type specific_path: :py:class:`string <CPython3:str>`
     """,
         "prefer_common": \
     """
         :param prefer_common: If ``True``, the common path, if it exists, 
                               will be preferred over the user path.
         :type prefer_common: :py:func:`boolean <CPython3:bool>`
-    """,
-        "append_path_fragment": \
-    """
-        :param append_path_fragment: If ``True``, a concatenation of the names
-                                     of the software vendor and the software,
-                                     along with the software version, will be
-                                     injected into the calculated path.
-        :type append_path_fragment: :py:func:`boolean <CPython3:bool>`
-    """,
-        "use_python_prefix": \
-    """
-        :param use_python_prefix: If ``True``, cause the path calculation to
-                                  attempt adherence to the Python file system
-                                  standard rather than the standard for the 
-                                  OS distribution.
-        :type use_python_prefix: :py:func:`boolean <CPython3:bool>`
     """,
         "RTYPE_string_or_None": \
     """
@@ -299,7 +282,7 @@ class UndeterminedFilesystemPath( FilesystemError_BASE, Error_WithReason ):
 
 def __decide_upon_error_on_none(
     error_on_none, path,
-    location, evname = None, software_name = None
+    location, evname = None, specific_path = None
 ):
     """
         Raises an 'UndeterminedFilesystemPath' exception, if the
@@ -308,18 +291,18 @@ def __decide_upon_error_on_none(
 
     if error_on_none and (None is path):
 
-        if software_name:
+        if specific_path:
             if evname:
                 error_reason_format = _TD_(
                     "Undetermined path to {0} for '{1}'."
                     " (Environment variable, '{2}', not set.)"
                 )
-                error_reason_args   = [ location, software_name, evname ]
+                error_reason_args   = [ location, specific_path, evname ]
             else:
                 error_reason_format = _TD_(
                     "Undetermined path to {0} for '{1}'."
                 )
-                error_reason_args   = [ location, software_name ]
+                error_reason_args   = [ location, specific_path ]
         else:
             if evname:
                 error_reason_format = _TD_(
@@ -580,7 +563,7 @@ def whereis_common_install_root( error_on_none = False ):
            :widths: 20, 80
 
            "POSIX",     "/usr/local"
-           "MacOS",     ""
+           "MacOS",     "/Library"
            "Windows",   "C:\\\\Program Files"
         
     """
@@ -591,7 +574,7 @@ def whereis_common_install_root( error_on_none = False ):
 
     fsl = which_fs_layout( )
     if   "POSIX" == fsl:    install_root_path = "/usr/local"
-    elif "MacOS X" == fsl:  pass
+    elif "MacOS X" == fsl:  install_root_path = "/Library"
     elif "Windows" == fsl:
         install_root_path = \
         __computed_Windows_program_files_path( error_on_none = error_on_none )
@@ -788,9 +771,9 @@ def whereis_user_temp_base( error_on_none = False ):
 
     """
 
-    utbp_evname         = None
-    user_temp_base_path = None
-    location            = _TD_( "user-specific temporary storage area" )
+    utbp_evname     = None
+    temp_base_path  = None
+    location        = _TD_( "user-specific temporary storage area" )
 
     fsl = which_fs_layout( )
     if   fsl in [ "POSIX", "MacOS X", ]:    pass
@@ -802,7 +785,7 @@ def whereis_user_temp_base( error_on_none = False ):
     __decide_upon_error_on_none(
         error_on_none, temp_base_path, location, utbp_evname
     )
-    return user_temp_base_path
+    return temp_base_path
 
 
 @__decorate_docstring
@@ -857,15 +840,11 @@ def whereis_preferred_temp_base(
 
 @__decorate_docstring
 def whereis_my_temp(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None,
-    prefer_common = False, append_path_fragment = True,
-    error_on_none = False
+    specific_path = None, prefer_common = False, error_on_none = False
 ):
     """
-        Returns the path to the preferred temporary storage for the software
-        specified by the ``software_name`` argument. Returns ``None``, 
-        otherwise.
+        Returns the path to the preferred temporary storage for the specific
+        software.
 
         The path calculation relies on results from the
         :py:func:`whereis_preferred_temp_base` and the 
@@ -873,188 +852,281 @@ def whereis_my_temp(
 
     """
 
-    temp_path   = None
-    location    = _TD_( "temporary storage area" )
+    base_path   = None
+    full_path   = None
+    evname      = None
 
-    if append_path_fragment:
-        mtpf = \
-        concatenated_software_path_fragment(
-            software_name   = software_name,
-            vendor_name     = vendor_name,
-            version         = version,
-            error_on_none   = error_on_none
-        )
-    else: mtpf = ""
-
-    ptbp = alt_base_path
-    if not ptbp:
-        ptbp = \
-        whereis_preferred_temp_base(
-            error_on_none = error_on_none,
-            prefer_common = prefer_common
-        )
-    if ptbp: temp_path = join_filtered_path( ptbp, mtpf  )
+    base_path = \
+    whereis_preferred_temp_base(
+        error_on_none = error_on_none, prefer_common = prefer_common
+    )
+    full_path = join_filtered_path( base_path, specific_path )
     
     __decide_upon_error_on_none(
-        error_on_none, temp_path, location, software_name = software_name
+        error_on_none, full_path, 
+        _TD_( "temporary storage area" ), 
+        evname, specific_path
     )
-    return temp_path
+    return full_path
 
 
 @__decorate_docstring
-def whereis_my_site_config(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None, use_python_prefix = False,
-    append_path_fragment = True,
-    error_on_none = False
+def whereis_my_common_config_at_base(
+    base_path, specific_path = None, error_on_none = False
 ):
     """
-        Returns a path to shared or site-wide configuration information 
-        or preferences directory for the software product named by the
-        ``software_name`` argument.
+        Returns a path to the directory, where the shared configuration
+        information for the specific software is stored.
 
     """
 
-    my_site_path        = None
-    fsl                 = which_fs_layout( )
-    msbp                = None
-    msbp_evname         = None
+    fsl         = which_fs_layout( )
+    full_path   = None
+    evname      = None
 
-    if append_path_fragment:
-        mspf = \
-        concatenated_software_path_fragment(
-            software_name   = software_name,
-            vendor_name     = vendor_name,
-            version         = version,
-            error_on_none   = error_on_none
-        )
-    else: mspf = ""
-
-    if not msbp: msbp = alt_base_path
-    if not msbp and use_python_prefix: msbp = sys.prefix
-    if not msbp:
-        if   fsl in [ "POSIX", ]:   msbp = "/usr/local"
-        elif fsl in [ "MacOS X", ]: msbp = "/Library"
-        elif fsl in [ "Windows", ]:
-            msbp = \
-            __computed_Windows_program_files_path(
-                error_on_none = error_on_none
-            )
-        else: __raise_UnsupportedFilesystemLayout( fsl )
-
-    if msbp:
+    if base_path:
 
         if   fsl in [ "POSIX", ]:
-            if "/usr" == msbp: msbp = "/"
-            my_site_path = join_filtered_path( msbp, "etc", mspf )
-
+            if "/usr" == base_path: base_path = "/"
+            full_path = \
+            join_filtered_path( base_path, "etc", specific_path )
         elif fsl in [ "MacOS X", ]:
-            msbp_orig = msbp
-            msbp = __computed_MacOS_X_python_prefix( msbp )
-            if msbp.startswith( "/System" ): msbp = "/Library"
-            # MacOS X-flavored
-            if (msbp_orig != msbp) or ("/Library" == msbp):
-                my_site_path = join_filtered_path( msbp, "Preferences", mspf )
-            # POSIX-flavored
+            base_path_orig = base_path
+            base_path = __computed_MacOS_X_python_prefix( base_path )
+            if base_path.startswith( "/System" ): base_path = "/Library"
+            posix_flavor = \
+            (base_path_orig == base_path) and ("/Library" != base_path)
+            if posix_flavor:
+                if "/usr" == base_path: base_path = "/"
+                full_path = \
+                join_filtered_path( base_path, "etc", specific_path )
             else:
-                my_site_path = join_filtered_path( msbp, "etc", mspf )
-
+                full_path = \
+                join_filtered_path( base_path, "Preferences", specific_path )
         elif fsl in [ "Windows", ]:
-            # Python-flavored
-            if   msbp == sys.prefix:
-                my_site_path = join_filtered_path( msbp, "Config", mspf )
-            # Windows-flavored
-            else:
-                my_site_path = join_filtered_path( msbp, mspf, "Config" )
-
+            if specific_path:
+                full_path = \
+                join_filtered_path( base_path, specific_path, "Config" )
         else: __raise_UnsupportedFilesystemLayout( fsl )
 
-    location = _TD_( "common configuration information" )
     __decide_upon_error_on_none(
-        error_on_none, my_site_path, location, msbp_evname, software_name
+        error_on_none, full_path,
+        _TD_( "shared configuration information" ),
+        evname, specific_path
     )
-    return my_site_path
+    return full_path
 
 
 @__decorate_docstring
-def whereis_my_site_resources(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None, use_python_prefix = False,
-    append_path_fragment = True,
-    error_on_none = False
+def whereis_my_common_config(
+    specific_path = None, error_on_none = False
 ):
     """
-        Returns a path to the shared or site-wide data store or resources 
-        directory for the software product named by the ``software_name`` 
-        argument.
+        Returns a path to the directory, where the shared configuration
+        information for the specific software is stored. (This path is 
+        relative to the current OS platform's standard shared location for 
+        configuration information.)
 
     """
 
-    my_site_path        = None
-    fsl                 = which_fs_layout( )
-    msbp                = None
-    msbp_evname         = None
+    fsl         = which_fs_layout( )
+    base_path   = whereis_common_install_root( error_on_none = error_on_none )
 
-    if append_path_fragment:
-        mspf = \
-        concatenated_software_path_fragment(
-            software_name   = software_name,
-            vendor_name     = vendor_name,
-            version         = version,
-            error_on_none   = error_on_none
-        )
-    else: mspf = ""
+    if   fsl in [ "POSIX", ]:
+        base_path = \
+        whereis_common_install_root( error_on_none = error_on_none )
+    elif fsl in [ "MacOS X", ]:
+        base_path = \
+        whereis_common_install_root( error_on_none = error_on_none )
+    elif fsl in [ "Windows", ]:
+        base_path = \
+        whereis_common_install_root( error_on_none = error_on_none )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
-    if not msbp: msbp = alt_base_path
-    if not msbp and use_python_prefix: msbp = sys.prefix
-    if not msbp:
-        if   fsl in [ "POSIX", ]:   msbp = "/usr/local"
-        elif fsl in [ "MacOS X", ]: msbp = "/Library"
+    return whereis_my_common_config_at_base(
+        base_path, specific_path, error_on_none
+    )
+
+
+@__decorate_docstring
+def whereis_my_common_config_pythonic(
+    specific_path = None, error_on_none = False
+):
+    """
+        Returns a path to the directory, where the shared configuration
+        information for the specific software is stored. (This path is 
+        relative to the current Python's current installation base directory.)
+
+    """
+
+    fsl         = which_fs_layout( )
+    base_path   = sys.prefix
+    full_path   = None
+    evname      = None
+
+    if base_path:
+
+        # NOTE: Possible PEP 370 violation.
+        if   fsl in [ "POSIX", ]:
+            full_path = join_filtered_path( base_path, "etc", specific_path )
+        elif fsl in [ "MacOS X", ]:
+            base_path_orig = base_path
+            base_path = __computed_MacOS_X_python_prefix( base_path )
+            if base_path.startswith( "/System" ): base_path = "/Library"
+            posix_flavor = \
+            (base_path_orig == base_path) and ("/Library" != base_path)
+            if posix_flavor:
+                full_path = \
+                join_filtered_path( base_path, "etc", specific_path )
+            else:
+                full_path = \
+                join_filtered_path(
+                    base_path, "Preferences", specific_path
+                )
         elif fsl in [ "Windows", ]:
-            msbp = \
-            __computed_Windows_program_files_path(
-                error_on_none = error_on_none 
-            )
+            full_path = \
+            join_filtered_path( base_path, "Config", specific_path )
         else: __raise_UnsupportedFilesystemLayout( fsl )
 
-    if msbp:
+    __decide_upon_error_on_none(
+        error_on_none, full_path,
+        _TD_( "Pythonic shared configuration information" ),
+        evname, specific_path
+    )
+    return full_path
+
+
+@__decorate_docstring
+def whereis_my_common_resources_at_base(
+    base_path, specific_path = None, error_on_none = False
+):
+    """
+        Returns a path to the directory, where the shared resources for the
+        specific software are stored.
+
+    """
+
+    fsl         = which_fs_layout( )
+    full_path   = None
+    evname      = None
+
+    if base_path:
 
         if   fsl in [ "POSIX", ]:
-            if "/" == msbp:
-                my_site_path = join_filtered_path( msbp, "etc", mspf )
+            if "/" == base_path:
+                full_path = \
+                join_filtered_path( base_path, "etc", specific_path )
             else:
-                my_site_path = join_filtered_path( msbp, "share", mspf )
-
+                full_path = \
+                join_filtered_path( base_path, "share", specific_path )
         elif fsl in [ "MacOS X", ]:
-            msbp_orig = msbp
-            msbp = __computed_MacOS_X_python_prefix( msbp )
-            if msbp.startswith( "/System" ): msbp = "/Library"
-            # MacOS X-flavored
-            if (msbp_orig != msbp) or ("/Library" == msbp):
-                my_site_path = \
-                join_filtered_path( msbp, "Application Support", mspf )
-            # POSIX-flavored
-            else:
-                if "/" == msbp:
-                    my_site_path = join_filtered_path( msbp, "etc", mspf )
+            base_path_orig = base_path
+            base_path = __computed_MacOS_X_python_prefix( base_path )
+            if base_path.startswith( "/System" ): base_path = "/Library"
+            posix_flavor = \
+            (base_path_orig == base_path) and ("/Library" != base_path)
+            if posix_flavor:
+                if "/" == base_path:
+                    full_path = \
+                    join_filtered_path( base_path, "etc", specific_path )
                 else:
-                    my_site_path = join_filtered_path( msbp, "share", mspf )
-
-        elif fsl in [ "Windows", ]:
-            # Python-flavored
-            if   msbp == sys.prefix:
-                my_site_path = join_filtered_path( msbp, "Resources", mspf )
-            # Windows-flavored
+                    full_path = \
+                    join_filtered_path( base_path, "share", specific_path )
             else:
-                my_site_path = join_filtered_path( msbp, mspf, "Resources" )
-
+                full_path = \
+                join_filtered_path(
+                    base_path, "Application Support", specific_path
+                )
+        elif fsl in [ "Windows", ]:
+            if specific_path:
+                full_path = \
+                join_filtered_path( base_path, specific_path, "Resources" )
         else: __raise_UnsupportedFilesystemLayout( fsl )
 
-    location = _TD_( "common resources" )
     __decide_upon_error_on_none(
-        error_on_none, my_site_path, location, msbp_evname, software_name
+        error_on_none, full_path,
+        _TD_( "shared resources" ),
+        evname, specific_path
     )
-    return my_site_path
+    return full_path
+
+
+@__decorate_docstring
+def whereis_my_common_resources(
+    specific_path = None, error_on_none = False
+):
+    """
+        Returns a path to the directory, where the shared resources for the
+        specific software are stored. (This path is relative to the current OS
+        platform's standard shared location for resources.)
+
+    """
+
+    fsl         = which_fs_layout( )
+    base_path   = whereis_common_install_root( error_on_none = error_on_none )
+
+    if   fsl in [ "POSIX", ]:
+        base_path = \
+        whereis_common_install_root( error_on_none = error_on_none )
+    elif fsl in [ "MacOS X", ]:
+        base_path = \
+        whereis_common_install_root( error_on_none = error_on_none )
+    elif fsl in [ "Windows", ]:
+        base_path = \
+        whereis_common_install_root( error_on_none = error_on_none )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
+
+    return whereis_my_common_resources_at_base(
+        base_path, specific_path, error_on_none
+    )
+
+
+@__decorate_docstring
+def whereis_my_common_resources_pythonic(
+    specific_path = None, error_on_none = False
+):
+    """
+        Returns a path to the directory, where the shared resources for the
+        specific software are stored. (This path is relative to the current
+        Python's current installation base directory.)
+
+    """
+
+    fsl         = which_fs_layout( )
+    base_path   = sys.prefix
+    full_path   = None
+    evname      = None
+
+    if base_path:
+
+        # NOTE: Possible PEP 370 violation.
+        if   fsl in [ "POSIX", ]:
+            full_path = join_filtered_path( base_path, "share", specific_path )
+        elif fsl in [ "MacOS X", ]:
+            base_path_orig = base_path
+            base_path = __computed_MacOS_X_python_prefix( base_path )
+            if base_path.startswith( "/System" ): base_path = "/Library"
+            posix_flavor = \
+            (base_path_orig == base_path) and ("/Library" != base_path)
+            if posix_flavor:
+                full_path = \
+                join_filtered_path( base_path, "share", specific_path )
+            else:
+                full_path = \
+                join_filtered_path(
+                    base_path, "Application Support", specific_path
+                )
+        elif fsl in [ "Windows", ]:
+            full_path = \
+            join_filtered_path( base_path, "Resources", specific_path )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
+
+    __decide_upon_error_on_none(
+        error_on_none, full_path,
+        _TD_( "Pythonic shared resources" ),
+        evname, specific_path
+    )
+    return full_path
 
 
 # TODO: whereis_my_site_programs
@@ -1062,237 +1134,284 @@ def whereis_my_site_resources(
 
 
 @__decorate_docstring
-def whereis_my_user_config(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None, use_python_prefix = False,
-    append_path_fragment = True,
-    error_on_none = False
+def whereis_my_user_config_at_base(
+    base_path, specific_path = None, error_on_none = False
 ):
     """
-        Returns a path to the user's configuration information or preferences
-        directory for the software product named by the ``software_name`` 
-        argument.
+        Returns a path to the directory, where the current user's configuration
+        information for the specific software is stored.
 
     """
 
-    my_user_path        = None
-    fsl                 = which_fs_layout( )
-    mubp                = None
-    mubp_evname         = None
+    fsl         = which_fs_layout( )
+    full_path   = None
+    evname      = None
 
-    if append_path_fragment:
-        mupf = \
-        concatenated_software_path_fragment(
-            software_name   = software_name,
-            vendor_name     = vendor_name,
-            version         = version,
-            error_on_none   = error_on_none
-        )
-    else: mupf = ""
-
-    if not mubp: mubp = alt_base_path
-    if not mubp and use_python_prefix: mubp = site.USER_BASE
-    if not mubp:
-        if   fsl in [ "POSIX", ]:
-            mubp = whereis_user_home( error_on_none = error_on_none )
-        elif fsl in [ "MacOS X", ]:
-            uhp = whereis_user_home( error_on_none = error_on_none )
-            if uhp:
-                # MacOS X-flavored
-                if  sys.prefix \
-                    != __computed_MacOS_X_python_prefix( sys.prefix ):
-                    mubp = join_path( uhp, "Library" )
-                # POSIX-flavored
-                else: mubp = uhp
-        elif fsl in [ "Windows", ]:
-            mubp_evname = "AppData"
-            mubp = envvars.get( mubp_evname, None )
-        else: __raise_UnsupportedFilesystemLayout( fsl )
-
-    if mubp:
+    if base_path:
 
         if   fsl in [ "POSIX", ]:
-            if use_python_prefix:
-                # NOTE: Possible PEP 370 violation.
-                my_user_path = join_filtered_path( mubp, "etc", mupf )
-            else:
-                if not mupf: mupf = software_name
-                my_user_path = join_filtered_path( mubp, "." + mupf, "etc" )
-        
+            full_path = \
+            join_filtered_path( base_path, ".config", specific_path )
         elif fsl in [ "MacOS X", ]:
-            # MacOS X-flavored
-            if  sys.prefix \
-                != __computed_MacOS_X_python_prefix( sys.prefix ):
-                my_user_path = join_filtered_path( mubp, "Preferences", mupf )
-            # POSIX-flavored
-            else:
-                if use_python_prefix:
-                    # NOTE: Possible PEP 370 violation.
-                    my_user_path = join_filtered_path( mubp, "etc", mupf )
-                else:
-                    if not mupf: mupf = software_name
-                    my_user_path = \
-                    join_filtered_path( mubp, "." + mupf, "etc" )
-        
+            posix_flavor = \
+            sys.prefix == __computed_MacOS_X_python_prefix( sys.prefix )
+            if posix_flavor:    mid_path = ".config"
+            else:               mid_path = "Preferences"
+            full_path = \
+            join_filtered_path( base_path, mid_path, specific_path )
         elif fsl in [ "Windows", ]:
-            if use_python_prefix:
-                my_user_path = join_filtered_path( mubp, "Config", mupf )
-            else:
-                if not mupf: mupf = software_name
-                my_user_path = join_filtered_path( mubp, mupf, "Config" )
-
+            if specific_path:
+                full_path = \
+                join_filtered_path( base_path, specific_path, "Config" )
         else: __raise_UnsupportedFilesystemLayout( fsl )
 
-    location = _TD_( "user-specific configuration information" )
     __decide_upon_error_on_none(
-        error_on_none, my_user_path, location, mubp_evname, software_name
+        error_on_none, full_path,
+        _TD_( "user-specific configuration information" ),
+        evname, specific_path
     )
-    return my_user_path
+    return full_path
+
+
+@__decorate_docstring
+def whereis_my_user_config(
+    specific_path = None, error_on_none = False
+):
+    """
+        Returns a path to the directory, where the current user's configuration
+        information for the specific software is stored. (This path is 
+        relative to the current OS platform's standard per-user location for 
+        configuration information.)
+
+    """
+
+    fsl         = which_fs_layout( )
+    base_path   = None
+
+    if   fsl in [ "POSIX", ]:
+        base_path = whereis_user_home( error_on_none = error_on_none )
+    elif fsl in [ "MacOS X", ]:
+        uhp = whereis_user_home( error_on_none = error_on_none )
+        if uhp:
+            posix_flavor = \
+            sys.prefix == __computed_MacOS_X_python_prefix( sys.prefix )
+            if posix_flavor:    base_path = uhp
+            else:               base_path = join_path( uhp, "Library" )
+    elif fsl in [ "Windows", ]:
+        base_path = envvars.get( "AppData", None )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
+
+    return whereis_my_user_config_at_base(
+        base_path, specific_path, error_on_none
+    )
+
+
+@__decorate_docstring
+def whereis_my_user_config_pythonic(
+    specific_path = None, error_on_none = False
+):
+    """
+        Returns a path to the directory, where the current user's configuration
+        information for the specific software are stored. (This path is 
+        relative to Python's user base directory, as specified by :pep:`370`.)
+
+    """
+
+    fsl         = which_fs_layout( )
+    base_path   = site.USER_BASE
+    full_path   = None
+    evname      = None
+
+    if base_path:
+
+        # NOTE: Possible PEP 370 violation.
+        if   fsl in [ "POSIX", ]:
+            full_path = join_filtered_path( base_path, "etc", specific_path )
+        elif fsl in [ "MacOS X", ]:
+            posix_flavor = \
+            sys.prefix == __computed_MacOS_X_python_prefix( sys.prefix )
+            if posix_flavor:    mid_path = "etc"
+            else:               mid_path = "Preferences"
+            full_path = \
+            join_filtered_path( base_path, mid_path, specific_path )
+        elif fsl in [ "Windows", ]:
+            full_path = \
+            join_filtered_path( base_path, "Config", specific_path )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
+
+    __decide_upon_error_on_none(
+        error_on_none, full_path,
+        _TD_( "Pythonic user-specific configuration information" ),
+        evname, specific_path
+    )
+    return full_path
+
+
+@__decorate_docstring
+def whereis_my_user_resources_at_base(
+    base_path, specific_path = None, error_on_none = False
+):
+    """
+        Returns a path to the directory, where the current user's resources for
+        the specific software are stored.
+
+    """
+
+    fsl         = which_fs_layout( )
+    full_path   = None
+    evname      = None
+
+    if base_path:
+
+        if   fsl in [ "POSIX", ]:
+            full_path = \
+            join_filtered_path( base_path, ".local/share", specific_path )
+        elif fsl in [ "MacOS X", ]:
+            posix_flavor = \
+            sys.prefix == __computed_MacOS_X_python_prefix( sys.prefix )
+            if posix_flavor:    mid_path = ".local/share"
+            else:               mid_path = "Application Support"
+            full_path = \
+            join_filtered_path( base_path, mid_path, specific_path )
+        elif fsl in [ "Windows", ]:
+            if specific_path:
+                full_path = \
+                join_filtered_path( base_path, specific_path, "Resources" )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
+
+    __decide_upon_error_on_none(
+        error_on_none, full_path,
+        _TD_( "user-specific resources" ),
+        evname, specific_path
+    )
+    return full_path
 
 
 @__decorate_docstring
 def whereis_my_user_resources(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None, use_python_prefix = False,
-    append_path_fragment = True,
-    error_on_none = False
+    specific_path = None, error_on_none = False
 ):
     """
-        Returns a path to the user's resources or data store directory 
-        for the software product named by the ``software_name`` argument.
+        Returns a path to the directory, where the current user's resources for
+        the specific software are stored. (This path is relative to the current
+        OS platform's standard per-user location for resources.)
 
     """
 
-    my_user_path        = None
-    fsl                 = which_fs_layout( )
-    mubp                = None
-    mubp_evname         = None
+    fsl         = which_fs_layout( )
+    base_path   = None
 
-    if append_path_fragment:
-        mupf = \
-        concatenated_software_path_fragment(
-            software_name   = software_name,
-            vendor_name     = vendor_name,
-            version         = version,
-            error_on_none   = error_on_none
-        )
-    else: mupf = ""
+    if   fsl in [ "POSIX", ]:
+        base_path = whereis_user_home( error_on_none = error_on_none )
+    elif fsl in [ "MacOS X", ]:
+        uhp = whereis_user_home( error_on_none = error_on_none )
+        if uhp:
+            posix_flavor = \
+            sys.prefix == __computed_MacOS_X_python_prefix( sys.prefix )
+            if posix_flavor:    base_path = uhp
+            else:               base_path = join_path( uhp, "Library" )
+    elif fsl in [ "Windows", ]:
+        base_path = envvars.get( "AppData", None )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
-    if not mubp: mubp = alt_base_path
-    if not mubp and use_python_prefix: mubp = site.USER_BASE
-    if not mubp:
-        if   fsl in [ "POSIX", ]:
-            mubp = whereis_user_home( error_on_none = error_on_none )
-        elif fsl in [ "MacOS X", ]:
-            uhp = whereis_user_home( error_on_none = error_on_none )
-            if uhp:
-                # MacOS X-flavored
-                if  sys.prefix \
-                    != __computed_MacOS_X_python_prefix( sys.prefix ):
-                    mubp = join_path( uhp, "Library" )
-                # POSIX-flavored
-                else: mubp = uhp
-        elif fsl in [ "Windows", ]:
-            mubp_evname = "AppData"
-            mubp = envvars.get( mubp_evname, None )
-        else: __raise_UnsupportedFilesystemLayout( fsl )
-
-    if mubp:
-
-        if   fsl in [ "POSIX", ]:
-            if use_python_prefix:
-                # NOTE: Possible PEP 370 violation.
-                my_user_path = join_filtered_path( mubp, "share", mupf )
-            else:
-                if not mupf: mupf = software_name
-                my_user_path = join_filtered_path( mubp, "." + mupf, "share" )
-        
-        elif fsl in [ "MacOS X", ]:
-            # MacOS X-flavored
-            if  sys.prefix \
-                != __computed_MacOS_X_python_prefix( sys.prefix ):
-                my_user_path = \
-                join_filtered_path( mubp, "Application Support", mupf )
-            # POSIX-flavored
-            else:
-                if use_python_prefix:
-                    # NOTE: Possible PEP 370 violation.
-                    my_user_path = join_filtered_path( mubp, "share", mupf )
-                else:
-                    if not mupf: mupf = software_name
-                    my_user_path = \
-                    join_filtered_path( mubp, "." + mupf, "share" )
-        
-        elif fsl in [ "Windows", ]:
-            if use_python_prefix:
-                my_user_path = join_filtered_path( mubp, "Resources", mupf )
-            else:
-                if not mupf: mupf = software_name
-                my_user_path = join_filtered_path( mubp, mupf, "Resources" )
-
-        else: __raise_UnsupportedFilesystemLayout( fsl )
-
-    location = _TD_( "user-specific resources" )
-    __decide_upon_error_on_none(
-        error_on_none, my_user_path, location, mubp_evname, software_name
+    return whereis_my_user_resources_at_base(
+        base_path, specific_path, error_on_none
     )
-    return my_user_path
+
+
+@__decorate_docstring
+def whereis_my_user_resources_pythonic(
+    specific_path = None, error_on_none = False
+):
+    """
+        Returns a path to the directory, where the current user's resources for
+        the specific software are stored. (This path is relative to Python's
+        user base directory, as specified by :pep:`370`.)
+
+    """
+
+    fsl         = which_fs_layout( )
+    base_path   = site.USER_BASE
+    full_path   = None
+    evname      = None
+
+    if base_path:
+
+        # NOTE: Possible PEP 370 violation.
+        if   fsl in [ "POSIX", ]:
+            full_path = join_filtered_path( base_path, "share", specific_path )
+        elif fsl in [ "MacOS X", ]:
+            posix_flavor = \
+            sys.prefix == __computed_MacOS_X_python_prefix( sys.prefix )
+            if posix_flavor:    mid_path = "share"
+            else:               mid_path = "Application Support"
+            full_path = \
+            join_filtered_path( base_path, mid_path, specific_path )
+        elif fsl in [ "Windows", ]:
+            full_path = \
+            join_filtered_path( base_path, "Resources", specific_path )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
+
+    __decide_upon_error_on_none(
+        error_on_none, full_path,
+        _TD_( "Pythonic user-specific resources" ),
+        evname, specific_path
+    )
+    return full_path
 
 
 # TODO: whereis_my_user_docs
 
 
 @__decorate_docstring
-def whereis_my_saved_data(
-    software_name, vendor_name = None, version = None,
-    alt_base_path = None, 
-    append_path_fragment = True,
-    error_on_none = False
+def whereis_my_saved_data_at_base(
+    base_path, specific_path = None, error_on_none = False
 ):
     """
+        Returns a path to the directory where works, created by the current
+        user, will be stored.
+
+    """
+    
+    fsl         = which_fs_layout( )
+    full_path   = None
+    evname      = None
+
+    if base_path:
+
+        if   fsl in [ "POSIX", ]:   pass
+        elif fsl in [ "MacOS X", "Windows", ]:
+            full_path = \
+            join_filtered_path( base_path, "Documents", specific_path )
+        else: __raise_UnsupportedFilesystemLayout( fsl )
+
+    __decide_upon_error_on_none(
+        error_on_none, full_path, _TD_( "saved data" ), evname, specific_path
+    )
+    return full_path
+
+
+@__decorate_docstring
+def whereis_my_saved_data( specific_path = None, error_on_none = False ):
+    """
         Returns a path to the directory where works, created by the user of the
-        software product, named by the ``software_name`` argument, will be
-        stored.
+        specific software, will be stored.
+
+        Uses :py:func:`.whereis_user_home` internally.
 
     """
 
-    my_saves_path       = None
-    fsl                 = which_fs_layout( )
-    mdbp                = None
-    mdbp_evname         = None
+    fsl         = which_fs_layout( )
+    base_path   = None
 
-    if append_path_fragment:
-        mdpf = \
-        concatenated_software_path_fragment(
-            software_name   = software_name,
-            vendor_name     = vendor_name,
-            version         = version,
-            error_on_none   = error_on_none
-        )
-    else: mdpf = ""
+    if   fsl in [ "POSIX", ]:   pass
+    if   fsl in [ "MacOS X", "Windows", ]:
+        base_path = whereis_user_home( error_on_none = error_on_none )
+    else: __raise_UnsupportedFilesystemLayout( fsl )
 
-    if not mdbp: mdbp = alt_base_path
-    if not mdbp:
-        if   fsl in [ "POSIX", "MacOS X", "Windows", ]:
-            mdbp = whereis_user_home( error_on_none = error_on_none )
-        else: __raise_UnsupportedFilesystemLayout( fsl )
-    
-    if mdbp:
-
-        if   fsl in [ "POSIX", ]:
-            if not mdpf: mdpf = software_name
-            my_saves_path = join_filtered_path( mdbp, "." + mdpf, "saves" )
-        
-        elif fsl in [ "MacOS X", "Windows", ]:
-            my_saves_path = join_filtered_path( mdbp, "Documents", mdpf )
-
-        else: __raise_UnsupportedFilesystemLayout( fsl )
-
-    location = _TD_( "saved data" )
-    __decide_upon_error_on_none(
-        error_on_none, my_saves_path, location, mdbp_evname, software_name
+    return whereis_my_saved_data_at_base(
+        base_path, specific_path, error_on_none
     )
-    return my_saves_path
 
 
 ###############################################################################
