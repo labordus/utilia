@@ -67,4 +67,18 @@ The source code and supporting works for the software are hosted on GitHub at:
 
    https://github.com/utilia/utilia
 
+.. |now| date:: %Y-%m-%d %H:%M:%S %Z
+
+.. |CI-devel| image:: https://travis-ci.org/utilia/utilia.png?branch=master
+
+The software undergoes continuous integration (CI) testing via
+`Travis CI <https://travis-ci.org/utilia/utilia>`_. The results of the CI
+tests, as of |now|, are tabulated below.
+
++--------------------------------------------------+--------------------------+
+| Repository Branch                                | Test Status              |
++==================================================+==========================+
+| Main Development (``master``)                    | |CI-devel|               |
++--------------------------------------------------+--------------------------+
+
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:
