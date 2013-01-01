@@ -56,7 +56,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'utilia'
-copyright = u'2012, Eric A. McDonald'
+copyright = u''
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

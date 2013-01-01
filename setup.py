@@ -133,10 +133,11 @@ setup_data[ "long_description" ]    = \
             * Et cetera....
     """
 setup_data[ "license" ]             = \
-    "Apache 2.0 (software), CC BY 3.0 Unported (documentation)"
+    "Apache 2.0 (software), CC BY 3.0 (documentation)"
 setup_data[ "author" ]              = "Eric A. McDonald"
-setup_data[ "author_email" ]        = "the.eric.mcdonald@gmail.com"
-# TODO: url
+setup_data[ "author_email" ]        = "utilia@googlegroups.com"
+setup_data[ "url" ]                 = \
+    "https://utilia.readthedocs.org/en/latest/index.html"
 # TODO: download_url
 
 setup_data[ "classifiers" ]         = \
