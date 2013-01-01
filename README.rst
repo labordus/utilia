@@ -50,7 +50,7 @@ There is no separate mailing list for announcements at this time.
 IRC and Twitter
 ~~~~~~~~~~~~~~~
 
-There is neither an IRC channel or a Twitter account at this time.
+There is neither an IRC channel nor a Twitter account at this time.
 
 Source Code and Supporting Works
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
