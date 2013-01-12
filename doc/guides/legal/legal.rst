@@ -5,8 +5,8 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-Information on Copyrights and Licensing
-=======================================
+Copyrights and Licensing
+========================
 
 .. include:: ../../../LEGAL.txt
 

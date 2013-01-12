@@ -8,8 +8,7 @@ other works which are distributed with it.
    The contributions to the Project listed below have been granted exceptions 
    to the standard licensing and legal notice policies of the Project. To 
    review the standard legal notice and licensing policies of the Project, 
-   please read the :file:`COPYRIGHT.txt` and :file:`LICENSE.txt` files, 
-   distributed with the Software.
+   please read the :file:`LEGAL.txt` file, distributed with the Software.
 
 Licensed Works
 --------------

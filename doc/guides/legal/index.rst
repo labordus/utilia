@@ -9,10 +9,9 @@ Legal Stuff
 ===========
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
-   copyright
-   licensing
+   legal
    notices
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:
