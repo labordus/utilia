@@ -5,9 +5,15 @@
 
       http://creativecommons.org/licenses/by/3.0/ 
 
-Copyright Information
-=====================
+Information on Copyrights and Licensing
+=======================================
 
-.. include:: ../../../COPYRIGHT.txt
+.. include:: ../../../LEGAL.txt
+
+Apache License 2.0
+------------------
+
+.. include:: ../../licenses/Apache-2_0.txt
+   :literal:
 
 .. vim: set ft=rst sts=3 sw=3 tw=79:

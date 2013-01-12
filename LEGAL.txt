@@ -4,6 +4,48 @@ This text pertains to the *utilia* project ("the Project"), which creates and
 maintains the *utilia* software ("the Software") and the documentation and
 other works which are distributed with it.
 
+Copyrights
+----------
+
+All contributions to the Project are subject to the relevant licenses;
+please read the licensing details below.
+
+As of this writing, no assignment of copyrights is required for the acceptance
+of contributions to the Software or other works which are distributed with it.
+
+Attribution of Authorship
+-------------------------
+
+Version control systems provide a means of tracking the authorship of
+contributions to a software distribution. Because of this and the copyright law
+extant in most jurisdictions throughout the world, the Project forbids
+copyright notices in anything contributed to it, with an exception being made 
+for those contributions which originate from separate, published collections 
+or distributions. Instead:
+
+* the official version control repository for the Software and the other 
+  works distributed with it shall serve as the official registry for tracking 
+  the authorship of contributions;
+
+* the Software shall be distributed with a file, named :file:`CONTRIB.txt`, 
+  which shall be the official list of all contributors who wish to be 
+  acknowledged as such.
+
+The location of the official version control repository for the Software and
+the other works distributed with it can be found at the following Internet URL:
+
+   http://github.com/utilia/utilia
+
+For a more detailed legal discussion behind this practice, please read the
+following white paper from the Software Freedom Law Center:
+   
+   http://softwarefreedom.org/resources/2012/ManagingCopyrightInformation.html
+
+For anything, which is not in the public domain and which is contributed to 
+the Project from a separate, published collection or distribution, a notice 
+about authorship and licensing shall appear in a file, named 
+:file:`NOTICE.txt`, which shall be distributed with the Software.
+
 License for the Software
 ------------------------
 
