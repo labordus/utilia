@@ -10,6 +10,15 @@ other works which are distributed with it.
    review the standard legal notice and licensing policies of the Project, 
    please read the :file:`LEGAL.txt` file, distributed with the Software.
 
+.. _BSD (2-clause):
+   http://opensource.org/licenses/BSD-2-Clause
+
+.. _MIT:
+   http://opensource.org/licenses/MIT
+
+.. _Python 2.0:
+   http://opensource.org/licenses/Python-2.0
+
 Licensed Works
 --------------
 
@@ -26,7 +35,7 @@ agogo (Sphinx theme)
 
 **Copyright Holder**:   the Sphinx team
 
-**License**:            BSD (2-clause)
+**License**:            `BSD (2-clause)`_
 
 **Location**:           :file:`doc/guides/_themes/agogo`
 
@@ -45,7 +54,7 @@ argparse
 
 **Original Author**:    Steven J. Bethard
 
-**License**:            PSF 2.0
+**License**:            `Python 2.0`_
 
 **Location**:           :file:`src/lib/utilia/config_parsers/argparse.py`
 
@@ -54,7 +63,7 @@ distribute_setup
 
 **Publication Info**:   http://python-distribute.org/distribute_setup.py
 
-**License**:            [Uncertain, being researched.]
+**License**:            [Uncertain, being researched. Probably `Python 2.0`_.]
 
 **Location**:           :file:`distribute_setup.py`
 
@@ -65,7 +74,7 @@ OrderedDict
 
 **Original Author**:    Raymond Hettinger
 
-**License**:            MIT
+**License**:            `MIT`_
 
 **Location**:           :file:`src/lib/utilia/types/ordered_dict.py`
 
