@@ -65,7 +65,7 @@ and the supporting works are covered by the
 `CC BY 3.0 License <http://creativecommons.org/licenses/by/3.0/>`_.
 For more information about the project's licensing, please read
 `the licensing text
-<https://utilia.readthedocs.org/en/latest/legal/licensing.html>`_.
+<https://utilia.readthedocs.org/en/latest/legal/legal.html>`_.
 
 For help with acquiring the software, please read 
 `the Installation Guide
