@@ -13,6 +13,15 @@ Subpackage Description
 
 .. automodule:: utilia.compat
 
+General Compatibility Functions
+-------------------------------
+
+.. autofunction:: iter_dict_keys
+
+.. autofunction:: iter_dict_values
+
+.. autofunction:: iter_dict_items
+
 Subpackages and Modules
 -----------------------
 
