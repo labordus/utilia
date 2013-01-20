@@ -52,7 +52,7 @@ from collections import *
 
 if  [ __python_version.major, __python_version.minor ] \
     in [ [ 2, 6 ], [ 3, 0 ] ]:
-    from utilia.types.COMPAT.ordered_dict import (
+    from utilia.types._COMPAT_.ordered_dict import (
         OrderedDict,
     )
 
