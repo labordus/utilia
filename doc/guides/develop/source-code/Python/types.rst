@@ -116,8 +116,9 @@ Here are some examples of preferred and avoided usages:
       return "a", 1, foo      # prefer
       return ( "a", 1, foo )  # avoid
       
-      for key, val in some_dict.iteritems( )       # prefer
-      for ( key, val ) in some_dict.iteritems( )   # avoid
+      from utilia.compat import iter_dict_items
+      for key, val in iter_dict_items( some_dict )       # prefer
+      for ( key, val ) in iter_dict_items( some_dict )   # avoid
 
 If you care about linguistic symmetry or code aesthetics, then consider the
 following contrasts:
@@ -145,7 +146,8 @@ cleaner than appending tuples to a list.
 
    .. code-block:: python
       
-      from utilia.types.maps import OrderedDict
+      from utilia.compat import iter_dict_items
+      from utilia.compat.collections import OrderedDict
 
       od = OrderedDict( )
       od[ "foo" ] = 1
@@ -153,7 +155,7 @@ cleaner than appending tuples to a list.
       # ...
       od[ "baz" ] = 3
       
-      for key, value in od.iteritems( ):
+      for key, value in iter_dict_items( od ):
          # Do stuff.
 
 In cases where lists of tuples can be generated automatically, then the use of
