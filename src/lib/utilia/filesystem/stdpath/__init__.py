@@ -100,12 +100,9 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
-# TODO: Convert into a package and refactor into modules by OS archtype.
 # TODO: Pass a context object instead of 'specific_path' strings.
-#       Can have specific path, as well as attributes:
 #           XDG Base Paths vs. Traditional User Data Paths
 #       Should carry software name for improved exception messages.
-#       Should be an optional argument, defaulting to None.
 # TODO: Support XDG environment variables.
 
 
