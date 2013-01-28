@@ -34,6 +34,7 @@ from __future__ import (
 
 
 import functools
+import abc
 
 
 def __has_attr_of_type( o, aname, atype ):
@@ -60,18 +61,19 @@ def test_MODULE_ATTRIBUTES( ):
 
     type_of_function    = type( lambda: None )
     type_of_class       = type( object )
+    type_of_abc         = abc.ABCMeta
+    type_of_exception   = type( BaseException )
+    type_of_future      = type( __FUTURE_division )
 
     for aname, atype in [
-        [ "__FUTURE_division",          type( __FUTURE_division ) ],
-        [ "__FUTURE_absolute_import",   type( __FUTURE_absolute_import ) ],
-        [ "__FUTURE_print_function",    type( __FUTURE_print_function ) ],
-        [ "__builtins_BaseException",   type( BaseException ) ],
-        [ "__builtins_BaseError",       type( Exception ) ],
+        [ "__FUTURE_division",          type_of_future ],
+        [ "__FUTURE_absolute_import",   type_of_future ],
+        [ "__FUTURE_print_function",    type_of_future ],
         [ "__version__",                str ],
-        [ "Exception_BASE",             type_of_class ],
-        [ "Error_BASE",                 type_of_class ],
-        [ "Error_WithRC",               type_of_class ],
-        [ "Error_WithReason",           type_of_class ],
+        [ "Exception_BASE",             type_of_abc ],
+        [ "Error_BASE",                 type_of_abc ],
+        [ "Exception_WithRC",           type_of_class ],
+        [ "Exception_WithReason",       type_of_class ],
     ]:
 
         f_decorated = \

@@ -49,11 +49,11 @@ Exception Classes
    :members:
    :inherited-members:
 
-.. autoclass:: Error_WithRC
+.. autoclass:: Exception_WithRC
    :members:
    :inherited-members:
 
-.. autoclass:: Error_WithReason
+.. autoclass:: Exception_WithReason
    :members:
    :inherited-members:
 

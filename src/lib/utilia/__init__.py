@@ -139,136 +139,208 @@ def _TD_( s ):
 # Exceptions
 
 
-# Note: If something goes wrong here, then just let the exception propagate.
+from abc import (
+    ABCMeta,
+)
+
+
 if 2 == python_version.major:
-    from __builtin__ import ( # pylint: disable=F0401
-        BaseException           as __builtins_BaseException,
-        StandardError           as __builtins_BaseError,
+    exec( # pylint: disable=W0122
+        """class Exception_BASE: __metaclass__ = ABCMeta"""
     )
 else:
-    from builtins import ( # pylint: disable=F0401
-        BaseException           as __builtins_BaseException,
-        Exception               as __builtins_BaseError,
+    exec( # pylint: disable=W0122 
+        """class Exception_BASE( metaclass = ABCMeta ): pass"""
     )
+# Note: Hack to make parse-only lint tools happy.
+Exception_BASE = vars( )[ "Exception_BASE" ]
+
+Exception_BASE.__doc__ = \
+"""
+    Abstract base class for all :py:mod:`utilia` exceptions.
+
+    Use this for your exception handler signature if you wish to catch any
+    exception raised from within :py:mod:`utilia`.
+"""
 
 
-class Exception_BASE( __builtins_BaseException ):
+if 2 == python_version.major:
+    exec( # pylint: disable=W0122
+        """class Error_BASE: __metaclass__ = ABCMeta"""
+    ) 
+else:
+    exec( # pylint: disable=W0122
+        """class Error_BASE( metaclass = ABCMeta ): pass"""
+    )
+# Note: Hack to make parse-only lint tools happy.
+Error_BASE = vars( )[ "Error_BASE" ]
+Exception_BASE.register( Error_BASE )
+
+Error_BASE.__doc__ = \
+"""
+    Abstract base class for all :py:mod:`utilia` exceptions 
+    which are regarded as errors.
+
+    Use this for your exception handler signature if you wish to catch any
+    error condition raised from within :py:mod:`utilia`.
+"""
+
+
+class Exception_WithRC( object ): # pylint: disable=R0903
     """
-        Base class for all :py:mod:`utilia` exceptions.
-        
-        Inherits from :py:exc:`BaseException <CPython3:BaseException>`.
-
-        Use this for your exception handler signature if you wish to catch any
-        exception raised from within :py:mod:`utilia`.
-    """
-
-
-    def __init__( self, *posargs ):
-        """
-            Invokes superclass initializers.
-        """
-
-        super( Exception_BASE, self ).__init__( *posargs )
-
-
-class Error_BASE( Exception_BASE, __builtins_BaseError ):
-    """
-        Base class for all :py:mod:`utilia` exceptions which are regarded as
-        errors.
-        
-        Inherits from :py:class:`Exception_BASE` and
-        :py:exc:`StandardError <CPython2:exceptions.StandardError>`. 
-
-        Use this for your exception handler signature if you wish to catch any
-        error condition raised from within :py:mod:`utilia`.
-    """
-
-
-    def __init__( self, *posargs ):
-        """
-            Invokes superclass initializers.
-        """
-
-        super( Error_BASE, self ).__init__( *posargs )
-
-
-class Error_WithRC( Error_BASE ):
-    """
-        Base class for all :py:mod:`utilia` exceptions which are regarded as
-        errors and which carry a return code that could be supplied to a
+        Mix-in class for all :py:mod:`utilia` exceptions which carry a return 
+        code that could be supplied to a 
         :py:exc:`SystemExit <CPython3:SystemExit>` exception.
 
-        Inherits from :py:class:`Error_BASE`.
+        Inherits from :py:class:`object <CPython3:object>`.
 
         Use this for your exception handler signature if you wish to catch any
-        error condition, which has an exit code, raised from within
+        exception, which has a return code, raised from within
         :py:mod:`utilia`.
     """
 
 
-    #: Return code to use as the exit status if the error is considered fatal.
-    rc              = 0
+    _rc              = 0
 
 
-    def __init__( self, *posargs ):
+    def __init__( self, *posargs ): # pylint: disable=W0613
         """
-            Invokes superclass initializers.
             Sets the return code to carry with the exception.
         """
 
-        super( Error_WithRC, self ).__init__( *posargs )
-        self.rc = 0
+        super( Exception_WithRC, self ).__init__( )
+        self._rc = 0
+
+
+    def __repr__( self ):
+        """
+            Returns a string which can be used by :py:func:`eval
+            <CPython3:eval>` to create an instance of the class.
+        """
+
+        return "Exception_WithRC( ) # rc = {0}".format( self._rc )
 
 
     def __str__( self ):
         """
-            Provides a human-readable representation of the error, 
-            including the return code it is carrying.
+            Returns the return code as a string.
         """
 
-        s = super( Error_WithRC, self ).__str__( )
-        s += " <Return Code: {0}>".format( self.rc )
-        return s
+        return self._rc_str( )
 
 
-class Error_WithReason( Error_BASE ):
+    def _rc_str( self ):
+        """
+            Returns the return code as a string.
+
+            Call this from a subclass if the return code is needed as a 
+            string.
+        """
+
+        return str( self._rc )
+
+
+    @property
+    def rc( self ):
+        """
+            The return code.
+        """
+
+        return self._rc
+
+Exception_BASE.register( Exception_WithRC )
+
+
+class Exception_WithReason( object ):
     """
-        Base class for all :py:mod:`utilia` exceptions which are regarded as
-        errors and which carry a translatable error reason format string and a
-        tuple of arguments for substitution into the format string.
+        Mix-in class for all :py:mod:`utilia` exceptions which carry a 
+        translatable format string and a tuple of arguments for 
+        substitution into the format string.
 
-        Inherits from :py:class:`Error_BASE`.
+        Inherits from :py:class:`object <CPython3:object>`.
 
         Use this for your exception handler signature if you wish to catch any
-        error condition, which has a translatable reason string, raised from
+        exception, which has a translatable reason string, raised from
         within :py:mod:`utilia`.
     """
 
 
-    #: Terse format string explaining why the path was undetermined.
-    #: The format string expects arguments to be supplied from
-    #: :py:attr:`reason_args`.
-    reason_format       = None
-    #: Tuple of arguments to be substituted into :py:attr:`reason_format`.
-    reason_args         = [ ]
+    _reason_format       = ""
+    _reason_args         = [ ]
 
 
     def __init__( self, reason_format, *reason_args ):
         """
-            Invokes superclass initializers.
             Sets the reason format string to carry with the exception.
 
-            :param reason_format: String containing zero or more 
-                                  ``format``-style substitution tokens.
+            :param reason_format: Format string, containing zero or more 
+                                  :py:func:`format <CPython3:format>`-style 
+                                  substitution tokens, for presentation as the
+                                  reason for the exception.
             :param *reason_args: Zero or more arguments to be substituted into
-                                 the reason format string.
+                                 the format string for presentation as the
+                                 reason for the exception.
         """
 
-        super( Error_WithReason, self ).__init__(
-            reason_format, *reason_args
-        )
-        self.reason_format  = reason_format
-        self.reason_args    = reason_args
+        super( Exception_WithReason, self ).__init__( )
+        self._reason_format  = reason_format
+        self._reason_args    = reason_args
+
+
+    def __repr__( self ):
+        """
+            Returns a string which can be used by :py:func:`eval
+            <CPython3:eval>` to create an instance of the class.
+        """
+
+        args_fmt = \
+        ", ".join( map(
+            repr, [ self._reason_format ] + list( self._reason_args )
+        ) )
+        return "Exception_WithReason( {0} )".format( args_fmt )
+
+
+    def __str__( self ):
+        """
+            Returns an untranslated string expressing the reason for the
+            exception.
+        """
+
+        return self._reason_format.format( *self._reason_args )
+
+
+    def translated( self, translator ):
+        """
+            Returns a translated string expressing the reason for the
+            exception.
+        """
+
+        return translator( self._reason_format ).format( *self._reason_args )
+
+
+    @property
+    def reason_format( self ):
+        """
+            Format string, containing zero or more :py:func:`format
+            <CPython3:format>`-style substitution tokens, for presentation as 
+            the reason for the exception. The substitions come from
+            :py:attr:`reason_args`.
+        """
+
+        return self._reason_format
+
+
+    @property
+    def reason_args( self ):
+        """
+            Arguments to be substituted into the format string for 
+            presentation as the reason for the exception. The arguments are
+            substituted into :py:attr:`reason_format`.
+        """
+
+        return self._reason_args
+
+Exception_BASE.register( Exception_WithReason )
 
 
 ###############################################################################

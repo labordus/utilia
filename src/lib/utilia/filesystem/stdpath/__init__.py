@@ -124,7 +124,7 @@ import re
 from utilia import (
     _autodoc_function_parameters,
     _TD_,
-    Error_WithReason,
+    Exception_WithReason,
 )
 from utilia.compat.builtins import ( # pylint: disable=W0622
     reduce,
@@ -235,13 +235,13 @@ __whitespace_to_underscore  = functools.partial( re.sub, r"\s+", "_" )
 __dot_to_underscore         = functools.partial( re.sub, r"\.{1,1}", "_" )
 
 
-class UnsupportedFilesystemLayout( FilesystemError_BASE, Error_WithReason ):
+class UnsupportedFilesystemLayout( Exception_WithReason ):
     """
         Error if the standard filesystem layout associated with the current OS
         is unknown or unsupported.
 
         Inherits from :py:class:`utilia.filesystem.Error_BASE` and
-        :py:class:`utilia.Error_WithReason`.
+        :py:class:`utilia.Exception_WithReason`.
     """
 
 
@@ -260,13 +260,15 @@ class UnsupportedFilesystemLayout( FilesystemError_BASE, Error_WithReason ):
         )
         # TODO: Set appropriate exit status.
 
+FilesystemError_BASE.register( UnsupportedFilesystemLayout )
 
-class UndeterminedFilesystemPath( FilesystemError_BASE, Error_WithReason ):
+
+class UndeterminedFilesystemPath( Exception_WithReason ):
     """
         Error if unable to ascertain a reasonably standard path for something.
 
         Inherits from :py:class:`utilia.filesystem.Error_BASE` and
-        :py:class:`utilia.Error_WithReason`.
+        :py:class:`utilia.Exception_WithReason`.
     """
 
 
@@ -284,6 +286,8 @@ class UndeterminedFilesystemPath( FilesystemError_BASE, Error_WithReason ):
             reason_format, *reason_args
         )
         # TODO: Set appropriate exit status.
+
+FilesystemError_BASE.register( UndeterminedFilesystemPath )
 
 
 def __decide_upon_error_on_none(

@@ -39,50 +39,66 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
-from .. import (
-    Exception_BASE          as __super_Exception_BASE,
-    Error_BASE              as __super_Error_BASE,
+from utilia import (
+    python_version,
 )
 
 
 # Exceptions
 
 
-class Exception_BASE( __super_Exception_BASE ):
-    """
-        Base class for all :py:mod:`utilia` filesystem exceptions. Inherits 
-        from :py:class:`utilia.Exception_BASE`.
+from abc import (
+    ABCMeta,
+)
 
-        Use this for your exception handler signature if you wish to catch any
-        filesystem-related exception raised from within :py:mod:`utilia`.
-    """
-
-    
-    def __init__( self, *posargs ):
-        """
-            Invokes superclass initializers.
-        """
-
-        super( Exception_BASE, self ).__init__( *posargs )
+from .. import (
+    Exception_BASE	    as __Exception_BASE_SUPER,
+    Error_BASE		    as __Error_BASE_SUPER,
+)
 
 
-class Error_BASE( Exception_BASE, __super_Error_BASE ):
-    """
-        Base class for all :py:mod:`utilia` filesystem exceptions which are
-        regarded as errors. Inherits from :py:class:`Exception_BASE` and 
-        :py:class:`utilia.Error_BASE`.
+if 2 == python_version.major:
+    exec( # pylint: disable=W0122
+	"""class Exception_BASE: __metaclass__ = ABCMeta"""
+    )
+else:
+    exec( # pylint: disable=W0122 
+	"""class Exception_BASE( metaclass = ABCMeta ): pass"""
+    )
+# Note: Hack to make parse-only lint tools happy.
+Exception_BASE = vars( )[ "Exception_BASE" ]
+__Exception_BASE_SUPER.register( Exception_BASE )
 
-        Use this for your exception handler signature if you wish to catch any
-        filesystem-related error condition raised from within :py:mod:`utilia`.
-    """
+Exception_BASE.__doc__ = \
+"""
+    Base class for all :py:mod:`utilia` filesystem exceptions.
+
+    Use this for your exception handler signature if you wish to catch any
+    filesystem-related exception raised from within :py:mod:`utilia`.
+"""
 
 
-    def __init__( self, *posargs ):
-        """
-            Invokes superclass initializers.
-        """
+if 2 == python_version.major:
+    exec( # pylint: disable=W0122
+	"""class Error_BASE: __metaclass__ = ABCMeta"""
+    )
+else:
+    exec( # pylint: disable=W0122
+	"""class Error_BASE( metaclass = ABCMeta ): pass"""
+    )
+# Note: Hack to make parse-only lint tools happy.
+Error_BASE = vars( )[ "Error_BASE" ]
+Exception_BASE.register( Error_BASE )
+__Error_BASE_SUPER.register( Error_BASE )
 
-        super( Error_BASE, self ).__init__( *posargs )
+Error_BASE.__doc__ = \
+"""
+    Base class for all :py:mod:`utilia` filesystem exceptions which are
+    regarded as errors.
+
+    Use this for your exception handler signature if you wish to catch any
+    filesystem-related error condition raised from within :py:mod:`utilia`.
+"""
 
 
 ###############################################################################
