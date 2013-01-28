@@ -138,6 +138,14 @@ def _TD_( s ):
 
 # Exceptions
 
+if   2 == python_version.major:
+    from __builtin__ import ( # pylint: disable=F0401
+        KeyError                as __builtins_KeyError,
+    )
+else:
+    from builtins import ( # pylint: disable=F0401
+        KeyError                as __builtins_KeyError,
+    )
 
 from abc import (
     ABCMeta,
@@ -174,6 +182,7 @@ else:
     )
 # Note: Hack to make parse-only lint tools happy.
 Error_BASE = vars( )[ "Error_BASE" ]
+
 Exception_BASE.register( Error_BASE )
 
 Error_BASE.__doc__ = \
@@ -186,78 +195,13 @@ Error_BASE.__doc__ = \
 """
 
 
-class Exception_WithRC( object ): # pylint: disable=R0903
-    """
-        Mix-in class for all :py:mod:`utilia` exceptions which carry a return 
-        code that could be supplied to a 
-        :py:exc:`SystemExit <CPython3:SystemExit>` exception.
-
-        Inherits from :py:class:`object <CPython3:object>`.
-
-        Use this for your exception handler signature if you wish to catch any
-        exception, which has a return code, raised from within
-        :py:mod:`utilia`.
-    """
-
-
-    _rc              = 0
-
-
-    def __init__( self, *posargs ): # pylint: disable=W0613
-        """
-            Sets the return code to carry with the exception.
-        """
-
-        super( Exception_WithRC, self ).__init__( )
-        self._rc = 0
-
-
-    def __repr__( self ):
-        """
-            Returns a string which can be used by :py:func:`eval
-            <CPython3:eval>` to create an instance of the class.
-        """
-
-        return "Exception_WithRC( ) # rc = {0}".format( self._rc )
-
-
-    def __str__( self ):
-        """
-            Returns the return code as a string.
-        """
-
-        return self._rc_str( )
-
-
-    def _rc_str( self ):
-        """
-            Returns the return code as a string.
-
-            Call this from a subclass if the return code is needed as a 
-            string.
-        """
-
-        return str( self._rc )
-
-
-    @property
-    def rc( self ):
-        """
-            The return code.
-        """
-
-        return self._rc
-
-Exception_BASE.register( Exception_WithRC )
-
-
 class Exception_WithReason( object ):
     """
         Mix-in class for all :py:mod:`utilia` exceptions which carry a 
         translatable format string and a tuple of arguments for 
         substitution into the format string.
 
-        Inherits from :py:class:`object <CPython3:object>`.
+        Inherits from :py:func:`object <CPython3:object>`.
 
         Use this for your exception handler signature if you wish to catch any
         exception, which has a translatable reason string, raised from
@@ -293,11 +237,7 @@ class Exception_WithReason( object ):
             <CPython3:eval>` to create an instance of the class.
         """
 
-        args_fmt = \
-        ", ".join( map(
-            repr, [ self._reason_format ] + list( self._reason_args )
-        ) )
-        return "Exception_WithReason( {0} )".format( args_fmt )
+        return "Exception_WithReason( {0} )".format( self._reason_repr( ) )
 
 
     def __str__( self ):
@@ -307,6 +247,18 @@ class Exception_WithReason( object ):
         """
 
         return self._reason_format.format( *self._reason_args )
+
+
+    def _reason_repr( self ):
+        """
+            Returns a string which contains a :py:func:`eval
+            <CPython3:eval>`-safe representation of the argument list needed to
+            create another exception with the same attribute values.
+        """
+
+        return ", ".join( map(
+            repr, [ self._reason_format ] + list( self._reason_args )
+        ) )
 
 
     def translated( self, translator ):
@@ -340,7 +292,142 @@ class Exception_WithReason( object ):
 
         return self._reason_args
 
+
 Exception_BASE.register( Exception_WithReason )
+
+
+class Exception_Exiting( Exception_WithReason ):
+    """
+        Mix-in class for all :py:mod:`utilia` exceptions which carry a 
+        translatable format string, a tuple of arguments for substitution 
+        into the format string, and a return code that could be supplied to a
+        :py:exc:`SystemExit <CPython3:SystemExit>` exception.
+
+        Inherits from :py:class:`Exception_WithReason`.
+
+        Use this for your exception handler signature if you wish to catch any
+        exception, which has a return code and a described reason, raised from
+        within :py:mod:`utilia`.
+    """
+
+
+    _rc     = 0
+
+
+    def __init__( self, reason_format, *reason_args ):
+        """
+            Sets the return code to carry with the exception.
+        """
+
+        super( Exception_Exiting, self ).__init__(
+            reason_format, *reason_args
+        )
+        self._rc = 0
+
+    __init__.__doc__ += Exception_WithReason.__init__.__doc__
+
+
+    def __repr__( self ):
+        """
+            Returns a string which can be used by :py:func:`eval
+            <CPython3:eval>` to create an instance of the class.
+        """
+
+        return self._full_repr( self.__class__.__name__ )
+
+
+    def __str__( self ):
+        """
+            Returns the return code as a string.
+        """
+
+        return self._rc_str( )
+
+
+    def _full_repr( self, class_name ):
+        """
+            Returns a string which can be used by :py:func:`eval
+            <CPython3:eval>` to create an instance of the class.
+
+            Call this from the ``__repr__`` method of a subclass.
+        """
+
+        return "{0}( {1} ){2}".format(
+            class_name, self._reason_repr( ), self._rc_repr( )
+        )
+
+
+    def _rc_repr( self ):
+        """
+            Returns a string which contains a :py:func:`eval
+            <CPython3:eval>`-safe comment representing the return code.
+        """
+
+        return " # rc = {0}".format( self._rc )
+
+
+    def _rc_str( self ):
+        """
+            Returns the return code as a string.
+
+            Call this from the ``__str__`` method of a subclass.
+        """
+
+        return str( self._rc )
+
+
+    @property
+    def rc( self ):
+        """
+            The return code.
+        """
+
+        return self._rc
+
+
+Exception_BASE.register( Exception_Exiting )
+
+
+class InvalidKeyError( Exception_Exiting, __builtins_KeyError ):
+    """
+        Exception class representing the error condition where a key of a
+        particular name is not permissible. (Note that this is different than
+        the error condition where a key is expected but missing.)
+
+        Inherits from :py:class:`Exception_Exiting` and :py:exc:`KeyError 
+        <CPython3:KeyError>`.
+    """
+
+
+    def __init__( self, reason_format, *reason_args ):
+        """ """
+
+        super( InvalidKeyError, self ).__init__( reason_format, *reason_args )
+
+        # TODO: Set return code to a proper OS-dependent value.
+        # TEMP
+        self._rc = 1
+
+    __init__.__doc__ += Exception_Exiting.__init__.__doc__
+
+
+    def __str__( self ):
+        """ """
+
+        return self._rc_str( )
+
+    __str__.__doc__ += Exception_Exiting.__str__.__doc__
+
+
+    def __repr__( self ):
+        """ """
+
+        return self._full_repr( self.__class__.__name__ )
+
+    __repr__.__doc__ += Exception_Exiting.__repr__.__doc__
+        
+
+Error_BASE.register( InvalidKeyError )
 
 
 ###############################################################################

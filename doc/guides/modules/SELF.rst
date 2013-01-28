@@ -49,11 +49,15 @@ Exception Classes
    :members:
    :inherited-members:
 
-.. autoclass:: Exception_WithRC
+.. autoclass:: Exception_WithReason
    :members:
    :inherited-members:
 
-.. autoclass:: Exception_WithReason
+.. autoclass:: Exception_Exiting
+   :members:
+   :inherited-members:
+
+.. autoclass:: InvalidKeyError
    :members:
    :inherited-members:
 

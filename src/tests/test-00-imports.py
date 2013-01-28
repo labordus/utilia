@@ -69,11 +69,14 @@ def test_MODULE_ATTRIBUTES( ):
         [ "__FUTURE_division",          type_of_future ],
         [ "__FUTURE_absolute_import",   type_of_future ],
         [ "__FUTURE_print_function",    type_of_future ],
+        [ "PythonVersion",              type_of_class ],
+        [ "python_version",             utilia.PythonVersion ],
         [ "__version__",                str ],
         [ "Exception_BASE",             type_of_abc ],
         [ "Error_BASE",                 type_of_abc ],
-        [ "Exception_WithRC",           type_of_class ],
         [ "Exception_WithReason",       type_of_class ],
+        [ "Exception_Exiting",          type_of_class ],
+        [ "InvalidKeyError",            type_of_exception ],
     ]:
 
         f_decorated = \
