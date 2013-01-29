@@ -17,7 +17,11 @@
 ###############################################################################
 
 """
-    <TODO: Insert module documentation here.>
+    Fundamental module for OS-dependent implementations of the standard path
+    calculation logic.
+
+    Select portions of this module will be exposed through the public
+    interface.
 """
 
 
@@ -32,59 +36,89 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
+from abc import (
+    abstractmethod,
+)
+
+from utilia import (
+    _TD_,
+    Exception_Exiting,
+    InvalidKeyError,
+    UnknownKeyError,
+    InvalidValueError,
+)
 from utilia.compat import (
     iter_dict_keys,
     iter_dict_items,
+    AbstractBase_BASE,
 )
-from utilia.compat.collections import (
+from utilia.compat.builtins import (
+    LookupError             as __builtins_LookupError,
+    KeyError                as __builtins_KeyError,
+)
+from utilia.compat.collections import ( # pylint: disable=E0611
     MutableMapping,
 )
+from utilia.filesystem import (
+    Error_BASE              as FilesystemError_BASE,
+)
+
+
+class UndeterminedPathError( Exception_Exiting, __builtins_LookupError ):
+    """
+        Exception class representing the error condition where a path
+        cannot be calculated for the given operating system and context.
+
+        Inherits from :py:class:`Exception_Exiting` and 
+        :py:exc:`LookupError <CPython3:LookupError>`.
+    """
+
+
+    def __init__( self, reason_format, *reason_args ):
+        """ """
+
+        super( UndeterminedPathError, self ).__init__(
+            reason_format, *reason_args
+        )
+
+        self._class_name    = self.__class__.__name__
+        # TODO: Set return code to a proper OS-dependent value.
+        # TEMP
+        self._rc            = 1
+
+    __init__.__doc__ += Exception_Exiting.__init__.__doc__
+        
+
+FilesystemError_BASE.register( UndeterminedPathError )
 
 
 class StandardPathContext( MutableMapping ):
     """
-        Auxiliary class, which provides a context for calculating standard
-        paths.
+        Base for auxiliary classes, which provide a context for calculating 
+        standard paths.
 
         Inherits from :py:class:`collections.MutableMapping
         <CPython3:collections.MutableMapping>`.
     """
 
 
-    #: Name of the particular software product for this context.
-    _software_name      = None
-    #: Name of the organization providing the particular software product for
-    #: this context.
-    _provider_name      = None
-    #: Version of the particular software product for this context.
-    _version            = None
-    #: Specific path to the particular software product for this context.
-    _specific_path      = None
-    #: Options for modifying the behavior of path calculations.
-    _options_DICT       = { }
+    _option_validators  = \
+    {
+        "error-on-none":            None,
+        "specific path":            None,
+        "calculate path":           None,
+        "software name":            None,
+        "software provider name":   None,
+        "software version":         None,
+    }
+    _options            = { }
 
 
-    def __init__(
-        self,
-        software_name = None, provider_name = None, version = None,
-        specific_path = None,
-        **options
-    ):
+    def __init__( self, **options ):
         """
-            :param software_name: Name of the particular software product for
-                                  which this context is being created.
-            :type software_name: :py:class:`string <CPython3:str>`
-            :param provider_name: Name of the organization providing the
-                                  particular software product for which this
-                                  context is being created.
-            :type provider_name: :py:class:`string <CPython3:str>`
-            :param version: Version of the particular software product for
-                            which this context is being created.
-            :type version: :py:class:`string <CPython3:str>`
-            :param specific_path: Specific path to the particular software
-                                  product for which this context is being
-                                  created.
-            :type specific_path: :py:class:`string <CPython3:str>`
+            Initializes the options dictionary from supplied keyword 
+            arguments.
+
             :param **options: Zero or more keyword arguments to be used as
                               options for modifying the behavior of path
                               calculations.
@@ -93,170 +127,199 @@ class StandardPathContext( MutableMapping ):
         for option_name, option_value in iter_dict_items( options ):
             self.__setitem__( option_name, option_value )
 
-        self.software_name      = software_name
-        self.provider_name      = provider_name
-        self.version            = version
-        self.specific_path      = specific_path
-
 
     def __iter__( self ):
         """
-            Returns an iterator over the behavior options dictionary.
+            Returns an iterator over the options dictionary.
         """
 
-        return iter_dict_keys( self._options_DICT )
+        return iter_dict_keys( self._options )
 
 
     def __len__( self ):
         """
-            Returns the number of entries in the behavior options dictionary.
+            Returns the number of entries in the options dictionary.
         """
 
-        return len( self._options_DICT )
+        return len( self._options )
 
 
     def __getitem__( self, key ):
         """
-            Returns a value from the behavior options dictionary corresponding
-            to the ``key`` argument.
+            Gets an entry from the options dictionary.
+
+            :param key: key into the options dictionary
         """
 
-        return self._options_DICT[ key ]
+        try:
+            value = self._options[ key ]
+        except __builtins_KeyError:
+            raise UnknownKeyError(
+                _TD_( "Unknown option '{1}' for instance of '{0}'." ),
+                self.__class__.__name__, key
+            )
+        return value
 
 
     def __setitem__( self, key, value ):
         """
-            Places the ``value`` argument into the behvaior options dictionary
-            such that it corresponds to the ``key`` argument.
+            Sets an entry in the options dictionary.
+
+            :param key: key into the options dictionary
+            :param value: new value of the entry in the options dictionary
         """
 
-        # TODO: Should be abstract here. Override on the basis of OS archtype
-        #       or OS to filter for suitable options.
-        # TEMP
-        self._options_DICT[ key ] = value
+        try:
+            validator = self._option_validators[ key ]
+        except __builtins_KeyError:
+            raise InvalidKeyError(
+                _TD_( "Invalid option '{1}' for instance of '{0}'." ),
+                self.__class__.__name__, key
+            )
+
+        if callable( validator ):
+            if validator( value ):
+                self._options[ key ] = value
+            else:
+                raise InvalidValueError(
+                    _TD_(
+                        "Invalid value '{2}' for option '{1}' "
+                        "for instance of '{0}'."
+                    ),
+                    self.__class__.__name__, key, value
+                )
+        else: self._options[ key ] = value
 
 
     def __delitem__( self, key ):
         """
-            Deletes the entry in the behavior options dictionary corresponding
-            to the ``key`` argument.
+            Deletes an entry in the options dictionary. 
+
+            :param key: key into the options dictionary
         """
 
-        del self._options_DICT[ key ]
+        try:
+            del self._options[ key ]
+        except __builtins_KeyError:
+            raise UnknownKeyError(
+                _TD_( "Unknown option '{1}' for instance of '{0}'." ),
+                self.__class__.__name__, key
+            )
 
 
-    def _software_name_GETTER( self ):
-        
-        return self._software_name
-
-
-    def _software_name_SETTER( self, software_name ):
-        
-        # TODO? Update calculated path cache.
-        self._software_name = software_name
-
-
-    def _software_name_DELETER( self ):
-        
-        # TODO? Update calculated path cache.
-        self._software_name = None
-
-
-    software_name = \
-    property(
-        _software_name_GETTER, _software_name_SETTER, _software_name_DELETER,
+    @property
+    def path( self ):
         """
-            Name of the particular software product for this context.
+            The path to the particular software product, if specified.
         """
-    )
 
+        options = self._options
 
-    def _provider_name_GETTER( self ):
+        if "specific path" in options:
+            return options[ "specific path" ]
         
-        return self._provider_name
+        if "calculate path" in options:
+            return self._calculate_path( )
+
+        if "error-on-none" in options:
+            self.raise_UndeterminedPathError( )
 
 
-    def _provider_name_SETTER( self, provider_name ):
-        
-        # TODO? Update calculated path cache.
-        self._provider_name = provider_name
-
-
-    def _provider_name_DELETER( self ):
-        
-        # TODO? Update calculated path cache.
-        self._provider_name = None
-
-
-    provider_name = \
-    property(
-        _provider_name_GETTER, _provider_name_SETTER, _provider_name_DELETER,
+    def raise_UndeterminedPathError(
+        self,
+        location_class = None,
+        specify_software = False, specify_os = False
+    ):
         """
-            Name of the organization providing the particular software product
-            for this context.
+            Raises a UndeterminedPathError exception with a message for the
+            context and, optionally, a location class.
+
+            :param location_class: string containing a general name for a
+                                   particular class of location in a 
+                                   filesystem
+            :param specify_software: boolean determining whether information
+                                     about the software product should appear
+                                     in the reason for the error
+            :param specify_os: boolean determining whether information about
+                               the operating system should appear in the reason
+                               for the error
+
+            :raises: :py:class:`UndeterminedPathError`
         """
-    )
+
+        options = self._options
+
+        for_whom = None
+        if specify_software:
+            software_option_names = \
+            [ "software provider name", "software name", "software version", ]
+            for_whom = \
+            " ".join(
+                [   options[ option_name ]
+                    for option_name in software_option_names
+                    if option_name in options
+                ]
+            )
+
+        on_os = None
+        if specify_os:
+            os_option_names = \
+            [ "operating system", " operating system version", ]
+            on_os = \
+            " ".join(
+                [   options[ option_name ]
+                    for option_name in os_option_names
+                    if option_name in options
+                ]
+            )
+
+        msg_format  = _TD_( "Undetermined path." )
+        msg_args    = [ ]
+        if   location_class:
+            if   for_whom:
+                if on_os:
+                    msg_format  = \
+                    _TD_( "Undetermined path to {0} for {1} on {2}." )
+                    msg_args    = [ location_class, for_whom, on_os ]
+                else:
+                    msg_format  = _TD_( "Undetermined path to {0} for {1}." )
+                    msg_args    = [ location_class, for_whom ]
+            elif on_os:
+                msg_format  = _TD_( "Undetermined path to {0} on {1}." )
+                msg_args    = [ location_class, on_os ]
+            else:
+                msg_format  = _TD_( "Undetermined path to {0}." )
+                msg_args    = [ location_class ]
+        elif for_whom:
+            if on_os:
+                msg_format  = _TD_( "Undetermined path for {0} on {1}." )
+                msg_args    = [ for_whom, on_os ]
+            else:
+                msg_format  = _TD_( "Undetermined path for {0}." )
+                msg_args    = [ for_whom ]
+        elif on_os:
+            msg_format  = _TD_( "Undetermined path on {0}." )
+            msg_args    = [ on_os ]
+
+        raise UndeterminedPathError( msg_format, *msg_args )
 
 
-    def _version_GETTER( self ):
-        
-        return self._version
-
-
-    def _version_SETTER( self, version ):
-        
-        # TODO? Update calculated path cache.
-        self._version = version
-
-
-    def _version_DELETER( self ):
-        
-        # TODO? Update calculated path cache.
-        self._version = None
-
-
-    version = \
-    property(
-        _version_GETTER, _version_SETTER, _version_DELETER,
+    @abstractmethod
+    def _calculate_path( self ):
         """
-            Version of the particular software product for this context.
+            Returns the path calculated from information about the software
+            product specified in the options dictionary.
         """
-    )
+
+        pass
 
 
-    def _specific_path_GETTER( self ):
-        
-        # TODO? Return value from calculated path cache, 
-        #       if specific path not set.
-        return self._specific_path
-
-
-    def _specific_path_SETTER( self, specific_path ):
-
-        # TODO? Check that the path is well-formed for given OS archtype.
-        self._specific_path = specific_path
-
-
-    def _specific_path_DELETER( self ):
-        
-        self._specific_path = None
-
-
-    specific_path = \
-    property(
-        _specific_path_GETTER, _specific_path_SETTER, _specific_path_DELETER,
-        """
-            Specific path to the particular software product for this context.
-        """
-    )
-
-
-class StandardPath( object ):
+class StandardPath( AbstractBase_BASE ):
     """
         Abstract base class for the standard path classes of the various
         flavors of operating system archtypes.
 
-        Inherits from :py:class:`object <CPython3:object>`.
+        Inherits from :py:class:`AbstractBase_BASE`.
     """
 
 
@@ -264,14 +327,12 @@ class StandardPath( object ):
     _context = None
 
 
-    def __init__( self, context = StandardPathContext( ) ):
+    def __init__( self, context = None ):
         """
-            :param context: An object containing the context with which to
-                            calculate paths.
+            :param context: an object containing the context with which to
+                            calculate paths
             :type context: :py:class:`StandardPathContext`
         """
-
-        super( StandardPath, self ).__init__( )
 
         self._context = context
 

@@ -422,8 +422,8 @@ class InvalidValueError( Exception_Exiting, __builtins_ValueError ):
         Exception class representing the error condition where a value
         is considered invalid in a particular context.
 
-        Inherits from :py:class:`Exception_Exiting` and :py:exc:`KeyError 
-        <CPython3:ValueError>`.
+        Inherits from :py:class:`Exception_Exiting` and 
+        :py:exc:`ValueError <CPython3:ValueError>`.
     """
 
 

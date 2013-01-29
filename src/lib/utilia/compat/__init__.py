@@ -52,6 +52,9 @@ __docformat__ = "reStructuredText"
 from utilia import python_version
 
 
+# Dictionary Iterators
+
+
 if 3 == python_version.major:
 
 
@@ -148,6 +151,45 @@ iter_dict_items.__doc__ = \
                      <CPython3:dict>` interface
     :rtype: a Python 3 dictionary iterator
 """
+
+
+# Abstract Base Classes
+
+
+from abc import (
+    ABCMeta,
+)
+
+
+if 2 == python_version.major:
+    exec( # pylint: disable=W0122
+        """class AbstractBase_BASE: __metaclass__ = ABCMeta"""
+    )
+else:
+    exec( # pylint: disable=W0122
+        """class AbstractBase_BASE( metaclass = ABCMeta ): pass"""
+    )
+# Note: Hack to make parse-only lint tools happy.
+AbstractBase_BASE = vars( )[ "AbstractBase_BASE" ]
+
+AbstractBase_BASE.__doc__ = \
+"""
+    Generalized abstract class, which has :py:class:`abc.ABCMeta
+    <CPython3:abc.ABCMeta>` as its metaclass.
+
+    Subclass this in any implementation of Python supported by the library to
+    create abstract methods and properties and use the ``__subclasshook__``
+    override and the subclass registration machinery from 
+    :py:class:`abc.ABCMeta <CPython3:abc.ABCMeta>`.
+"""
+
+
+del ABCMeta
+
+
+# Module Cleanup
+
+del python_version
 
 
 ###############################################################################

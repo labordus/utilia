@@ -22,6 +22,13 @@ General Compatibility Functions
 
 .. autofunction:: iter_dict_items
 
+General Compatibility Classes
+-----------------------------
+
+.. autoclass:: AbstractBase_BASE
+   :members:
+   :inherited-members:
+
 Subpackages and Modules
 -----------------------
 
