@@ -141,10 +141,12 @@ def _TD_( s ):
 if   2 == python_version.major:
     from __builtin__ import ( # pylint: disable=F0401
         KeyError                as __builtins_KeyError,
+        ValueError              as __builtins_ValueError,
     )
 else:
     from builtins import ( # pylint: disable=F0401
         KeyError                as __builtins_KeyError,
+        ValueError              as __builtins_ValueError,
     )
 
 from abc import (
@@ -311,7 +313,8 @@ class Exception_Exiting( Exception_WithReason ):
     """
 
 
-    _rc     = 0
+    _rc         = 0
+    _class_name = ""
 
 
     def __init__( self, reason_format, *reason_args ):
@@ -322,7 +325,9 @@ class Exception_Exiting( Exception_WithReason ):
         super( Exception_Exiting, self ).__init__(
             reason_format, *reason_args
         )
-        self._rc = 0
+
+        self._rc            = 0
+        self._class_name    = self.__class__.__name__
 
     __init__.__doc__ += Exception_WithReason.__init__.__doc__
 
@@ -333,44 +338,14 @@ class Exception_Exiting( Exception_WithReason ):
             <CPython3:eval>` to create an instance of the class.
         """
 
-        return self._full_repr( self.__class__.__name__ )
+        return "{0}( {1} ) # rc = {2}".format(
+            self._class_name, self._reason_repr( ), self._rc
+        )
 
 
     def __str__( self ):
         """
             Returns the return code as a string.
-        """
-
-        return self._rc_str( )
-
-
-    def _full_repr( self, class_name ):
-        """
-            Returns a string which can be used by :py:func:`eval
-            <CPython3:eval>` to create an instance of the class.
-
-            Call this from the ``__repr__`` method of a subclass.
-        """
-
-        return "{0}( {1} ){2}".format(
-            class_name, self._reason_repr( ), self._rc_repr( )
-        )
-
-
-    def _rc_repr( self ):
-        """
-            Returns a string which contains a :py:func:`eval
-            <CPython3:eval>`-safe comment representing the return code.
-        """
-
-        return " # rc = {0}".format( self._rc )
-
-
-    def _rc_str( self ):
-        """
-            Returns the return code as a string.
-
-            Call this from the ``__str__`` method of a subclass.
         """
 
         return str( self._rc )
@@ -404,30 +379,70 @@ class InvalidKeyError( Exception_Exiting, __builtins_KeyError ):
 
         super( InvalidKeyError, self ).__init__( reason_format, *reason_args )
 
+        self._class_name    = self.__class__.__name__
         # TODO: Set return code to a proper OS-dependent value.
         # TEMP
-        self._rc = 1
+        self._rc            = 1
 
     __init__.__doc__ += Exception_Exiting.__init__.__doc__
-
-
-    def __str__( self ):
-        """ """
-
-        return self._rc_str( )
-
-    __str__.__doc__ += Exception_Exiting.__str__.__doc__
-
-
-    def __repr__( self ):
-        """ """
-
-        return self._full_repr( self.__class__.__name__ )
-
-    __repr__.__doc__ += Exception_Exiting.__repr__.__doc__
         
 
 Error_BASE.register( InvalidKeyError )
+
+
+class UnknownKeyError( Exception_Exiting, __builtins_KeyError ):
+    """
+        Exception class representing the error condition where a key of a
+        particular name is expected but missing. (Note that this is different 
+        than the error condition where a key is forbidden.)
+
+        Inherits from :py:class:`Exception_Exiting` and :py:exc:`KeyError 
+        <CPython3:KeyError>`.
+    """
+
+
+    def __init__( self, reason_format, *reason_args ):
+        """ """
+
+        super( UnknownKeyError, self ).__init__( reason_format, *reason_args )
+
+        self._class_name    = self.__class__.__name__
+        # TODO: Set return code to a proper OS-dependent value.
+        # TEMP
+        self._rc            = 1
+
+    __init__.__doc__ += Exception_Exiting.__init__.__doc__
+        
+
+Error_BASE.register( UnknownKeyError )
+
+
+class InvalidValueError( Exception_Exiting, __builtins_ValueError ):
+    """
+        Exception class representing the error condition where a value
+        is considered invalid in a particular context.
+
+        Inherits from :py:class:`Exception_Exiting` and :py:exc:`KeyError 
+        <CPython3:ValueError>`.
+    """
+
+
+    def __init__( self, reason_format, *reason_args ):
+        """ """
+
+        super( InvalidValueError, self ).__init__(
+            reason_format, *reason_args
+        )
+
+        self._class_name    = self.__class__.__name__
+        # TODO: Set return code to a proper OS-dependent value.
+        # TEMP
+        self._rc            = 1
+
+    __init__.__doc__ += Exception_Exiting.__init__.__doc__
+        
+
+Error_BASE.register( InvalidValueError )
 
 
 ###############################################################################

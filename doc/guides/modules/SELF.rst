@@ -61,6 +61,14 @@ Exception Classes
    :members:
    :inherited-members:
 
+.. autoclass:: UnknownKeyError
+   :members:
+   :inherited-members:
+
+.. autoclass:: InvalidValueError
+   :members:
+   :inherited-members:
+
 Subpackages and Modules
 -----------------------
 
