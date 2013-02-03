@@ -322,8 +322,10 @@ class StandardPath( AbstractBase_BASE ):
         Inherits from :py:class:`AbstractBase_BASE`.
     """
 
+    # TODO: Raise 'InvokedAbstractMethodError' instead of simply passing in
+    #       abstract methods.
 
-    #: Object containing the context with which to calculate paths.
+
     _context = None
 
 
@@ -337,7 +339,331 @@ class StandardPath( AbstractBase_BASE ):
         self._context = context
 
 
-    # TODO: Implement.
+    @abstractmethod
+    def whereis_oscore_install_root( self, context = None ):
+        """
+            Returns the installation root path for the core OS components, if 
+            it can be determined. Returns ``None`` otherwise.
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_osdist_install_root( self, context = None ):
+        """
+            Returns to the installation root path for the OS distribution, if 
+            it can be determined. Returns ``None`` otherwise.
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_common_install_root( self, context = None ):
+        """
+            Returns the typical default root path for a shared or sitewide
+            software installation by the superuser or systems administrator, if
+            it can be determined. Returns ``None`` otherwise.
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_oscore_config_base( self, context = None ):
+        """
+            Returns the path to the typical top-level directory under which the
+            donfiguration information resides for the core OS components, if it
+            can be determined. Returns ``None``, otherwise.
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_osdist_config_base( self, context = None ):
+        """
+            Returns the path to the typical top-level directory under which the
+            configuration information resides for the OS distribution,
+            if it can be determined. Returns ``None``, otherwise.
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_common_config_base( self, context = None ):
+        """
+            Returns the path to the typical top-level directory under which 
+            the configuration information resides for software installed by 
+            the superuser or systems administrator, if it can be determined. 
+            Returns ``None``, otherwise.
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_user_home( self, context = None ):
+        """
+            Returns the path to the current user's home directory, if it can 
+            be determined. Returns ``None``, otherwise.
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_common_temp_base( self, context = None ):
+        """
+            Returns the path to the temporary storage area available for use 
+            by everyone on the system.
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_user_temp_base( self, context = None ):
+        """
+            Returns the path to the current user's temporary storage area.
+
+        """
+        
+        pass
+
+
+    @abstractmethod
+    def whereis_preferred_temp_base(
+        self, context = None, prefer_common = False
+    ):
+        """
+            Returns:
+            
+            * the result from a call to :py:meth:`whereis_common_temp_base`, 
+              if it is not ``None`` and the ``prefer_common`` argument is 
+              ``True``;
+            
+            * the result from a call to :py:meth:`whereis_user_temp_base`, 
+              if it is not ``None``;
+
+            * the result from a call to :py:meth:`whereis_common_temp_base`, 
+              if it is not ``None``; 
+            
+            * or ``None``, if all else fails.
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_my_temp( self, context = None, prefer_common = False ):
+        """
+            Returns the path to the preferred temporary storage for 
+            the software product, defined in ``context``.
+
+            The path calculation relies on results from the
+            :py:meth:`whereis_preferred_temp_base`.
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_my_common_config_at_base( self, base_path, context = None ):
+        """
+            Returns the path to the directory where the shared or sitewide
+            configuration information for the software product, defined in
+            ``context``, is stored. (This path is relative to the supplied
+            ``base_path``.)
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_my_common_config( self, context = None ):
+        """
+            Returns the path to the directory where the shared or sitewide
+            configuration information for the software product, defined in
+            ``context``, is stored. (This path is relative to the cirrent OS
+            platform's standard shared or sitewide location for configuration
+            information.)
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_my_common_config_pythonic( self, context = None ):
+        """
+            Returns the path to the directory where the shared or sitewide
+            configuration information for the software product, defined in
+            ``context``, is stored. (This path is relative to the current
+            Python's installation base directory.)
+
+        """
+
+        pass
+    
+
+    @abstractmethod
+    def whereis_my_common_resources_at_base( self, base_path, context = None ):
+        """
+            Returns the path to the directory where the shared or sitewide
+            resources for the software product, defined in ``context``, are
+            stored. (This path is relative to the supplied ``base_path``.)
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_my_common_resources( self, context = None ):
+        """
+            Returns the path to the directory where the shared or sitewide
+            resources for the software product, defined in ``context``, are
+            stored. (This path is relative to the current OS platform's
+            standard shared or sitewide location for resources.)
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_my_common_resources_pythonic( self, context = None ):
+        """
+            Returns the path to the directory where the shared or sitewide
+            resources for the software product, defined in ``context``, are
+            stored. (This path is relative to the current Python's installation
+            base directory.)
+
+        """
+
+        pass
+
+
+    # TODO: whereis_my_site_programs
+    # TODO: whereis_my_site_docs
+
+
+    @abstractmethod
+    def whereis_my_user_config_at_base( self, base_path, context = None ):
+        """
+            Returns the path to the directory where the current user's
+            configuration information for the software product, defined in
+            ``context`` is stored. (This path is relative to the supplied
+            ``base_path``.)
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_my_user_config( self, context = None ):
+        """
+            Returns the path to the directory where the current user's
+            configuration information for the software product, defined in
+            ``context`` is stored. (This path is relative to the current OS
+            platform's standard per-user location for configuration
+            information.)
+        
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_my_user_config_pythonic( self, context = None ):
+        """
+            Returns the path to the directory where the current user's
+            configuration information for the software product, defined in
+            ``context`` is stored. (This path is relative to Python's user base
+            directory, as specified by :pep:`370`.)
+
+        """
+
+        pass
+
+    
+    @abstractmethod
+    def whereis_my_user_resources_at_base( self, base_path, context = None ):
+        """
+            Returns the path to the directory where the current user's
+            resources for the software product, defined in ``context`` is 
+            stored. (This path is relative to the supplied ``base_path``.)
+            
+        """
+
+        pass
+
+    
+    @abstractmethod
+    def whereis_my_user_resources( self, context = None ):
+        """
+            Returns the path to the directory where the current user's
+            resources for the software product, defined in ``context`` is 
+            stored. (This path is relative to the current OS platform's 
+            standard per-user location for resources.)
+
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_my_user_resources_pythonic( self, context = None ):
+        """
+            Returns the path to the directory where the current user's
+            resources for the software product, defined in ``context`` is 
+            stored. (This path is relative to Python's user base directory, 
+            as specified by :pep:`370`.)
+        """
+
+        pass
+
+
+    # TODO: whereis_my_user_docs
+
+
+    @abstractmethod
+    def whereis_my_saved_data_at_base( self, base_path, context = None ):
+        """
+            Returns the path to the directory where works, created by the
+            current user with the software product, defined in ``context``,
+            will be stored. (This path is relative to the supplied
+            ``base_path``.)
+        """
+
+        pass
+
+
+    @abstractmethod
+    def whereis_my_saved_data( self, context = None ):
+        """
+            Returns the path to the directory where works, created by the
+            current user with the software product, defined in ``context``,
+            will be stored. (This path is relative to the current OS 
+            platform's standard location for user-created data.)
+
+        """
+
+        pass
 
 
 ###############################################################################

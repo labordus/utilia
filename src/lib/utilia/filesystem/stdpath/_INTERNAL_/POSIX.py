@@ -32,5 +32,9 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
+# TODO: XDG Base Paths vs. Traditional User Data Paths
+# TODO: Support XDG environment variables.
+
+
 ###############################################################################
 # vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #

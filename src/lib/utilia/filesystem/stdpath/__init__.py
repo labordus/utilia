@@ -100,12 +100,6 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
-# TODO: Pass a context object instead of 'specific_path' strings.
-#           XDG Base Paths vs. Traditional User Data Paths
-#       Should carry software name for improved exception messages.
-# TODO: Support XDG environment variables.
-
-
 import sys
 from os import (
     environ                 as envvars,
@@ -965,7 +959,7 @@ def whereis_my_common_config_pythonic(
     """
         Returns a path to the directory, where the shared configuration
         information for the specific software is stored. (This path is 
-        relative to the current Python's current installation base directory.)
+        relative to the current Python's installation base directory.)
 
     """
 
@@ -1098,7 +1092,7 @@ def whereis_my_common_resources_pythonic(
     """
         Returns a path to the directory, where the shared resources for the
         specific software are stored. (This path is relative to the current
-        Python's current installation base directory.)
+        Python's installation base directory.)
 
     """
 
@@ -1137,10 +1131,6 @@ def whereis_my_common_resources_pythonic(
         evname, specific_path
     )
     return full_path
-
-
-# TODO: whereis_my_site_programs
-# TODO: whereis_my_site_docs
 
 
 @__decorate_docstring
@@ -1368,9 +1358,6 @@ def whereis_my_user_resources_pythonic(
         evname, specific_path
     )
     return full_path
-
-
-# TODO: whereis_my_user_docs
 
 
 @__decorate_docstring
