@@ -46,6 +46,7 @@ from utilia import (
     InvalidKeyError,
     UnknownKeyError,
     InvalidValueError,
+    InvokedAbstractMethodError,
 )
 from utilia.compat import (
     iter_dict_keys,
@@ -323,8 +324,12 @@ class StandardPath( AbstractBase_BASE ):
         Inherits from :py:class:`AbstractBase_BASE`.
     """
 
-    # TODO: Raise 'InvokedAbstractMethodError' instead of simply passing in
-    #       abstract methods.
+
+    # TODO: Prune away the 'whereis_my_*' methods in favor of using context
+    #       with the more fundamental ones.
+
+    # TODO: Prune away the '*_at_base' methods in favor of using a supplied
+    #       base path from context in conjunction with the fundamental methods.
 
 
     _context = None
@@ -340,6 +345,9 @@ class StandardPath( AbstractBase_BASE ):
         self._context = context
 
 
+    # pylint: disable=W0613
+
+
     @abstractmethod
     def whereis_oscore_install_root( self, context = None ):
         """
@@ -348,7 +356,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_oscore_install_root"
+        )
 
 
     @abstractmethod
@@ -359,7 +370,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_osdist_install_root"
+        )
 
 
     @abstractmethod
@@ -371,7 +385,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_common_install_root"
+        )
 
 
     @abstractmethod
@@ -383,7 +400,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_oscore_config_root"
+        )
 
 
     @abstractmethod
@@ -395,7 +415,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_osdist_config_root"
+        )
 
 
     @abstractmethod
@@ -408,7 +431,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_common_config_root"
+        )
 
 
     @abstractmethod
@@ -419,7 +445,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_user_home"
+        )
 
 
     @abstractmethod
@@ -430,7 +459,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_common_temp_base"
+        )
 
 
     @abstractmethod
@@ -440,7 +472,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
         
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_user_temp_base"
+        )
 
 
     @abstractmethod
@@ -464,7 +499,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_preferred_temp_base"
+        )
 
 
     @abstractmethod
@@ -478,7 +516,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_temp"
+        )
 
 
     @abstractmethod
@@ -491,7 +532,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_common_config_at_base"
+        )
 
 
     @abstractmethod
@@ -505,7 +549,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_common_config"
+        )
     
 
     @abstractmethod
@@ -517,7 +564,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_common_resources_at_base"
+        )
 
 
     @abstractmethod
@@ -529,11 +579,13 @@ class StandardPath( AbstractBase_BASE ):
             standard shared or sitewide location for resources.)
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_common_resources"
+        )
 
 
-    # TODO: whereis_my_site_programs
-    # TODO: whereis_my_site_docs
+    # TODO: whereis_my_common_programs
 
 
     @abstractmethod
@@ -546,7 +598,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_user_config_at_base"
+        )
 
 
     @abstractmethod
@@ -560,7 +615,10 @@ class StandardPath( AbstractBase_BASE ):
         
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_user_config"
+        )
 
     
     @abstractmethod
@@ -572,7 +630,10 @@ class StandardPath( AbstractBase_BASE ):
             
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_user_resources_at_base"
+        )
 
     
     @abstractmethod
@@ -585,10 +646,10 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
-
-
-    # TODO: whereis_my_user_docs
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_user_resources"
+        )
 
 
     @abstractmethod
@@ -600,7 +661,10 @@ class StandardPath( AbstractBase_BASE ):
             ``base_path``.)
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_saved_data_at_base"
+        )
 
 
     @abstractmethod
@@ -613,7 +677,13 @@ class StandardPath( AbstractBase_BASE ):
 
         """
 
-        pass
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_my_saved_data"
+        )
+
+
+    # pylint: enable=W0613
 
 
 ###############################################################################

@@ -142,11 +142,13 @@ if   2 == python_version.major:
     from __builtin__ import ( # pylint: disable=F0401
         KeyError                as __builtins_KeyError,
         ValueError              as __builtins_ValueError,
+        RuntimeError            as __builtins_RuntimeError,
     )
 else:
     from builtins import ( # pylint: disable=F0401
         KeyError                as __builtins_KeyError,
         ValueError              as __builtins_ValueError,
+        RuntimeError            as __builtins_RuntimeError,
     )
 
 from abc import (
@@ -443,6 +445,34 @@ class InvalidValueError( Exception_Exiting, __builtins_ValueError ):
         
 
 Error_BASE.register( InvalidValueError )
+
+
+class InvokedAbstractMethodError( Exception_Exiting, __builtins_RuntimeError ):
+    """
+        Exception class representing the error condition where an abstract
+        method should have not been invoked in a superclass.
+
+        Inherits from :py:class:`Exception_Exiting` and 
+        :py:exc:`RuntimeError <CPython3:RuntimeError>`.
+    """
+
+
+    def __init__( self, reason_format, *reason_args ):
+        """ """
+
+        super( InvokedAbstractMethodError, self ).__init__(
+            reason_format, *reason_args
+        )
+
+        self._class_name    = self.__class__.__name__
+        # TODO: Set return code to a proper OS-dependent value.
+        # TEMP
+        self._rc            = 1
+
+    __init__.__doc__ += Exception_Exiting.__init__.__doc__
+        
+
+Error_BASE.register( InvokedAbstractMethodError )
 
 
 ###############################################################################
