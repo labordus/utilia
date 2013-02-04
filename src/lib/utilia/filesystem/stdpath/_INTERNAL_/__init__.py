@@ -110,6 +110,7 @@ class StandardPathContext( MutableMapping ):
         "software name":            None,
         "software provider name":   None,
         "software version":         None,
+        "PEP 370":                  None,
     }
     _options            = { }
 
@@ -505,19 +506,6 @@ class StandardPath( AbstractBase_BASE ):
         """
 
         pass
-
-
-    @abstractmethod
-    def whereis_my_common_config_pythonic( self, context = None ):
-        """
-            Returns the path to the directory where the shared or sitewide
-            configuration information for the software product, defined in
-            ``context``, is stored. (This path is relative to the current
-            Python's installation base directory.)
-
-        """
-
-        pass
     
 
     @abstractmethod
@@ -539,19 +527,6 @@ class StandardPath( AbstractBase_BASE ):
             resources for the software product, defined in ``context``, are
             stored. (This path is relative to the current OS platform's
             standard shared or sitewide location for resources.)
-        """
-
-        pass
-
-
-    @abstractmethod
-    def whereis_my_common_resources_pythonic( self, context = None ):
-        """
-            Returns the path to the directory where the shared or sitewide
-            resources for the software product, defined in ``context``, are
-            stored. (This path is relative to the current Python's installation
-            base directory.)
-
         """
 
         pass
@@ -587,19 +562,6 @@ class StandardPath( AbstractBase_BASE ):
 
         pass
 
-
-    @abstractmethod
-    def whereis_my_user_config_pythonic( self, context = None ):
-        """
-            Returns the path to the directory where the current user's
-            configuration information for the software product, defined in
-            ``context`` is stored. (This path is relative to Python's user base
-            directory, as specified by :pep:`370`.)
-
-        """
-
-        pass
-
     
     @abstractmethod
     def whereis_my_user_resources_at_base( self, base_path, context = None ):
@@ -621,18 +583,6 @@ class StandardPath( AbstractBase_BASE ):
             stored. (This path is relative to the current OS platform's 
             standard per-user location for resources.)
 
-        """
-
-        pass
-
-
-    @abstractmethod
-    def whereis_my_user_resources_pythonic( self, context = None ):
-        """
-            Returns the path to the directory where the current user's
-            resources for the software product, defined in ``context`` is 
-            stored. (This path is relative to Python's user base directory, 
-            as specified by :pep:`370`.)
         """
 
         pass
