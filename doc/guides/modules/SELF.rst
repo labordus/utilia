@@ -69,6 +69,10 @@ Exception Classes
    :members:
    :inherited-members:
 
+.. autoclass:: InvokedAbstractMethodError
+   :members:
+   :inherited-members:
+
 Subpackages and Modules
 -----------------------
 
