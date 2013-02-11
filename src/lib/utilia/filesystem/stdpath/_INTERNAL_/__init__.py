@@ -111,6 +111,7 @@ class StandardPathContext( MutableMapping ):
         "software name":            None,
         "software provider name":   None,
         "software version":         None,
+        "base path":                None,
         "PEP 370":                  None,
     }
     _options            = { }
@@ -325,13 +326,6 @@ class StandardPath( AbstractBase_BASE ):
     """
 
 
-    # TODO: Prune away the 'whereis_my_*' methods in favor of using context
-    #       with the more fundamental ones.
-
-    # TODO: Prune away the '*_at_base' methods in favor of using a supplied
-    #       base path from context in conjunction with the fundamental methods.
-
-
     _context = None
 
 
@@ -348,6 +342,7 @@ class StandardPath( AbstractBase_BASE ):
     # pylint: disable=W0613
 
 
+    # TODO: Hide as platform-dependent helper function.
     @abstractmethod
     def whereis_oscore_install_root( self, context = None ):
         """
@@ -362,6 +357,7 @@ class StandardPath( AbstractBase_BASE ):
         )
 
 
+    # TODO: Hide as platform-dependent helper function.
     @abstractmethod
     def whereis_osdist_install_root( self, context = None ):
         """
@@ -376,6 +372,7 @@ class StandardPath( AbstractBase_BASE ):
         )
 
 
+    # TODO: Hide as platform-dependent helper function.
     @abstractmethod
     def whereis_common_install_root( self, context = None ):
         """
@@ -391,6 +388,7 @@ class StandardPath( AbstractBase_BASE ):
         )
 
 
+    # TODO: Hide as platform-dependent helper function.
     @abstractmethod
     def whereis_oscore_config_base( self, context = None ):
         """
@@ -406,6 +404,7 @@ class StandardPath( AbstractBase_BASE ):
         )
 
 
+    # TODO: Hide as platform-dependent helper function.
     @abstractmethod
     def whereis_osdist_config_base( self, context = None ):
         """
@@ -421,6 +420,7 @@ class StandardPath( AbstractBase_BASE ):
         )
 
 
+    # TODO: Hide as platform-dependent helper function.
     @abstractmethod
     def whereis_common_config_base( self, context = None ):
         """
@@ -437,6 +437,7 @@ class StandardPath( AbstractBase_BASE ):
         )
 
 
+    # TODO: Hide as platform-dependent helper function.
     @abstractmethod
     def whereis_user_home( self, context = None ):
         """
@@ -451,6 +452,7 @@ class StandardPath( AbstractBase_BASE ):
         )
 
 
+    # TODO: Hide as platform-dependent helper function.
     @abstractmethod
     def whereis_common_temp_base( self, context = None ):
         """
@@ -465,6 +467,7 @@ class StandardPath( AbstractBase_BASE ):
         )
 
 
+    # TODO: Hide as platform-dependent helper function.
     @abstractmethod
     def whereis_user_temp_base( self, context = None ):
         """
@@ -478,6 +481,7 @@ class StandardPath( AbstractBase_BASE ):
         )
 
 
+    # TODO: Hide as platform-dependent helper function.
     @abstractmethod
     def whereis_preferred_temp_base(
         self, context = None, prefer_common = False
@@ -506,7 +510,7 @@ class StandardPath( AbstractBase_BASE ):
 
 
     @abstractmethod
-    def whereis_my_temp( self, context = None, prefer_common = False ):
+    def whereis_temp( self, context = None, prefer_common = False ):
         """
             Returns the path to the preferred temporary storage for 
             the software product, defined in ``context``.
@@ -518,168 +522,84 @@ class StandardPath( AbstractBase_BASE ):
 
         raise InvokedAbstractMethodError(
             _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_temp"
+            self.__class__.__name__, "whereis_temp"
         )
 
 
     @abstractmethod
-    def whereis_my_common_config_at_base( self, base_path, context = None ):
+    def whereis_common_config( self, context = None ):
         """
             Returns the path to the directory where the shared or sitewide
             configuration information for the software product, defined in
-            ``context``, is stored. (This path is relative to the supplied
-            ``base_path``.)
+            ``context``, is stored.
 
         """
 
         raise InvokedAbstractMethodError(
             _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_common_config_at_base"
+            self.__class__.__name__, "whereis_common_config"
         )
 
 
     @abstractmethod
-    def whereis_my_common_config( self, context = None ):
-        """
-            Returns the path to the directory where the shared or sitewide
-            configuration information for the software product, defined in
-            ``context``, is stored. (This path is relative to the cirrent OS
-            platform's standard shared or sitewide location for configuration
-            information.)
-
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_common_config"
-        )
-    
-
-    @abstractmethod
-    def whereis_my_common_resources_at_base( self, base_path, context = None ):
+    def whereis_common_resources( self, context = None ):
         """
             Returns the path to the directory where the shared or sitewide
             resources for the software product, defined in ``context``, are
-            stored. (This path is relative to the supplied ``base_path``.)
-
+            stored.
         """
 
         raise InvokedAbstractMethodError(
             _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_common_resources_at_base"
+            self.__class__.__name__, "whereis_common_resources"
         )
 
 
-    @abstractmethod
-    def whereis_my_common_resources( self, context = None ):
-        """
-            Returns the path to the directory where the shared or sitewide
-            resources for the software product, defined in ``context``, are
-            stored. (This path is relative to the current OS platform's
-            standard shared or sitewide location for resources.)
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_common_resources"
-        )
-
-
-    # TODO: whereis_my_common_programs
+    # TODO: whereis_common_programs
 
 
     @abstractmethod
-    def whereis_my_user_config_at_base( self, base_path, context = None ):
+    def whereis_user_config( self, context = None ):
         """
             Returns the path to the directory where the current user's
             configuration information for the software product, defined in
-            ``context`` is stored. (This path is relative to the supplied
-            ``base_path``.)
-
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_user_config_at_base"
-        )
-
-
-    @abstractmethod
-    def whereis_my_user_config( self, context = None ):
-        """
-            Returns the path to the directory where the current user's
-            configuration information for the software product, defined in
-            ``context`` is stored. (This path is relative to the current OS
-            platform's standard per-user location for configuration
-            information.)
+            ``context`` is stored.
         
         """
 
         raise InvokedAbstractMethodError(
             _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_user_config"
+            self.__class__.__name__, "whereis_user_config"
         )
 
     
     @abstractmethod
-    def whereis_my_user_resources_at_base( self, base_path, context = None ):
+    def whereis_user_resources( self, context = None ):
         """
             Returns the path to the directory where the current user's
             resources for the software product, defined in ``context`` is 
-            stored. (This path is relative to the supplied ``base_path``.)
-            
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_user_resources_at_base"
-        )
-
-    
-    @abstractmethod
-    def whereis_my_user_resources( self, context = None ):
-        """
-            Returns the path to the directory where the current user's
-            resources for the software product, defined in ``context`` is 
-            stored. (This path is relative to the current OS platform's 
-            standard per-user location for resources.)
+            stored.
 
         """
 
         raise InvokedAbstractMethodError(
             _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_user_resources"
+            self.__class__.__name__, "whereis_user_resources"
         )
 
 
     @abstractmethod
-    def whereis_my_saved_data_at_base( self, base_path, context = None ):
+    def whereis_saved_data( self, context = None ):
         """
             Returns the path to the directory where works, created by the
             current user with the software product, defined in ``context``,
-            will be stored. (This path is relative to the supplied
-            ``base_path``.)
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_saved_data_at_base"
-        )
-
-
-    @abstractmethod
-    def whereis_my_saved_data( self, context = None ):
-        """
-            Returns the path to the directory where works, created by the
-            current user with the software product, defined in ``context``,
-            will be stored. (This path is relative to the current OS 
-            platform's standard location for user-created data.)
+            will be stored.
 
         """
 
         raise InvokedAbstractMethodError(
             _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_my_saved_data"
+            self.__class__.__name__, "whereis_saved_data"
         )
 
 
