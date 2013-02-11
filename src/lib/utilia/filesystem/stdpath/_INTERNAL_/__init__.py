@@ -59,6 +59,7 @@ from utilia.compat.builtins import (
 )
 from utilia.compat.collections import ( # pylint: disable=E0611
     MutableMapping,
+    namedtuple,
 )
 from utilia.filesystem import (
     Error_BASE              as FilesystemError_BASE,
@@ -93,7 +94,10 @@ class UndeterminedPathError( Exception_Exiting, __builtins_LookupError ):
 FilesystemError_BASE.register( UndeterminedPathError )
 
 
-class StandardPathContext( MutableMapping ):
+_OptionValidator = namedtuple( "_OptionValidator", "func help" )
+
+
+class StandardPathContext_BASE( MutableMapping ):
     """
         Base for auxiliary classes, which provide a context for calculating 
         standard paths.
@@ -103,16 +107,17 @@ class StandardPathContext( MutableMapping ):
     """
 
 
+    # TODO: Fill out help on option validators.
     _option_validators  = \
     {
-        "error-on-none":            None,
-        "specific path":            None,
-        "calculate path":           None,
-        "software name":            None,
-        "software provider name":   None,
-        "software version":         None,
-        "base path":                None,
-        "PEP 370":                  None,
+        "error-on-none":            _OptionValidator( None, """ """ ),
+        "specific path":            _OptionValidator( None, """ """ ),
+        "calculate path":           _OptionValidator( None, """ """ ),
+        "software name":            _OptionValidator( None, """ """ ),
+        "software provider name":   _OptionValidator( None, """ """ ),
+        "software version":         _OptionValidator( None, """ """ ),
+        "base path":                _OptionValidator( None, """ """ ),
+        "PEP 370":                  _OptionValidator( None, """ """ ), 
     }
     _options            = { }
 
@@ -317,7 +322,20 @@ class StandardPathContext( MutableMapping ):
         pass
 
 
-class StandardPath( AbstractBase_BASE ):
+    def iter_option_validators( self ):
+        """
+            Returns an iterator over the available option validators.
+            Each item returned is a tuple consisting of the validator function
+            (or ``None``) and help on the corresponding option.
+
+            This can be useful for getting help on the options in an
+            interactive session.
+        """
+
+        return iter_dict_items( self._option_validators )
+
+
+class StandardPath_BASE( AbstractBase_BASE ):
     """
         Abstract base class for the standard path classes of the various
         flavors of operating system archtypes.
