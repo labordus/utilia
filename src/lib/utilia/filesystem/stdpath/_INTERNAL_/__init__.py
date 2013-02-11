@@ -54,8 +54,8 @@ from utilia.compat import (
     AbstractBase_BASE,
 )
 from utilia.compat.builtins import (
-    LookupError             as __builtins_LookupError,
-    KeyError                as __builtins_KeyError,
+    LookupError             as _builtins_LookupError,
+    KeyError                as _builtins_KeyError,
 )
 from utilia.compat.collections import ( # pylint: disable=E0611
     MutableMapping,
@@ -66,7 +66,7 @@ from utilia.filesystem import (
 )
 
 
-class UndeterminedPathError( Exception_Exiting, __builtins_LookupError ):
+class UndeterminedPathError( Exception_Exiting, _builtins_LookupError ):
     """
         Exception class representing the error condition where a path
         cannot be calculated for the given operating system and context.
@@ -107,17 +107,20 @@ class StandardPathContext_BASE( MutableMapping ):
     """
 
 
+    # TODO: Implement '__str__' and '__repr__' methods.
+
+
     # TODO: Fill out help on option validators.
     _option_validators  = \
     {
-        "error-on-none":            _OptionValidator( None, """ """ ),
-        "specific path":            _OptionValidator( None, """ """ ),
-        "calculate path":           _OptionValidator( None, """ """ ),
-        "software name":            _OptionValidator( None, """ """ ),
-        "software provider name":   _OptionValidator( None, """ """ ),
-        "software version":         _OptionValidator( None, """ """ ),
-        "base path":                _OptionValidator( None, """ """ ),
-        "PEP 370":                  _OptionValidator( None, """ """ ), 
+        "error_on_none":            _OptionValidator( None, """ """ ),
+        "specific_path":            _OptionValidator( None, """ """ ),
+        "calculate_path":           _OptionValidator( None, """ """ ),
+        "software_name":            _OptionValidator( None, """ """ ),
+        "software_provider_name":   _OptionValidator( None, """ """ ),
+        "software_version":         _OptionValidator( None, """ """ ),
+        "base_path":                _OptionValidator( None, """ """ ),
+        "PEP_370":                  _OptionValidator( None, """ """ ), 
     }
     _options            = { }
 
@@ -161,7 +164,7 @@ class StandardPathContext_BASE( MutableMapping ):
 
         try:
             value = self._options[ key ]
-        except __builtins_KeyError:
+        except _builtins_KeyError:
             raise UnknownKeyError(
                 _TD_( "Unknown option '{1}' for instance of '{0}'." ),
                 self.__class__.__name__, key
@@ -179,7 +182,7 @@ class StandardPathContext_BASE( MutableMapping ):
 
         try:
             validator = self._option_validators[ key ]
-        except __builtins_KeyError:
+        except _builtins_KeyError:
             raise InvalidKeyError(
                 _TD_( "Invalid option '{1}' for instance of '{0}'." ),
                 self.__class__.__name__, key
@@ -208,7 +211,7 @@ class StandardPathContext_BASE( MutableMapping ):
 
         try:
             del self._options[ key ]
-        except __builtins_KeyError:
+        except _builtins_KeyError:
             raise UnknownKeyError(
                 _TD_( "Unknown option '{1}' for instance of '{0}'." ),
                 self.__class__.__name__, key
@@ -344,6 +347,9 @@ class StandardPath_BASE( AbstractBase_BASE ):
     """
 
 
+    # TODO: Implement '__str__' and '__repr__' methods.
+
+
     _context = None
 
 
@@ -361,7 +367,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # TODO: Hide as platform-dependent helper function.
-    @abstractmethod
+    #@abstractmethod
     def whereis_oscore_install_root( self, context = None ):
         """
             Returns the installation root path for the core OS components, if 
@@ -376,7 +382,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # TODO: Hide as platform-dependent helper function.
-    @abstractmethod
+    #@abstractmethod
     def whereis_osdist_install_root( self, context = None ):
         """
             Returns to the installation root path for the OS distribution, if 
@@ -391,7 +397,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # TODO: Hide as platform-dependent helper function.
-    @abstractmethod
+    #@abstractmethod
     def whereis_common_install_root( self, context = None ):
         """
             Returns the typical default root path for a shared or sitewide
@@ -407,7 +413,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # TODO: Hide as platform-dependent helper function.
-    @abstractmethod
+    #@abstractmethod
     def whereis_oscore_config_base( self, context = None ):
         """
             Returns the path to the typical top-level directory under which the
@@ -423,7 +429,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # TODO: Hide as platform-dependent helper function.
-    @abstractmethod
+    #@abstractmethod
     def whereis_osdist_config_base( self, context = None ):
         """
             Returns the path to the typical top-level directory under which the
@@ -439,7 +445,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # TODO: Hide as platform-dependent helper function.
-    @abstractmethod
+    #@abstractmethod
     def whereis_common_config_base( self, context = None ):
         """
             Returns the path to the typical top-level directory under which 
@@ -456,7 +462,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # TODO: Hide as platform-dependent helper function.
-    @abstractmethod
+    #@abstractmethod
     def whereis_user_home( self, context = None ):
         """
             Returns the path to the current user's home directory, if it can 
@@ -471,7 +477,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # TODO: Hide as platform-dependent helper function.
-    @abstractmethod
+    #@abstractmethod
     def whereis_common_temp_base( self, context = None ):
         """
             Returns the path to the temporary storage area available for use 
@@ -486,7 +492,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # TODO: Hide as platform-dependent helper function.
-    @abstractmethod
+    #@abstractmethod
     def whereis_user_temp_base( self, context = None ):
         """
             Returns the path to the current user's temporary storage area.
@@ -500,7 +506,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # TODO: Hide as platform-dependent helper function.
-    @abstractmethod
+    #@abstractmethod
     def whereis_preferred_temp_base(
         self, context = None, prefer_common = False
     ):
