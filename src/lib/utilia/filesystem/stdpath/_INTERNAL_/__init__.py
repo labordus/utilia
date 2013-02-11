@@ -510,7 +510,7 @@ class StandardPath( AbstractBase_BASE ):
 
 
     @abstractmethod
-    def whereis_temp( self, context = None, prefer_common = False ):
+    def whereis_temp( self, context = None ):
         """
             Returns the path to the preferred temporary storage for 
             the software product, defined in ``context``.
