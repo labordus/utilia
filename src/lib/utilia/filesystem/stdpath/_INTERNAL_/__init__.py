@@ -17,11 +17,8 @@
 ###############################################################################
 
 """
-    Fundamental module for OS-dependent implementations of the standard path
-    calculation logic.
-
-    Select portions of this module will be exposed through the public
-    interface.
+    Basis for OS-dependent implementations of the standard path calculation 
+    logic.
 """
 
 
@@ -226,13 +223,13 @@ class StandardPathContext_BASE( MutableMapping ):
 
         options = self._options
 
-        if "specific path" in options:
+        if "specific_path" in options:
             return options[ "specific path" ]
         
-        if "calculate path" in options:
+        if "calculate_path" in options:
             return self._calculate_path( )
 
-        if "error-on-none" in options:
+        if "error_on_none" in options:
             self.raise_UndeterminedPathError( )
 
 
@@ -627,7 +624,57 @@ class StandardPath_BASE( AbstractBase_BASE ):
         )
 
 
+    @abstractmethod
+    def _is_absolute_path( self, the_path ):
+        """
+            Tests whether the given path is an absolute path on the OS 
+            platform for which standard paths are being derived rather 
+            than the current OS platform.
+        """
+
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "_is_absolute_path"
+        )
+
+
+    @abstractmethod
+    def _join_path( self, *posargs ):
+        """
+            Joins path components according to the rules of the OS platform for
+            which standard paths are being derived rather than the current OS
+            platform.
+        """
+
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "_join_path"
+        )
+
+
     # pylint: enable=W0613
+
+
+    def _find_context( self, context ):
+        """
+            Returns the first available standard path context found.
+        """
+
+        if not None is context: return context
+        return self._context
+
+
+    def _choose_path_parts( self, context ):
+        """
+            Returns base path and specific path from standard path context.
+        """
+
+        if context.path and self._is_absolute_path( context.path ):
+            return context.path, None
+
+        base_path = None
+        if "base_path" in context: base_path = context[ "base_path" ]
+        return base_path, context.path
 
 
 ###############################################################################

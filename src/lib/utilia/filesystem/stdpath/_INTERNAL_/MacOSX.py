@@ -17,7 +17,7 @@
 ###############################################################################
 
 """
-    <TODO: Insert module documentation here.>
+    Implementation of the standard path calculation logic for MacOS X.
 """
 
 

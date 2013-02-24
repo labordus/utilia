@@ -17,7 +17,8 @@
 ###############################################################################
 
 """
-    <TODO: Insert module documentation here.>
+    Implementation of the standard path calculation logic for POSIX OS
+    platforms.
 """
 
 
@@ -35,6 +36,13 @@ __docformat__ = "reStructuredText"
 # TODO: Support XDG environment variables.
 
 
+# TODO: Replace with POSIX-specific functions.
+from os.path import (
+    isabs                   as is_absolute_path,
+    join                    as join_path,
+)
+
+
 from . import (
     _OptionValidator,
     StandardPathContext_BASE,
@@ -44,7 +52,17 @@ from . import (
 
 class StandardPathContext( StandardPathContext_BASE ):
     """
-        <TODO: Insert class documentation here.> 
+        Auxiliary class, which provides a context for calculating standard
+        paths on POSIX OS platforms.
+
+        Inherits from :py:class:`StandardPathContext_BASE`.
+
+        Provides these options:
+
+        .. csv-table::
+           :header: "Name", "Description"
+           :widths: 20, 80
+
     """
 
 
@@ -74,13 +92,61 @@ class StandardPathContext( StandardPathContext_BASE ):
     StandardPathContext_BASE._calculate_path.__doc__
 
 
+def get_default_context( ):
+    """
+        Returns the default standard path context.
+    """
+    
+    return StandardPathContext(
+        error_on_none               = True,
+        whitespace_to_underscore    = True,
+        XDG_Standard                = True,
+    )
+
+
+#: Current standard path context.
+_context = get_default_context( )
+
+StandardPathContext.__doc__ += \
+"\n".join(
+    map(
+        lambda k, v: \
+        (" " * 10) + """ "{option_name}", "{option_help}" """.format(
+            option_name = k, option_help = v
+        ),
+        (k for k, v in _context.iter_option_validators( )),
+        (v.help for k, v in _context.iter_option_validators( ))
+    )
+)
+
+
+def get_context( ):
+    """
+        Returns the current standard path context.
+    """
+
+    return _context
+
+
+def set_context( new_context ):
+    """
+        Sets a new standard path context.
+        Returns the old standard path context.
+    """
+
+    global _context
+
+    old_context, _context = _context, new_context
+    return old_context
+
+
 class StandardPath( StandardPath_BASE ):
     """
-        <TODO: Insert class documentation here.>
+        Calculates standard paths for POSIX OS platforms.
     """
 
 
-    def __init__( self, context = None ):
+    def __init__( self, context = get_context( ) ):
         """ """
 
         StandardPath_BASE.__init__( self, context )
@@ -91,8 +157,13 @@ class StandardPath( StandardPath_BASE ):
     def whereis_temp( self, context = None ):
         """ """
 
-        # TODO: Implement.
-        pass
+        context = self._find_context( context )
+
+        base_path, specific_path = self._choose_path_parts( context )
+        if None is base_path: base_path = "/tmp"
+
+        if specific_path: return self._join_path( base_path, specific_path )
+        return base_path
 
     whereis_temp.__doc__ = StandardPath_BASE.whereis_temp.__doc__
 
@@ -145,6 +216,26 @@ class StandardPath( StandardPath_BASE ):
 
     whereis_saved_data.__doc__ = \
     StandardPath_BASE.whereis_saved_data.__doc__
+
+
+    def _is_absolute_path( self, the_path ):
+        """ """
+
+        # TODO: Use POSIX-specific path tester rather than current OS one.
+        return is_absolute_path( the_path )
+
+    _is_absolute_path.__doc__ = \
+    StandardPath_BASE._is_absolute_path.__doc__
+        
+
+    def _join_path( self, *posargs ):
+        """ """
+
+        # TODO: Use POSIX-specific path joiner rather than current OS one.
+        return join_path( *posargs )
+
+    _join_path.__doc__ = \
+    StandardPath_BASE._join_path.__doc__
 
 
 ###############################################################################
