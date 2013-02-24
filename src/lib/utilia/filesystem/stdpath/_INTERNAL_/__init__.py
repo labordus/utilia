@@ -107,17 +107,92 @@ class StandardPathContext_BASE( MutableMapping ):
     # TODO: Implement '__str__' and '__repr__' methods.
 
 
-    # TODO: Fill out help on option validators.
     _option_validators  = \
     {
-        "error_on_none":            _OptionValidator( None, """ """ ),
-        "specific_path":            _OptionValidator( None, """ """ ),
-        "calculate_path":           _OptionValidator( None, """ """ ),
-        "software_name":            _OptionValidator( None, """ """ ),
-        "software_provider_name":   _OptionValidator( None, """ """ ),
-        "software_version":         _OptionValidator( None, """ """ ),
-        "base_path":                _OptionValidator( None, """ """ ),
-        "PEP_370":                  _OptionValidator( None, """ """ ), 
+        "error_on_none": \
+        _OptionValidator(
+            None,
+            """
+                (*Boolean*).
+                Raise a :py:class:`UndeterminedPathError` if a standard path
+                cannot be calculated with the given context for the OS
+                platform.
+            """
+        ),
+        "specific_path": \
+        _OptionValidator(
+            None,
+            """
+                (*String*).
+                Use this path as the part of a full path which is specific to a
+                particular software package. If this path is set, then it
+                overrides any path calculated from the software name, vendor,
+                and version. If this path is an absolute path on the OS
+                platform corresponding to its context, then it overrides any
+                base path supplied within the context.
+            """
+        ),
+        "calculate_path": \
+        _OptionValidator(
+            None,
+            """
+                (*Boolean*).
+                Attempt to calculate the part of a full path which is specific
+                to a particular software package by using the name, provider, 
+                and version of the software package, as available. If a 
+                specific path to this software package is not directly set, 
+                then the calculated path will be used.
+            """
+        ),
+        "software_name": \
+        _OptionValidator(
+            None,
+            """
+                (*String*).
+                The name of a software package which can be used to calculate
+                the part of a full path that is specific to the software
+                package.
+            """
+        ),
+        "software_provider_name": \
+        _OptionValidator(
+            None,
+            """
+                (*String*).
+                The name of the provider (author, vendor, etc...) of a software
+                package which can be used to calculate the part of a full path
+                that is specific to the software package.
+            """
+        ),
+        "software_version": \
+        _OptionValidator(
+            None,
+            """
+                (*String*).
+                The version of a software package which can be used to
+                calculate the part of a full path that is specific to the
+                software package.
+            """
+        ),
+        "base_path": \
+        _OptionValidator(
+            None,
+            """
+                (*String*).
+                Use this path as the part of a full path which is an
+                alternative installation root path to the default one for the
+                OS platform corresponding to the context.
+            """
+        ),
+        "PEP_370": \
+        _OptionValidator(
+            None,
+            """
+                (*Boolean*).
+                Calculate standard paths which comply with :pep:`370`, where
+                applicable.
+            """
+        ), 
     }
     _options            = { }
 
