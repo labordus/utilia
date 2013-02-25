@@ -47,6 +47,7 @@ from utilia import (
 )
 from utilia.compat import (
     iter_dict_keys,
+    iter_dict_values,
     iter_dict_items,
     AbstractBase_BASE,
 )
@@ -57,6 +58,7 @@ from utilia.compat.builtins import (
 from utilia.compat.collections import ( # pylint: disable=E0611
     MutableMapping,
     namedtuple,
+    OrderedDict,
 )
 from utilia.filesystem import (
     Error_BASE              as FilesystemError_BASE,
@@ -102,9 +104,6 @@ class StandardPathContext_BASE( MutableMapping ):
         Inherits from :py:class:`collections.MutableMapping
         <CPython3:collections.MutableMapping>`.
     """
-
-
-    # TODO: Implement '__str__' and '__repr__' methods.
 
 
     _option_validators  = \
@@ -288,6 +287,43 @@ class StandardPathContext_BASE( MutableMapping ):
                 _TD_( "Unknown option '{1}' for instance of '{0}'." ),
                 self.__class__.__name__, key
             )
+
+
+    def __str__( self ):
+        """
+            Returns a dictionary-like representation of the options, both
+            default and customized.
+        """
+
+        options = OrderedDict( )
+        for k, v in self.iter_option_validators( ):
+            options[ k ] = v.default
+        for k, v in iter_dict_items( self._options ):
+            options[ k ] = v
+        return "{ " + ", ".join( map(
+            lambda k, v: "{option_name}: {option_value}".format(
+                option_name = k, option_value = v
+            ),
+            (repr( k ) for k in iter_dict_keys( options )),
+            (repr( v ) for v in iter_dict_values( options ))
+        ) ) + " }"
+
+
+    def _options_repr( self ):
+        """
+            Returns a string which contains a :py:func:`eval
+            <CPython3:eval>`-safe representation of the keyword arguments
+            needed to create another standard path context with the same
+            options.
+        """
+
+        return ", ".join( map(
+            lambda k, v: "{option_name} = {option_value}".format(
+                option_name = k, option_value = v
+            ),
+            (k for k in iter_dict_keys( self._options )),
+            (repr( v ) for v in iter_dict_values( self._options ))
+        ) )
 
 
     @property
