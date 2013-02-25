@@ -91,7 +91,7 @@ class UndeterminedPathError( Exception_Exiting, _builtins_LookupError ):
 FilesystemError_BASE.register( UndeterminedPathError )
 
 
-_OptionValidator = namedtuple( "_OptionValidator", "func help" )
+_OptionValidator = namedtuple( "_OptionValidator", "func default help" )
 
 
 class StandardPathContext_BASE( MutableMapping ):
@@ -111,7 +111,7 @@ class StandardPathContext_BASE( MutableMapping ):
     {
         "error_on_none": \
         _OptionValidator(
-            None,
+            None, True,
             """
                 (*Boolean*).
                 Raise a :py:class:`UndeterminedPathError` if a standard path
@@ -121,7 +121,7 @@ class StandardPathContext_BASE( MutableMapping ):
         ),
         "specific_path": \
         _OptionValidator(
-            None,
+            None, None,
             """
                 (*String*).
                 Use this path as the part of a full path which is specific to a
@@ -134,7 +134,7 @@ class StandardPathContext_BASE( MutableMapping ):
         ),
         "calculate_path": \
         _OptionValidator(
-            None,
+            None, False,
             """
                 (*Boolean*).
                 Attempt to calculate the part of a full path which is specific
@@ -146,7 +146,7 @@ class StandardPathContext_BASE( MutableMapping ):
         ),
         "software_name": \
         _OptionValidator(
-            None,
+            None, None,
             """
                 (*String*).
                 The name of a software package which can be used to calculate
@@ -156,7 +156,7 @@ class StandardPathContext_BASE( MutableMapping ):
         ),
         "software_provider_name": \
         _OptionValidator(
-            None,
+            None, None,
             """
                 (*String*).
                 The name of the provider (author, vendor, etc...) of a software
@@ -166,7 +166,7 @@ class StandardPathContext_BASE( MutableMapping ):
         ),
         "software_version": \
         _OptionValidator(
-            None,
+            None, None,
             """
                 (*String*).
                 The version of a software package which can be used to
@@ -176,7 +176,7 @@ class StandardPathContext_BASE( MutableMapping ):
         ),
         "base_path": \
         _OptionValidator(
-            None,
+            None, None,
             """
                 (*String*).
                 Use this path as the part of a full path which is an
@@ -186,7 +186,7 @@ class StandardPathContext_BASE( MutableMapping ):
         ),
         "PEP_370": \
         _OptionValidator(
-            None,
+            None, False,
             """
                 (*Boolean*).
                 Calculate standard paths which comply with :pep:`370`, where

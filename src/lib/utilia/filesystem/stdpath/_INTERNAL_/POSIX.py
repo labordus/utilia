@@ -70,7 +70,7 @@ class StandardPathContext( StandardPathContext_BASE ):
     _option_validators.update( {
         "whitespace_to_underscore": \
         _OptionValidator(
-            None,
+            None, True,
             """
                 (*Boolean*).
                 Convert white spaces to underscores in paths calculated from 
@@ -79,7 +79,7 @@ class StandardPathContext( StandardPathContext_BASE ):
         ),
         "XDG_Standard": \
         _OptionValidator(
-            None,
+            None, True,
             """
                 (*Boolean*).
                 Follow the XDG Base Directory Specification, where relevant,
@@ -107,20 +107,8 @@ class StandardPathContext( StandardPathContext_BASE ):
     StandardPathContext_BASE._calculate_path.__doc__
 
 
-def get_default_context( ):
-    """
-        Returns the default standard path context.
-    """
-    
-    return StandardPathContext(
-        error_on_none               = True,
-        whitespace_to_underscore    = True,
-        XDG_Standard                = True,
-    )
-
-
 #: Current standard path context.
-_context = get_default_context( )
+_context = StandardPathContext( )
 
 StandardPathContext.__doc__ += \
 "\n".join(
