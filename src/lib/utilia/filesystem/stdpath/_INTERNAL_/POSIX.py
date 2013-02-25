@@ -67,26 +67,24 @@ class StandardPathContext( StandardPathContext_BASE ):
 
 
     _option_validators = StandardPathContext_BASE._option_validators
-    _option_validators.update( {
-        "whitespace_to_underscore": \
-        _OptionValidator(
-            None, True,
-            """
-                (*Boolean*).
-                Convert white spaces to underscores in paths calculated from 
-                the name, provider, and version of a software package.
-            """
-        ),
-        "XDG_Standard": \
-        _OptionValidator(
-            None, True,
-            """
-                (*Boolean*).
-                Follow the XDG Base Directory Specification, where relevant,
-                when calculating paths.
-            """
-        ),
-    } )
+    _option_validators[ "whitespace_to_underscore" ]    = \
+    _OptionValidator(
+        None, True,
+        """
+            (*Boolean*).
+            Convert white spaces to underscores in paths calculated from 
+            the name, provider, and version of a software package.
+        """
+    )
+    _option_validators[ "XDG_Standard" ]                = \
+    _OptionValidator(
+        None, True,
+        """
+            (*Boolean*).
+            Follow the XDG Base Directory Specification, where relevant,
+            when calculating paths.
+        """
+    )
 
 
     def __init__( self, **options ):
