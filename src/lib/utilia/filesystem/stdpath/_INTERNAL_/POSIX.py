@@ -97,15 +97,6 @@ class StandardPathContext( StandardPathContext_BASE ):
     __init__.__doc__ = StandardPathContext_BASE.__init__.__doc__
 
 
-    def __repr__( self ):
-        """
-            Returns a string which can be used by :py:func:`eval
-            <CPython3:eval>` to create an instance of the class.
-        """
-
-        return "StandardPathContext( {0} )".format( self._options_repr( ) )
-
-
     def _calculate_path( self ):
         """ """
 

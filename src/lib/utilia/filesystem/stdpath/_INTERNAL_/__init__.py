@@ -289,6 +289,24 @@ class StandardPathContext_BASE( MutableMapping ):
             )
 
 
+    def __repr__( self ):
+        """
+            Returns a string which can be used by :py:func:`eval
+            <CPython3:eval>` to create an instance of the class, having the
+            same options as the current instance.
+        """
+
+        return "StandardPathContext( {0} )".format(
+            ", ".join( map(
+                lambda k, v: "{option_name} = {option_value}".format(
+                    option_name = k, option_value = v
+                ),
+                (k for k in iter_dict_keys( self._options )),
+                (repr( v ) for v in iter_dict_values( self._options ))
+            ) )
+        )
+
+
     def __str__( self ):
         """
             Returns a dictionary-like representation of the options, both
@@ -300,30 +318,15 @@ class StandardPathContext_BASE( MutableMapping ):
             options[ k ] = v.default
         for k, v in iter_dict_items( self._options ):
             options[ k ] = v
-        return "{ " + ", ".join( map(
-            lambda k, v: "{option_name}: {option_value}".format(
-                option_name = k, option_value = v
-            ),
-            (repr( k ) for k in iter_dict_keys( options )),
-            (repr( v ) for v in iter_dict_values( options ))
-        ) ) + " }"
-
-
-    def _options_repr( self ):
-        """
-            Returns a string which contains a :py:func:`eval
-            <CPython3:eval>`-safe representation of the keyword arguments
-            needed to create another standard path context with the same
-            options.
-        """
-
-        return ", ".join( map(
-            lambda k, v: "{option_name} = {option_value}".format(
-                option_name = k, option_value = v
-            ),
-            (k for k in iter_dict_keys( self._options )),
-            (repr( v ) for v in iter_dict_values( self._options ))
-        ) )
+        return "{{ {0} }} ".format(
+            ", ".join( map(
+                lambda k, v: "{option_name}: {option_value}".format(
+                    option_name = k, option_value = v
+                ),
+                (repr( k ) for k in iter_dict_keys( options )),
+                (repr( v ) for v in iter_dict_values( options ))
+            ) )
+        )
 
 
     @property
@@ -455,9 +458,6 @@ class StandardPath_BASE( AbstractBase_BASE ):
     """
 
 
-    # TODO: Implement '__str__' and '__repr__' methods.
-
-
     _context = None
 
 
@@ -471,12 +471,45 @@ class StandardPath_BASE( AbstractBase_BASE ):
         self._context = context
 
 
+    def __repr__( self ):
+        """
+            Returns a string which can be used by :py:func:`eval
+            <CPython3:eval>` to create an instance of the class, having the
+            same options as the current instance.
+        """
+
+        return "StandardPath( {0} )".format(
+            repr( self._context ) if self._context is not None else ""
+        )
+
+
+    def __str__( self ):
+        """
+            Returns a dictionary-like representation of the various paths,
+            calculated with the context currently in use.
+        """
+
+        path_methods = OrderedDict( [
+            [ mn.replace( "whereis_", "", 1 ), mn ]
+            for mn in dir( self ) if mn.startswith( "whereis_" )
+        ] )
+        return "{{ {0} }}".format(
+            ", ".join( map(
+                lambda k, v: "{path_type}: {path}".format(
+                    path_type = k, path = repr( getattr( self, v )( ) )
+                ),
+                iter_dict_keys( path_methods ),
+                iter_dict_values( path_methods )
+            ) )
+        )
+
+
     # pylint: disable=W0613
 
 
     # TODO: Hide as platform-dependent helper function.
     #@abstractmethod
-    def whereis_oscore_install_root( self, context = None ):
+    def _whereis_oscore_install_root( self, context = None ):
         """
             Returns the installation root path for the core OS components, if 
             it can be determined. Returns ``None`` otherwise.
@@ -491,7 +524,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
     # TODO: Hide as platform-dependent helper function.
     #@abstractmethod
-    def whereis_osdist_install_root( self, context = None ):
+    def _whereis_osdist_install_root( self, context = None ):
         """
             Returns to the installation root path for the OS distribution, if 
             it can be determined. Returns ``None`` otherwise.
@@ -506,7 +539,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
     # TODO: Hide as platform-dependent helper function.
     #@abstractmethod
-    def whereis_common_install_root( self, context = None ):
+    def _whereis_common_install_root( self, context = None ):
         """
             Returns the typical default root path for a shared or sitewide
             software installation by the superuser or systems administrator, if
@@ -522,7 +555,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
     # TODO: Hide as platform-dependent helper function.
     #@abstractmethod
-    def whereis_oscore_config_base( self, context = None ):
+    def _whereis_oscore_config_base( self, context = None ):
         """
             Returns the path to the typical top-level directory under which the
             donfiguration information resides for the core OS components, if it
@@ -532,13 +565,13 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
         raise InvokedAbstractMethodError(
             _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_oscore_config_root"
+            self.__class__.__name__, "whereis_oscore_config_base"
         )
 
 
     # TODO: Hide as platform-dependent helper function.
     #@abstractmethod
-    def whereis_osdist_config_base( self, context = None ):
+    def _whereis_osdist_config_base( self, context = None ):
         """
             Returns the path to the typical top-level directory under which the
             configuration information resides for the OS distribution,
@@ -548,13 +581,13 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
         raise InvokedAbstractMethodError(
             _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_osdist_config_root"
+            self.__class__.__name__, "whereis_osdist_config_base"
         )
 
 
     # TODO: Hide as platform-dependent helper function.
     #@abstractmethod
-    def whereis_common_config_base( self, context = None ):
+    def _whereis_common_config_base( self, context = None ):
         """
             Returns the path to the typical top-level directory under which 
             the configuration information resides for software installed by 
@@ -565,13 +598,13 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
         raise InvokedAbstractMethodError(
             _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_common_config_root"
+            self.__class__.__name__, "whereis_common_config_base"
         )
 
 
     # TODO: Hide as platform-dependent helper function.
     #@abstractmethod
-    def whereis_user_home( self, context = None ):
+    def _whereis_user_home( self, context = None ):
         """
             Returns the path to the current user's home directory, if it can 
             be determined. Returns ``None``, otherwise.
@@ -586,7 +619,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
     # TODO: Hide as platform-dependent helper function.
     #@abstractmethod
-    def whereis_common_temp_base( self, context = None ):
+    def _whereis_common_temp_base( self, context = None ):
         """
             Returns the path to the temporary storage area available for use 
             by everyone on the system.
@@ -601,7 +634,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
     # TODO: Hide as platform-dependent helper function.
     #@abstractmethod
-    def whereis_user_temp_base( self, context = None ):
+    def _whereis_user_temp_base( self, context = None ):
         """
             Returns the path to the current user's temporary storage area.
 
@@ -615,7 +648,7 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
     # TODO: Hide as platform-dependent helper function.
     #@abstractmethod
-    def whereis_preferred_temp_base(
+    def _whereis_preferred_temp_base(
         self, context = None, prefer_common = False
     ):
         """
