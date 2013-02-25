@@ -36,15 +36,21 @@ __docformat__ = "reStructuredText"
 # TODO: Support XDG environment variables.
 
 
+import functools
+import re
 # TODO: Replace with POSIX-specific functions.
 from os.path import (
-    isabs                   as is_absolute_path,
-    join                    as join_path,
+    isabs                   as _is_absolute_path,
+    join                    as _join_path,
 )
 
 
+from utilia import (
+    _TD_,
+)
 from . import (
     _OptionValidator,
+    UndeterminedPathError,
     StandardPathContext_BASE,
     StandardPath_BASE,
 )
@@ -98,8 +104,40 @@ class StandardPathContext( StandardPathContext_BASE ):
     def _calculate_path( self ):
         """ """
 
-        # TODO: Implement.
-        pass
+        error_on_none               = \
+        self.get_with_default( "error_on_none" )
+        whitespace_to_underscore    = \
+        self.get_with_default( "whitespace_to_underscore" )
+        software_name               = \
+        self.get_with_default( "software_name" )
+        software_provider_name      = \
+        self.get_with_default( "software_provider_name" )
+        software_version            = \
+        self.get_with_default( "software_version" )
+        
+        if not software_name:
+            if error_on_none:
+                raise UndeterminedPathError(
+                    _TD_( "Missing software name for calculated path." )
+                )
+            else: return None
+
+        if whitespace_to_underscore:
+            resub_whitespace_to_underscore  = \
+            functools.partial( re.sub, r"\s+", "_" )
+            software_name                   = \
+            resub_whitespace_to_underscore( software_name )
+            if software_provider_name:
+                software_provider_name      = \
+                resub_whitespace_to_underscore( software_provider_name )
+            if software_version:
+                software_version            = \
+                resub_whitespace_to_underscore( software_version )
+
+        return _join_path( *filter(
+            None,
+            [ software_provider_name, software_name, software_version ]
+        ) )
 
     _calculate_path.__doc__ = \
     StandardPathContext_BASE._calculate_path.__doc__
@@ -135,7 +173,7 @@ def set_context( new_context ):
         Returns the old standard path context.
     """
 
-    global _context
+    global _context     # pylint: disable=W0603
 
     old_context, _context = _context, new_context
     return old_context
@@ -163,7 +201,7 @@ class StandardPath( StandardPath_BASE ):
         base_path, specific_path = self._choose_path_parts( context )
         if None is base_path: base_path = "/tmp"
 
-        if specific_path: return self._join_path( base_path, specific_path )
+        if specific_path: return _join_path( base_path, specific_path )
         return base_path
 
     whereis_temp.__doc__ = StandardPath_BASE.whereis_temp.__doc__
@@ -223,20 +261,10 @@ class StandardPath( StandardPath_BASE ):
         """ """
 
         # TODO: Use POSIX-specific path tester rather than current OS one.
-        return is_absolute_path( the_path )
+        return _is_absolute_path( the_path )
 
     _is_absolute_path.__doc__ = \
     StandardPath_BASE._is_absolute_path.__doc__
-        
-
-    def _join_path( self, *posargs ):
-        """ """
-
-        # TODO: Use POSIX-specific path joiner rather than current OS one.
-        return join_path( *posargs )
-
-    _join_path.__doc__ = \
-    StandardPath_BASE._join_path.__doc__
 
 
 ###############################################################################

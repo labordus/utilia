@@ -431,6 +431,23 @@ class StandardPathContext_BASE( MutableMapping ):
         pass
 
 
+    def get_with_default( self, option_name, fallback_value = None ):
+        """
+            If the option, corresponding to the given name, has been customized
+            in this instance of a standard path context, then returns the value
+            of the customized option. Else if an option valdiator,
+            corresponding to the given option name, exists, then return the 
+            default value for the option. Else, return the fallback value, if
+            one was provided, or ``None`` otherwise.
+        """
+
+        if option_name in self._options:
+            return self._options[ option_name ]
+        if option_name in self._option_validators:
+            return self._option_validators[ option_name ].default
+        return fallback_value
+
+
     def iter_option_validators( self ):
         """
             Returns an iterator over the available option validators.
@@ -774,20 +791,6 @@ class StandardPath_BASE( AbstractBase_BASE ):
         raise InvokedAbstractMethodError(
             _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
             self.__class__.__name__, "_is_absolute_path"
-        )
-
-
-    @abstractmethod
-    def _join_path( self, *posargs ):
-        """
-            Joins path components according to the rules of the OS platform for
-            which standard paths are being derived rather than the current OS
-            platform.
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "_join_path"
         )
 
 
