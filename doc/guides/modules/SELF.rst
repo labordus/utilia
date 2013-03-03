@@ -83,6 +83,7 @@ Subpackages and Modules
    config_parsers/SELF
    filesystem/SELF
    functional/SELF
+   os/SELF
    types/SELF
 
 .. vim: set ft=rst ts=3 sts=3 sw=3 et tw=79:
