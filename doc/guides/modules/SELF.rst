@@ -38,41 +38,6 @@ Package Description
 
 .. automodule:: utilia
 
-Exception Classes
------------------
-
-.. autoclass:: Exception_BASE
-   :members:
-   :inherited-members:
-
-.. autoclass:: Error_BASE
-   :members:
-   :inherited-members:
-
-.. autoclass:: Exception_WithReason
-   :members:
-   :inherited-members:
-
-.. autoclass:: Exception_Exiting
-   :members:
-   :inherited-members:
-
-.. autoclass:: InvalidKeyError
-   :members:
-   :inherited-members:
-
-.. autoclass:: UnknownKeyError
-   :members:
-   :inherited-members:
-
-.. autoclass:: InvalidValueError
-   :members:
-   :inherited-members:
-
-.. autoclass:: InvokedAbstractMethodError
-   :members:
-   :inherited-members:
-
 Subpackages and Modules
 -----------------------
 
@@ -81,6 +46,7 @@ Subpackages and Modules
 
    compat/SELF
    config_parsers/SELF
+   exceptions/SELF
    filesystem/SELF
    functional/SELF
    os/SELF

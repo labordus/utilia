@@ -39,66 +39,36 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
-from utilia import (
-    python_version,
-)
-
-
 # Exceptions
 
 
-from abc import (
-    ABCMeta,
-)
-
-from .. import (
-    Exception_BASE	    as __Exception_BASE_SUPER,
-    Error_BASE		    as __Error_BASE_SUPER,
+from utilia.exceptions import (
+    Exception_BASE	    as _Exception_BASE_SUPER,
+    Error_BASE		    as _Error_BASE_SUPER,
 )
 
 
-if 2 == python_version.major:
-    exec( # pylint: disable=W0122
-	"""class Exception_BASE: __metaclass__ = ABCMeta"""
-    )
-else:
-    exec( # pylint: disable=W0122 
-	"""class Exception_BASE( metaclass = ABCMeta ): pass"""
-    )
-# Note: Hack to make parse-only lint tools happy.
-Exception_BASE = vars( )[ "Exception_BASE" ]
-__Exception_BASE_SUPER.register( Exception_BASE )
+class Exception_BASE( _Exception_BASE_SUPER ): # pylint: disable=W0232,R0903
+    """
+	Base class for all :py:mod:`utilia` filesystem exceptions.
 
-Exception_BASE.__doc__ = \
-"""
-    Base class for all :py:mod:`utilia` filesystem exceptions.
+	Use this for your exception handler signature if you wish to catch any
+	filesystem-related exception raised from within :py:mod:`utilia`.
+    """
 
-    Use this for your exception handler signature if you wish to catch any
-    filesystem-related exception raised from within :py:mod:`utilia`.
-"""
+    pass
 
 
-if 2 == python_version.major:
-    exec( # pylint: disable=W0122
-	"""class Error_BASE: __metaclass__ = ABCMeta"""
-    )
-else:
-    exec( # pylint: disable=W0122
-	"""class Error_BASE( metaclass = ABCMeta ): pass"""
-    )
-# Note: Hack to make parse-only lint tools happy.
-Error_BASE = vars( )[ "Error_BASE" ]
-Exception_BASE.register( Error_BASE )
-__Error_BASE_SUPER.register( Error_BASE )
+class Error_BASE( _Error_BASE_SUPER ): # pylint: disable=W0232,R0903
+    """
+	Base class for all :py:mod:`utilia` filesystem exceptions which are
+	regarded as errors.
 
-Error_BASE.__doc__ = \
-"""
-    Base class for all :py:mod:`utilia` filesystem exceptions which are
-    regarded as errors.
+	Use this for your exception handler signature if you wish to catch any
+	filesystem-related error condition raised from within :py:mod:`utilia`.
+    """
 
-    Use this for your exception handler signature if you wish to catch any
-    filesystem-related error condition raised from within :py:mod:`utilia`.
-"""
+    pass
 
 
 ###############################################################################

@@ -39,11 +39,6 @@ from abc import (
 
 from utilia import (
     _TD_,
-    Exception_Exiting,
-    InvalidKeyError,
-    UnknownKeyError,
-    InvalidValueError,
-    InvokedAbstractMethodError,
 )
 from utilia.compat import (
     iter_dict_keys,
@@ -59,6 +54,14 @@ from utilia.compat.collections import ( # pylint: disable=E0611
     MutableMapping,
     namedtuple,
     OrderedDict,
+)
+import utilia.os.exit_codes as _exit_codes
+from utilia.exceptions import (
+    Exception_Exiting,
+    InvalidKeyError,
+    UnknownKeyError,
+    InvalidValueError,
+    InvokedAbstractMethodError,
 )
 from utilia.filesystem import (
     Error_BASE              as FilesystemError_BASE,
@@ -83,9 +86,7 @@ class UndeterminedPathError( Exception_Exiting, _builtins_LookupError ):
         )
 
         self._class_name    = self.__class__.__name__
-        # TODO: Set return code to a proper OS-dependent value.
-        # TEMP
-        self._rc            = 1
+        self._rc            = _exit_codes.INTERNAL_SOFTWARE_ERROR( )
 
     __init__.__doc__ += Exception_Exiting.__init__.__doc__
         
