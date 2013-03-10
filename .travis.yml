@@ -8,8 +8,10 @@ matrix:
     allow_failures:
         # Until installation of a 'pylint' dependency is fixed.
         - python: "3.3"
-# NOTE: Bootstrap in setup script handles dependencies.
-install: "true"
+install:
+    - pip install Sphinx --use-mirrors
+    - pip install nose --use-mirrors
+    - pip install setuptools-lint --use-mirrors
 script: python setup.py test
 
 # vim: set ft=yaml ts=4 sts=4 sw=4 et tw=79:
