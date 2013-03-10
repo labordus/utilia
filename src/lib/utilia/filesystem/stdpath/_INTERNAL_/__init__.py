@@ -33,12 +33,14 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
+import sys
 from abc import (
     abstractmethod,
 )
 
 from utilia import (
     _TD_,
+    python_version          as _python_version,
 )
 from utilia.compat import (
     iter_dict_keys,
@@ -180,13 +182,54 @@ class StandardPathContext_BASE( MutableMapping ):
             corresponding to the context.
         """
     )
-    _option_validators[ "PEP_370" ]                 = \
+    _option_validators[ "Pythonic" ]                = \
     _OptionValidator(
         None, False,
         """
             (*Boolean*).
-            Calculate standard paths which comply with :pep:`370`, where
-            applicable.
+            Calculate standard paths which comply with :pep:`370` and various
+            Pythonic packaging conventions, where applicable.
+        """
+    )
+    _option_validators[ "strictly_Pythonic" ]       = \
+    _OptionValidator(
+        None, False,
+        """
+            (*Boolean*).
+            Calculate standard paths under the assumptions that:
+
+            * common configuration information will be stored in the same
+              directory as a package.
+        """
+    )
+    _option_validators[ "Python_prefix_path" ]      = \
+    _OptionValidator(
+        None, sys.prefix,
+        """
+            (*String*)
+            Use this path as the Python installation root path.
+        """
+    )
+    _option_validators[ "Python_version" ]          = \
+    _OptionValidator(
+        None,
+        ".".join(
+            map( str, [ _python_version.major, _python_version.minor ] )
+        ),
+        """
+            (*String*)
+            Use this version number when calculating the path to the primary
+            site packages directory for a Python installation.
+        """
+    )
+    _option_validators[ "Python_package_name" ]     = \
+    _OptionValidator(
+        None, None,
+        """
+            (*String*)
+            Use this name when calculating the path to a particular Python
+            package relative to the primary site packages directory for a
+            Python installation.
         """
     )
     _options            = { }
@@ -201,6 +244,8 @@ class StandardPathContext_BASE( MutableMapping ):
                               options for modifying the behavior of path
                               calculations.
         """
+
+        self._options = { }
 
         for option_name, option_value in iter_dict_items( options ):
             self.__setitem__( option_name, option_value )
@@ -518,101 +563,6 @@ class StandardPath_BASE( AbstractBase_BASE ):
 
 
     # pylint: disable=W0613
-
-
-    # TODO: Hide as platform-dependent helper function.
-    #@abstractmethod
-    def _whereis_oscore_install_root( self, context = None ):
-        """
-            Returns the installation root path for the core OS components, if 
-            it can be determined. Returns ``None`` otherwise.
-
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_oscore_install_root"
-        )
-
-
-    # TODO: Hide as platform-dependent helper function.
-    #@abstractmethod
-    def _whereis_osdist_install_root( self, context = None ):
-        """
-            Returns to the installation root path for the OS distribution, if 
-            it can be determined. Returns ``None`` otherwise.
-
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_osdist_install_root"
-        )
-
-
-    # TODO: Hide as platform-dependent helper function.
-    #@abstractmethod
-    def _whereis_common_install_root( self, context = None ):
-        """
-            Returns the typical default root path for a shared or sitewide
-            software installation by the superuser or systems administrator, if
-            it can be determined. Returns ``None`` otherwise.
-
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_common_install_root"
-        )
-
-
-    # TODO: Hide as platform-dependent helper function.
-    #@abstractmethod
-    def _whereis_oscore_config_base( self, context = None ):
-        """
-            Returns the path to the typical top-level directory under which the
-            donfiguration information resides for the core OS components, if it
-            can be determined. Returns ``None``, otherwise.
-
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_oscore_config_base"
-        )
-
-
-    # TODO: Hide as platform-dependent helper function.
-    #@abstractmethod
-    def _whereis_osdist_config_base( self, context = None ):
-        """
-            Returns the path to the typical top-level directory under which the
-            configuration information resides for the OS distribution,
-            if it can be determined. Returns ``None``, otherwise.
-
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_osdist_config_base"
-        )
-
-
-    # TODO: Hide as platform-dependent helper function.
-    #@abstractmethod
-    def _whereis_common_config_base( self, context = None ):
-        """
-            Returns the path to the typical top-level directory under which 
-            the configuration information resides for software installed by 
-            the superuser or systems administrator, if it can be determined. 
-            Returns ``None``, otherwise.
-
-        """
-
-        raise InvokedAbstractMethodError(
-            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
-            self.__class__.__name__, "whereis_common_config_base"
-        )
 
 
     @abstractmethod

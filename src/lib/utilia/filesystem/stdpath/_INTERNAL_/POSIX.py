@@ -200,6 +200,7 @@ class StandardPath( StandardPath_BASE ):
         context = self._find_context( context )
 
         base_path, specific_path = self._choose_path_parts( context )
+
         if None is base_path:
             if context.get_with_default( "XDG_standard" ):
                 base_path = _envvars.get( "XDG_CACHE_HOME" )
@@ -220,8 +221,24 @@ class StandardPath( StandardPath_BASE ):
     def whereis_common_config( self, context = None ):
         """ """
 
-        # TODO: Implement.
-        pass
+        context = self._find_context( context )
+
+        pythonic = context.get_with_default( "Pythonic" )
+        if pythonic and context.get_with_default( "strictly_Pythonic" ):
+            return _whereis_Python_package( context )
+
+        base_path, specific_path = self._choose_path_parts( context )
+
+        if (None is base_path) and pythonic:
+            base_path = context.get_with_default( "Python_prefix_path" )
+        if None is base_path: base_path = "/usr/local"
+
+        # Note: '/' and '/usr' share '/etc'.
+        if "/usr" == base_path: base_path = "/"
+        base_path = _join_path( base_path, "etc" )
+
+        if specific_path: return _join_path( base_path, specific_path )
+        return base_path
 
     whereis_common_config.__doc__ = \
     StandardPath_BASE.whereis_common_config.__doc__
@@ -240,8 +257,16 @@ class StandardPath( StandardPath_BASE ):
     def whereis_user_config( self, context = None ):
         """ """
 
-        # TODO: Implement.
-        pass
+        # TODO: Finish implementing.
+        return
+        base_path = None
+
+        if None is base_path:
+            if context.get_with_default( "XDG_standard" ):
+                base_path = _envvars.get( "XDG_CONFIG_HOME" )
+                if None is base_path:
+                    base_path = \
+                    _join_path( _whereis_user_home( ), ".config" )
 
     whereis_user_config.__doc__ = \
     StandardPath_BASE.whereis_user_config.__doc__
@@ -303,6 +328,28 @@ def _whereis_user_home( ):
             )
 
     return user_home_path
+
+
+def _whereis_Python_package( context ):
+    """
+        Returns the path to a particular Python package relative to the primary
+        site packages directory for a given Python installation and version.
+    """
+
+    python_package_name = context.get_with_default( "Python_package_name" )
+
+    if None is python_package_name:
+        context.raise_UndeterminedPathError(
+            _TD_( "Python package" ), specify_software = True
+        )
+    else:
+        return _join_path(
+            context.get_with_default( "Python_prefix_path" ),
+            "lib",
+            "python" + context.get_with_default( "Python_version" ),
+            "site-packages",
+            python_package_name
+        )
 
 
 ###############################################################################
