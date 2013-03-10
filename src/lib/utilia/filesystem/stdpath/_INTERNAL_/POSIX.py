@@ -33,15 +33,16 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
-# TODO: Support XDG environment variables.
-
-
 import functools
 import re
+from os import (
+    environ                 as _envvars,
+)
 # TODO: Replace with POSIX-specific functions.
 from os.path import (
     isabs                   as _is_absolute_path,
     join                    as _join_path,
+    expanduser              as _expand_user_path,
 )
 
 
@@ -82,7 +83,7 @@ class StandardPathContext( StandardPathContext_BASE ):
             the name, provider, and version of a software package.
         """
     )
-    _option_validators[ "XDG_Standard" ]                = \
+    _option_validators[ "XDG_standard" ]                = \
     _OptionValidator(
         None, True,
         """
@@ -199,12 +200,21 @@ class StandardPath( StandardPath_BASE ):
         context = self._find_context( context )
 
         base_path, specific_path = self._choose_path_parts( context )
+        if None is base_path:
+            if context.get_with_default( "XDG_standard" ):
+                base_path = _envvars.get( "XDG_CACHE_HOME" )
+                if None is base_path:
+                    base_path = \
+                    _join_path( _whereis_user_home( ), ".cache" )
         if None is base_path: base_path = "/tmp"
 
         if specific_path: return _join_path( base_path, specific_path )
         return base_path
 
     whereis_temp.__doc__ = StandardPath_BASE.whereis_temp.__doc__
+
+
+    # TODO: whereis_runtime_support
 
 
     def whereis_common_config( self, context = None ):
@@ -265,6 +275,34 @@ class StandardPath( StandardPath_BASE ):
 
     _is_absolute_path.__doc__ = \
     StandardPath_BASE._is_absolute_path.__doc__
+
+
+def _whereis_user_home( ):
+    """
+        Returns the path to the current user's home directory, if it can be
+        determined. Returns ``None``, otherwise.
+    """
+
+    user_id         = _envvars.get( "USER" )
+    user_home_path  = _expand_user_path( "~" )
+
+    if None is user_home_path:
+        if None is user_id:
+            raise UndeterminedPathError(
+                _TD_(
+                    "Undetermined path to home directory "
+                    "because current user is unknown."
+                )
+            )
+        else:
+            raise UndeterminedPathError(
+                _TD_(
+                    "Undetermined path to home directory of user {0}."
+                ),
+                user_id
+            )
+
+    return user_home_path
 
 
 ###############################################################################
