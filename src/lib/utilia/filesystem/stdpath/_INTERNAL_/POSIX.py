@@ -33,6 +33,7 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
+import site
 import functools
 import re
 from os import (
@@ -225,7 +226,7 @@ class StandardPath( StandardPath_BASE ):
 
         pythonic = context.get_with_default( "Pythonic" )
         if pythonic and context.get_with_default( "strictly_Pythonic" ):
-            return _whereis_Python_package( context )
+            return _whereis_common_Python_package( context )
 
         base_path, specific_path = self._choose_path_parts( context )
 
@@ -252,7 +253,7 @@ class StandardPath( StandardPath_BASE ):
 
         pythonic = context.get_with_default( "Pythonic" )
         if pythonic and context.get_with_default( "strictly_Pythonic" ):
-            return _whereis_Python_package( context )
+            return _whereis_common_Python_package( context )
 
         base_path, specific_path = self._choose_path_parts( context )
 
@@ -276,16 +277,32 @@ class StandardPath( StandardPath_BASE ):
     def whereis_user_config( self, context = None ):
         """ """
 
-        # TODO: Finish implementing.
-        return
-        base_path = None
+        context = self._find_context( context )
 
+        pythonic = context.get_with_default( "Pythonic" )
+        if pythonic and context.get_with_default( "strictly_Pythonic" ):
+            return _whereis_user_Python_package( context )
+
+        base_path, specific_path = self._choose_path_parts( context )
+
+        if (None is base_path) and pythonic:
+            base_path = _join_path( site.USER_BASE, "etc" )
         if None is base_path:
             if context.get_with_default( "XDG_standard" ):
                 base_path = _envvars.get( "XDG_CONFIG_HOME" )
                 if None is base_path:
                     base_path = \
                     _join_path( _whereis_user_home( ), ".config" )
+        if None is base_path:
+            if specific_path:
+                return _join_path(
+                    _whereis_user_home( ), "." + specific_path, "etc"
+                )
+            else:
+                return _whereis_user_home( )
+
+        if specific_path: return _join_path( base_path, specific_path )
+        return base_path
 
     whereis_user_config.__doc__ = \
     StandardPath_BASE.whereis_user_config.__doc__
@@ -321,6 +338,45 @@ class StandardPath( StandardPath_BASE ):
     StandardPath_BASE._is_absolute_path.__doc__
 
 
+def _whereis_common_Python_package( context ):
+    """
+        Returns the path to a particular Python package relative to the primary
+        site packages directory for a given Python installation and version.
+    """
+
+    python_package_name = context.get_with_default( "Python_package_name" )
+
+    if None is python_package_name:
+        context.raise_UndeterminedPathError(
+            _TD_( "Python package" ), specify_software = True
+        )
+
+    return _join_path(
+        context.get_with_default( "Python_prefix_path" ),
+        "lib",
+        "python" + context.get_with_default( "Python_version" ),
+        "site-packages",
+        python_package_name
+    )
+
+
+def _whereis_user_Python_package( context ):
+    """
+        Returns the path to a particular Python package relative to the user's
+        site packages directory specified by :pep:`370` and provided by the
+        :py:mod:`site <CPython3:site>` module.
+    """
+
+    python_package_name = context.get_with_default( "Python_package_name" )
+
+    if None is python_package_name:
+        context.raise_UndeterminedPathError(
+            _TD_( "Python package" ), specify_software = True
+        )
+
+    return _join_path( site.USER_SITE, python_package_name )
+
+
 def _whereis_user_home( ):
     """
         Returns the path to the current user's home directory, if it can be
@@ -347,28 +403,6 @@ def _whereis_user_home( ):
             )
 
     return user_home_path
-
-
-def _whereis_Python_package( context ):
-    """
-        Returns the path to a particular Python package relative to the primary
-        site packages directory for a given Python installation and version.
-    """
-
-    python_package_name = context.get_with_default( "Python_package_name" )
-
-    if None is python_package_name:
-        context.raise_UndeterminedPathError(
-            _TD_( "Python package" ), specify_software = True
-        )
-    else:
-        return _join_path(
-            context.get_with_default( "Python_prefix_path" ),
-            "lib",
-            "python" + context.get_with_default( "Python_version" ),
-            "site-packages",
-            python_package_name
-        )
 
 
 ###############################################################################
