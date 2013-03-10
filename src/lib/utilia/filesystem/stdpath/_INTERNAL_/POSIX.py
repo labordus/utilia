@@ -233,7 +233,8 @@ class StandardPath( StandardPath_BASE ):
             base_path = context.get_with_default( "Python_prefix_path" )
         if None is base_path: base_path = "/usr/local"
 
-        # Note: '/' and '/usr' share '/etc'.
+        # TODO? Handle '/opt' as '/etc/opt'.
+        # Note: '/' and '/usr' share '/etc' for config.
         if "/usr" == base_path: base_path = "/"
         base_path = _join_path( base_path, "etc" )
 
@@ -247,8 +248,26 @@ class StandardPath( StandardPath_BASE ):
     def whereis_common_resources( self, context = None ):
         """ """
 
-        # TODO: Implement.
-        pass
+        context = self._find_context( context )
+
+        pythonic = context.get_with_default( "Pythonic" )
+        if pythonic and context.get_with_default( "strictly_Pythonic" ):
+            return _whereis_Python_package( context )
+
+        base_path, specific_path = self._choose_path_parts( context )
+
+        if (None is base_path) and pythonic:
+            base_path = context.get_with_default( "Python_prefix_path" )
+        if None is base_path: base_path = "/usr/local"
+
+        # Note: '/' cannot rely on the presence of '/usr/share'.
+        #       '/etc' is thus assumed to be the location for resources.
+        # TODO: Research handling of '/' more.
+        if "/" == base_path:    base_path = "/etc"
+        else:                   base_path = _join_path( base_path, "share" )
+
+        if specific_path: return _join_path( base_path, specific_path )
+        return base_path
 
     whereis_common_resources.__doc__ = \
     StandardPath_BASE.whereis_common_resources.__doc__

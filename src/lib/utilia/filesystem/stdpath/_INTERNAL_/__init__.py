@@ -199,7 +199,9 @@ class StandardPathContext_BASE( MutableMapping ):
             Calculate standard paths under the assumptions that:
 
             * common configuration information will be stored in the same
-              directory as a package.
+              directory as a package;
+            * common resources will be stored in the same directory as a
+              package.
         """
     )
     _option_validators[ "Python_prefix_path" ]      = \
@@ -554,7 +556,8 @@ class StandardPath_BASE( AbstractBase_BASE ):
         return "{{ {0} }}".format(
             ", ".join( map(
                 lambda k, v: "{path_type}: {path}".format(
-                    path_type = k, path = repr( getattr( self, v )( ) )
+                    path_type = repr( k ),
+                    path = repr( getattr( self, v )( ) )
                 ),
                 iter_dict_keys( path_methods ),
                 iter_dict_values( path_methods )
