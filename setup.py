@@ -63,6 +63,8 @@ from os.path import (
 
 # Hack around a 'multiprocessing' module issue which manifests itself when
 # using 'nosetests' from the setup script. (Fixed in later Python releases.)
+# http://bugs.python.org/issue15881
+# http://bugs.python.org/issue15881#msg170215
 try:
     import multiprocessing
 except ImportError:
