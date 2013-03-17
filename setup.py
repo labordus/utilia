@@ -57,68 +57,76 @@ import sys
 import collections
 from os.path import (
     dirname,
-    join                    as path_join,
-    exists                  as path_exists,
+    join                    as _join_path,
+    exists                  as _path_exists,
 )
 # Record path to working directory of the script.
 __pwd           = dirname( sys.argv[ 0 ] )
 # Calculate path to the software library.
-__path_to_lib   = path_join( __pwd, "src", "lib", "utilia" )
+_path_to_lib   = _join_path( __pwd, "src", "lib", "utilia" )
 
 
 # Get Python version.
-__Version = collections.namedtuple( "__Version", "maj min" )
+_Version = collections.namedtuple( "_Version", "major minor" )
 # Note: Access 'version_info' fields by index rather than name for Python 2.6 
 #       compatibility.
-__python_version = __Version( sys.version_info[ 0 ], sys.version_info[ 1 ] )
-assert 2 <= __python_version.maj
+_python_version = _Version( sys.version_info[ 0 ], sys.version_info[ 1 ] )
+assert 2 <= _python_version.major
 
 
 # Read the master package's version info from config file.
 # If the release type is "development", then write out a new timestamp.
 # Note: If something goes wrong here, then just let the exception propagate.
-# TODO: Look at 'control:frozen' to determine whether new timestamp should be
-#       created.
-if 2 == __python_version.maj:   __mname_configparser = "ConfigParser"
-else:                           __mname_configparser = "configparser"
-exec(
-"""
-from {0} import (
-    SafeConfigParser        as __ConfigParser,
-)
-""".format( __mname_configparser )
-)
-from datetime import (
-    datetime                as __DateTime,
-)
-
-__path_to_timestamp = path_join( __path_to_lib, "dev-timestamp.dat" )
-__vinfo_CFG         = __ConfigParser( )
-__vinfo_CFG.readfp( open( path_join( __path_to_lib, "version.cfg" ) ) )
-
-__vinfo_release_type    = __vinfo_CFG.get( "control", "release_type" )
-assert __vinfo_release_type in [ "bugfix", "candidate", "development" ]
-__vinfo_numbers_DICT    = dict( __vinfo_CFG.items( "numbers" ) )
-if   "bugfix" == __vinfo_release_type: # Stable Bugfix Release
-    __version = "{major}.{minor}.{bugfix}".format( **__vinfo_numbers_DICT )
-elif "candidate" == __vinfo_release_type: # Release Candidate
-    __version = "{major}.{minor}.0rc{update}".format( **__vinfo_numbers_DICT )
-elif "development" == __vinfo_release_type: # Development Release
-    if      __vinfo_CFG.getboolean( "control", "frozen_timestamp" ) \
-        and path_exists( __path_to_timestamp ):
-        __timestamp_STR = open( __path_to_timestamp ).read( 12 )
+if 3 == _python_version.major:
+    if 2 <= _python_version.minor:
+        from configparser import ( # pylint: disable=F0401
+            ConfigParser            as _ConfigParser,
+        )
     else:
-        __timestamp_STR = __DateTime.utcnow( ).strftime( "%Y%m%d%H%M" )
-        print( __timestamp_STR, file = open( __path_to_timestamp, "w" ) )
-    __vinfo_numbers_DICT[ "update" ] = __timestamp_STR
-    __version = "{major}.{minor}.0dev{update}".format( **__vinfo_numbers_DICT )
+        from configparser import ( # pylint: disable=F0401
+            SafeConfigParser        as _ConfigParser,
+        )
+else:
+    from ConfigParser import ( # pylint: disable=F0401
+        SafeConfigParser        as _ConfigParser,
+    )
+from datetime import (
+    datetime                as _DateTime,
+)
+
+_path_to_timestamp  = _join_path( _path_to_lib, "dev-timestamp.dat" )
+_path_to_config     = _join_path( _path_to_lib, "version.cfg" )
+_vinfo_CFG = _ConfigParser( )
+if _path_to_config not in _vinfo_CFG.read( _path_to_config ):
+    raise IOError(
+        "Configuration file '{0}' expected but not found.".format(
+            _path_to_config
+        )
+    )
+
+_vinfo_release_type    = _vinfo_CFG.get( "control", "release_type" )
+assert _vinfo_release_type in [ "bugfix", "candidate", "development" ]
+_vinfo_numbers_DICT    = dict( _vinfo_CFG.items( "numbers" ) )
+if   "bugfix" == _vinfo_release_type: # Stable Bugfix Release
+    _version = "{major}.{minor}.{bugfix}".format( **_vinfo_numbers_DICT )
+elif "candidate" == _vinfo_release_type: # Release Candidate
+    _version = "{major}.{minor}.0rc{update}".format( **_vinfo_numbers_DICT )
+elif "development" == _vinfo_release_type: # Development Release
+    if      _vinfo_CFG.getboolean( "control", "frozen_timestamp" ) \
+        and _path_exists( _path_to_timestamp ):
+        _timestamp_STR = open( _path_to_timestamp ).read( 12 )
+    else:
+        _timestamp_STR = _DateTime.utcnow( ).strftime( "%Y%m%d%H%M" )
+        print( _timestamp_STR, file = open( _path_to_timestamp, "w" ) )
+    _vinfo_numbers_DICT[ "update" ] = _timestamp_STR
+    _version = "{major}.{minor}.0dev{update}".format( **_vinfo_numbers_DICT )
 
 
 # Fill out the metadata for the distribution.
 setup_data = { }
 
 setup_data[ "name" ]                = "utilia"
-setup_data[ "version" ]             = __version
+setup_data[ "version" ]             = _version
 setup_data[ "description" ]         = \
     "An assorted collection of modules and scripts."
 setup_data[ "long_description" ]    = \
@@ -160,8 +168,8 @@ setup_data[ "classifiers" ]         = \
     ]
 
 # TODO: namespace_packages
-setup_data[ "packages" ]            = find_packages( dirname( __path_to_lib ) )
-setup_data[ "package_dir" ]         = { "": dirname( __path_to_lib ) }
+setup_data[ "packages" ]            = find_packages( dirname( _path_to_lib ) )
+setup_data[ "package_dir" ]         = { "": dirname( _path_to_lib ) }
 # TODO: py_modules
 # TODO: ext_modules
 # TODO: scripts
@@ -186,8 +194,8 @@ setup_data[ "package_data" ]        = \
 # TODO: dependency_links
 setup_data[ "setup_requires" ]      = [ ]
 # Only expose lint and translation tools in development mode.
-if "development" == __vinfo_release_type:
-    if 2 == __python_version.maj:
+if "development" == _vinfo_release_type:
+    if 2 == _python_version.major:
         # Note: Needed for the 'flakes' command.
         setup_data[ "setup_requires" ].append( "setuptools_pyflakes >= 1.1.0" )
         # Note: Needed for the following commands:
@@ -199,7 +207,7 @@ if "development" == __vinfo_release_type:
         #       (See 'setup.cfg' for details.)
         setup_data[ "message_extractors" ] = \
         {
-            __path_to_lib: """[python: **.py]"""
+            _path_to_lib: """[python: **.py]"""
         }
     # Note: Needed for the 'lint' command.
     setup_data[ "setup_requires" ].append( "setuptools-lint >= 0.1" )

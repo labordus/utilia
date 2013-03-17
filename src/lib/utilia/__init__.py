@@ -50,7 +50,7 @@ __docformat__ = "reStructuredText"
 import sys
 import collections
 from os.path import (
-    join                    as path_join,
+    join                    as _join_path,
 )
 
 
@@ -67,38 +67,51 @@ python_version = PythonVersion(
 
 # Read the version info from config file.
 # Note: If something goes wrong here, then just let the exception propagate.
-if 2 == python_version.major:
-    from ConfigParser import ( # pylint: disable=F0401
-        SafeConfigParser        as __ConfigParser,
-    )
+if 3 == python_version.major:
+    if 2 <= python_version.minor:
+        from configparser import ( # pylint: disable=F0401
+            ConfigParser            as _ConfigParser,
+        )
+    else:
+        from configparser import ( # pylint: disable=F0401
+            SafeConfigParser        as _ConfigParser,
+        )
 else:
-    from configparser import ( # pylint: disable=F0401
-        SafeConfigParser        as __ConfigParser,
+    from ConfigParser import ( # pylint: disable=F0401
+        SafeConfigParser        as _ConfigParser,
     )
 
-__vinfo_CFG     = __ConfigParser( )
-__vinfo_CFG.readfp( open( path_join( __path__[ 0 ], "version.cfg" ) ) )
+_path_to_config = _join_path( __path__[ 0 ], "version.cfg" )
+_vinfo_CFG = _ConfigParser( )
+if _path_to_config not in _vinfo_CFG.read( _path_to_config ):
+    raise IOError(
+        "Configuration file '{0}' expected but not found.".format(
+            _path_to_config
+        )
+    )
 
-__vinfo_release_type    = __vinfo_CFG.get( "control", "release_type" )
-assert __vinfo_release_type in [ "bugfix", "candidate", "development" ]
-__vinfo_numbers_DICT    = dict( __vinfo_CFG.items( "numbers" ) )
-if   "bugfix" == __vinfo_release_type: # Stable Bugfix Release
+_vinfo_release_type     = _vinfo_CFG.get( "control", "release_type" )
+assert _vinfo_release_type in [ "bugfix", "candidate", "development" ]
+_vinfo_numbers_DICT     = dict( _vinfo_CFG.items( "numbers" ) )
+if   "bugfix" == _vinfo_release_type: # Stable Bugfix Release
     __version__ = \
-    "{major}.{minor}.{bugfix}".format( **__vinfo_numbers_DICT )
-elif "candidate" == __vinfo_release_type: # Release Candidate
+    "{major}.{minor}.{bugfix}".format( **_vinfo_numbers_DICT )
+elif "candidate" == _vinfo_release_type: # Release Candidate
     __version__ = \
-    "{major}.{minor}.0rc{update}".format( **__vinfo_numbers_DICT )
-elif "development" == __vinfo_release_type: # Development Release
-    __vinfo_numbers_DICT[ "update" ] = \
-    open( path_join( __path__[ 0 ], "dev-timestamp.dat" ) ).read( 12 )
+    "{major}.{minor}.0rc{update}".format( **_vinfo_numbers_DICT )
+elif "development" == _vinfo_release_type: # Development Release
+    with open( _join_path( __path__[ 0 ], "dev-timestamp.dat" ) ) \
+    as _ts_file:
+        _vinfo_numbers_DICT[ "update" ] = _ts_file.read( 12 )
     __version__ = \
-    "{major}.{minor}.0dev{update}".format( **__vinfo_numbers_DICT )
+    "{major}.{minor}.0dev{update}".format( **_vinfo_numbers_DICT )
 
-del __ConfigParser, __vinfo_CFG, __vinfo_release_type, __vinfo_numbers_DICT
+del _ConfigParser, _path_to_config
+del _vinfo_CFG, _vinfo_release_type, _vinfo_numbers_DICT
 
 
 # Cleanup the module namespace.
-del path_join, collections
+del _join_path, collections
 
 
 # Utility Functions

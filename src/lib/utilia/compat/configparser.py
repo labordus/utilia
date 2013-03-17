@@ -35,19 +35,22 @@ __docformat__ = "reStructuredText"
 
 
 from utilia import (
-    python_version          as __python_version,
+    python_version          as _python_version,
 )
 
 
-if   3 == __python_version.major:
+if   3 == _python_version.major:
     from configparser import *
+
+    if 2 <= _python_version.minor:
+        SafeConfigParser = ConfigParser
 
 else:
     from ConfigParser import *
 
 
 # Cleanup the module namespace.
-del __python_version
+del _python_version
 
 
 ###############################################################################
