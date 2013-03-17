@@ -119,16 +119,29 @@ class StandardPathContext_BASE( MutableMapping ):
             cannot be calculated with the given context for the OS platform.
         """
     )
-    _option_validators[ "specific_path" ]           = \
+    _option_validators[ "specific_common_path" ]    = \
     _OptionValidator(
         None, None,
         """
             (*String*).
-            Use this path as the part of a full path which is specific to a
-            particular software package. If this path is set, then it
-            overrides any path calculated from the software name, vendor,
-            and version. If this path is an absolute path on the OS
-            platform corresponding to its context, then it overrides any
+            Use this path as the part of a full common installation root path
+            which is specific to a particular software package. If this path
+            is set, then it overrides any path calculated from the software
+            name, vendor, and version. If this path is an absolute path on the
+            OS platform corresponding to its context, then it overrides any
+            base path supplied within the context.
+        """
+    )
+    _option_validators[ "specific_user_path" ]      = \
+    _OptionValidator(
+        None, None,
+        """
+            (*String*).
+            Use this path as the part of a full user installation root path
+            which is specific to a particular software package. If this path
+            is set, then it overrides any path calculated from the software
+            name, vendor, and version. If this path is an absolute path on the
+            OS platform corresponding to its context, then it overrides any
             base path supplied within the context.
         """
     )
@@ -142,6 +155,15 @@ class StandardPathContext_BASE( MutableMapping ):
             and version of the software package, as available. If a 
             specific path to this software package is not directly set, 
             then the calculated path will be used.
+        """
+    )
+    _option_validators[ "temp_on_base_path" ]       = \
+    _OptionValidator(
+        None, False,
+        """
+            (*Boolean*).
+            If a base path is supplied, then calculate path to temporary
+            storage relative to it.
         """
     )
     _option_validators[ "software_name" ]           = \
@@ -172,14 +194,24 @@ class StandardPathContext_BASE( MutableMapping ):
             the part of a full path that is specific to the software package.
         """
     )
-    _option_validators[ "base_path" ]               = \
+    _option_validators[ "common_base_path" ]        = \
     _OptionValidator(
         None, None,
         """
             (*String*).
             Use this path as the part of a full path which is an alternative
-            installation root path to the default one for the OS platform 
-            corresponding to the context.
+            common installation root path to the default one for the OS 
+            platform corresponding to the context.
+        """
+    )
+    _option_validators[ "user_base_path" ]          = \
+    _OptionValidator(
+        None, None,
+        """
+            (*String*).
+            Use this path as the part of a full path which is an alternative
+            user installation root path to the default one for the OS 
+            platform corresponding to the context.
         """
     )
     _option_validators[ "Pythonic" ]                = \
@@ -373,15 +405,35 @@ class StandardPathContext_BASE( MutableMapping ):
 
 
     @property
-    def path( self ):
+    def common_path( self ):
         """
-            The path to the particular software product, if specified.
+            The common installation root path to the particular software 
+            product, if specified.
         """
 
         options = self._options
 
-        if "specific_path" in options:
-            return options[ "specific path" ]
+        if "specific_common_path" in options:
+            return options[ "specific_common_path" ]
+        
+        if "calculate_path" in options:
+            return self._calculate_path( )
+
+        if "error_on_none" in options:
+            self.raise_UndeterminedPathError( )
+
+
+    @property
+    def user_path( self ):
+        """
+            The common installation root path to the particular software 
+            product, if specified.
+        """
+
+        options = self._options
+
+        if "specific_user_path" in options:
+            return options[ "specific_user_path" ]
         
         if "calculate_path" in options:
             return self._calculate_path( )
@@ -472,7 +524,7 @@ class StandardPathContext_BASE( MutableMapping ):
     @abstractmethod
     def _calculate_path( self ):
         """
-            Returns the path calculated from information about the software
+            Returns the path calculated from information about the software 
             product specified in the options dictionary.
         """
 
@@ -688,17 +740,36 @@ class StandardPath_BASE( AbstractBase_BASE ):
         return self._context
 
 
-    def _choose_path_parts( self, context ):
+    def _choose_common_path_parts( self, context ):
         """
-            Returns base path and specific path from standard path context.
+            Returns common base path and specific path from standard path 
+            context.
         """
 
-        if context.path and self._is_absolute_path( context.path ):
-            return context.path, None
+        if      context.common_path \
+            and self._is_absolute_path( context.common_path ):
+            return context.common_path, None
 
         base_path = None
-        if "base_path" in context: base_path = context[ "base_path" ]
-        return base_path, context.path
+        if "common_base_path" in context:
+            base_path = context[ "common_base_path" ]
+        return base_path, context.common_path
+
+
+    def _choose_user_path_parts( self, context ):
+        """
+            Returns user base path and specific path from standard path 
+            context.
+        """
+
+        if      context.user_path \
+            and self._is_absolute_path( context.user_path ):
+            return context.user_path, None
+
+        base_path = None
+        if "user_base_path" in context:
+            base_path = context[ "user_base_path" ]
+        return base_path, context.user_path
 
 
 ###############################################################################

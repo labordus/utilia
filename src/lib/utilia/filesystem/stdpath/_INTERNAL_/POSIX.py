@@ -200,7 +200,12 @@ class StandardPath( StandardPath_BASE ):
 
         context = self._find_context( context )
 
-        base_path, specific_path = self._choose_path_parts( context )
+        base_path, specific_path = \
+        self._choose_common_path_parts( context )
+
+        if base_path and context.get_with_default( "temp_on_base_path" ):
+            base_path = _join_path( base_path, "tmp" )
+        else: base_path = None
 
         if None is base_path:
             if context.get_with_default( "XDG_standard" ):
@@ -228,7 +233,8 @@ class StandardPath( StandardPath_BASE ):
         if pythonic and context.get_with_default( "strictly_Pythonic" ):
             return _whereis_common_Python_package( context )
 
-        base_path, specific_path = self._choose_path_parts( context )
+        base_path, specific_path = \
+        self._choose_common_path_parts( context )
 
         if (None is base_path) and pythonic:
             base_path = context.get_with_default( "Python_prefix_path" )
@@ -255,7 +261,8 @@ class StandardPath( StandardPath_BASE ):
         if pythonic and context.get_with_default( "strictly_Pythonic" ):
             return _whereis_common_Python_package( context )
 
-        base_path, specific_path = self._choose_path_parts( context )
+        base_path, specific_path = \
+        self._choose_common_path_parts( context )
 
         if (None is base_path) and pythonic:
             base_path = context.get_with_default( "Python_prefix_path" )
@@ -283,7 +290,10 @@ class StandardPath( StandardPath_BASE ):
         if pythonic and context.get_with_default( "strictly_Pythonic" ):
             return _whereis_user_Python_package( context )
 
-        base_path, specific_path = self._choose_path_parts( context )
+        base_path, specific_path = \
+        self._choose_user_path_parts( context )
+
+        if base_path: base_path = _join_path( base_path, "etc" )
 
         if (None is base_path) and pythonic:
             base_path = _join_path( site.USER_BASE, "etc" )
@@ -296,10 +306,9 @@ class StandardPath( StandardPath_BASE ):
         if None is base_path:
             if specific_path:
                 return _join_path(
-                    _whereis_user_home( ), "." + specific_path, "etc"
+                    _whereis_user_home( ), "." + specific_path, "config"
                 )
-            else:
-                return _whereis_user_home( )
+            else: return _whereis_user_home( )
 
         if specific_path: return _join_path( base_path, specific_path )
         return base_path
@@ -311,18 +320,62 @@ class StandardPath( StandardPath_BASE ):
     def whereis_user_resources( self, context = None ):
         """ """
 
-        # TODO: Implement.
-        pass
+        context = self._find_context( context )
+
+        pythonic = context.get_with_default( "Pythonic" )
+        if pythonic and context.get_with_default( "strictly_Pythonic" ):
+            return _whereis_user_Python_package( context )
+
+        base_path, specific_path = \
+        self._choose_user_path_parts( context )
+
+        if base_path: base_path = _join_path( base_path, "share" )
+
+        if (None is base_path) and pythonic:
+            base_path = _join_path( site.USER_BASE, "share" )
+        if None is base_path:
+            if context.get_with_default( "XDG_standard" ):
+                base_path = _envvars.get( "XDG_DATA_HOME" )
+                if None is base_path:
+                    base_path = \
+                    _join_path( _whereis_user_home( ), ".local", "share" )
+        if None is base_path:
+            if specific_path:
+                return _join_path(
+                    _whereis_user_home( ), "." + specific_path, "resources"
+                )
+            else: return _whereis_user_home( )
+
+        if specific_path: return _join_path( base_path, specific_path )
+        return base_path
 
     whereis_user_resources.__doc__ = \
     StandardPath_BASE.whereis_user_resources.__doc__
 
-
     def whereis_saved_data( self, context = None ):
         """ """
 
-        # TODO: Implement.
-        pass
+        context = self._find_context( context )
+
+        base_path, specific_path = \
+        self._choose_user_path_parts( context )
+
+        # TODO: Consider on a per-desktop environment basis.
+        #       Use 'Documents' directory as appropriate.
+        if not base_path:
+            if specific_path:
+                return _join_path(
+                    _whereis_user_home( ), "." + specific_path, "saved_data"
+                )
+            else: return _whereis_user_home( )
+
+        if specific_path:
+            specific_path = _join_path( specific_path, "saved_data" )
+        else:
+            base_path = _join_path( base_path, "saved_data" )
+
+        if specific_path: return _join_path( base_path, specific_path )
+        return base_path
 
     whereis_saved_data.__doc__ = \
     StandardPath_BASE.whereis_saved_data.__doc__
@@ -351,6 +404,9 @@ def _whereis_common_Python_package( context ):
             _TD_( "Python package" ), specify_software = True
         )
 
+    # NOTE: The Ubuntu Linux distro seems to violate convention by using
+    #       'dist-packages' instead of 'site-packages'.
+    # TODO: Account for Ubuntu Linux in Linux-specific standard paths.
     return _join_path(
         context.get_with_default( "Python_prefix_path" ),
         "lib",
