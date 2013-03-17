@@ -58,11 +58,17 @@ from os.path import (
 PythonVersion = collections.namedtuple(
     "PythonVersion", "flavor major minor"
 )
-# Note: Access 'version_info' members by index rather than name for Python 2.6
-#       compatibility.
-python_version = PythonVersion(
-    sys.subversion[ 0 ], sys.version_info[ 0 ], sys.version_info[ 1 ]
-)
+if (3 == sys.version_info[ 0 ]) and (3 <= sys.version_info[ 1 ]):
+    python_version = PythonVersion(
+        sys.implementation.name,
+        sys.version_info.major, sys.version_info.minor
+    )
+else:
+    # Note: Access 'version_info' members by index rather than name for 
+    #       Python 2.6 compatibility.
+    python_version = PythonVersion(
+        sys.subversion[ 0 ], sys.version_info[ 0 ], sys.version_info[ 1 ]
+    )
 
 
 # Read the version info from config file.

@@ -4,14 +4,15 @@ python:
     - "2.7"
     - "3.2"
     - "3.3"
-matrix:
-    allow_failures:
-        # Until installation of a 'pylint' dependency is fixed.
-        - python: "3.3"
+#matrix:
+#    allow_failures:
 install:
     - pip install Sphinx --use-mirrors
     - pip install nose --use-mirrors
     - pip install setuptools-lint --use-mirrors
-script: python setup.py test
+script:
+    # TODO: Test 'lint' target once code is fully compliant.
+    - python setup.py test
+    - python setup.py build_sphinx
 
 # vim: set ft=yaml ts=4 sts=4 sw=4 et tw=79:
