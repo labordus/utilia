@@ -60,6 +60,14 @@ from os.path import (
     join                    as _join_path,
     exists                  as _path_exists,
 )
+
+# Hack around a 'multiprocessing' module issue which manifests itself when
+# using 'nosetests' from the setup script. (Fixed in later Python releases.)
+try:
+    import multiprocessing
+except ImportError:
+    pass
+
 # Record path to working directory of the script.
 __pwd           = dirname( sys.argv[ 0 ] )
 # Calculate path to the software library.
