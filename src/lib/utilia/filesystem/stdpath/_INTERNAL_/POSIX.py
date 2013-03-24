@@ -279,6 +279,23 @@ class StandardPath( StandardPath_BASE ):
 
     whereis_common_resources.__doc__ = \
     StandardPath_BASE.whereis_common_resources.__doc__
+
+
+    def whereis_common_programs( self, context = None ):
+        """ """
+
+        context = self._find_context( context )
+
+        base_path = self._choose_common_path_parts( context )[ 0 ]
+
+        if (None is base_path) and context.get_with_default( "Pythonic" ):
+            base_path = context.get_with_default( "Python_prefix_path" )
+        if None is base_path: base_path = "/usr/local"
+
+        return _join_path( base_path, "bin" )
+
+    whereis_common_programs.__doc__ = \
+    StandardPath_BASE.whereis_common_programs.__doc__
     
 
     def whereis_user_config( self, context = None ):

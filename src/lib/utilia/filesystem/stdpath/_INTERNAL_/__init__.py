@@ -666,7 +666,18 @@ class StandardPath_BASE( AbstractBase_BASE ):
         )
 
 
-    # TODO: whereis_common_programs
+    @abstractmethod
+    def whereis_common_programs( self, context = None ):
+        """
+            Returns the path to the directory where the shared or sitewide
+            programs for the software product, defined in ``context``, are
+            stored.
+        """
+
+        raise InvokedAbstractMethodError(
+            _TD_( "Invoked abstract method '{1}' in class '{0}'." ),
+            self.__class__.__name__, "whereis_common_programs"
+        )
 
 
     @abstractmethod
