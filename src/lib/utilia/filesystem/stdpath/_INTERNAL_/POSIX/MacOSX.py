@@ -32,5 +32,196 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
+import re   as _re
+# TODO: Replace with POSIX-specific functions.
+from os.path import (
+    join                    as _join_path,
+    dirname                 as _dirname_of_path,
+)
+
+
+from . import (
+    StandardPathContext     as POSIXStandardPathContext,
+    StandardPath            as POSIXStandardPath,
+    _whereis_common_Python_package,
+)
+
+
+class StandardPathContext( POSIXStandardPathContext ):
+    """
+        Auxiliary class, which provides a context for calculating standard
+        paths for MacOS X platforms.
+
+        Inherits from :py:class:`POSIX.StandardPathContext
+        <POSIXStandardPathContext>`.
+
+        Provides these options:
+
+        .. csv-table::
+           :header: "Name", "Description"
+           :widths: 20, 80
+
+    """
+
+
+    _option_validators = POSIXStandardPathContext._option_validators
+
+
+    def __init__( self, **options ):
+        """ """
+
+        POSIXStandardPathContext.__init__( self, **options )
+
+    __init__.__doc__ = POSIXStandardPathContext.__init__.__doc__
+
+
+#: Current standard path context.
+_context = StandardPathContext( )
+
+StandardPathContext.__doc__ += \
+"\n".join(
+    map(
+        lambda k, v: \
+        (" " * 10) + """ "{option_name}", "{option_help}" """.format(
+            option_name = k, option_help = v
+        ),
+        (k for k, v in _context.iter_option_validators( )),
+        (v.help for k, v in _context.iter_option_validators( ))
+    )
+)
+
+
+def get_context( ):
+    """
+        Returns the current standard path context.
+    """
+
+    return _context
+
+
+def set_context( new_context ):
+    """
+        Sets a new standard path context.
+        Returns the old standard path context.
+    """
+
+    global _context     # pylint: disable=W0603
+
+    old_context, _context = _context, new_context
+    return old_context
+
+
+class StandardPath( POSIXStandardPath ):
+    """
+        Calculates standard paths for MacOS X platforms.
+    """
+
+
+    def __init__( self, context = get_context( ) ):
+        """ """
+
+        POSIXStandardPath.__init__( self, context )
+
+    __init__.__doc__ = POSIXStandardPath.__init__.__doc__
+
+
+    def whereis_common_config( self, context = None ):
+        """ """
+
+        context = self._find_context( context )
+
+        pythonic = context.get_with_default( "Pythonic" )
+        if pythonic:
+            if context.get_with_default( "strictly_Pythonic" ):
+                return _whereis_common_Python_package( context )
+            return POSIXStandardPath.whereis_common_config( self, context )
+
+        base_path, specific_path = \
+        self._choose_common_path_parts( context )
+
+        if base_path:
+            base_path_trunc = \
+            StandardPath._truncate_framework_path( base_path )
+            if base_path == base_path_trunc:
+                # TODO: Handle Fink, Homebrew, MacPorts, etc..., if desired.
+                return POSIXStandardPath.whereis_common_config(
+                    self, context
+                )
+            base_path = base_path_trunc
+            if base_path.startswith( "/System" ): base_path = "/Library"
+        else: base_path = "/Library"
+        base_path = _join_path( base_path, "Preferences" )
+
+        if specific_path: return _join_path( base_path, specific_path )
+        return base_path
+
+    whereis_common_config.__doc__ = \
+    POSIXStandardPath.whereis_common_config.__doc__
+
+
+    def whereis_common_resources( self, context = None ):
+        """ """
+
+        context = self._find_context( context )
+
+        pythonic = context.get_with_default( "Pythonic" )
+        if pythonic:
+            if context.get_with_default( "strictly_Pythonic" ):
+                return _whereis_common_Python_package( context )
+            return POSIXStandardPath.whereis_common_resources( self, context )
+
+        base_path, specific_path = \
+        self._choose_common_path_parts( context )
+
+        if base_path:
+            base_path_trunc = \
+            StandardPath._truncate_framework_path( base_path )
+            if base_path == base_path_trunc:
+                # TODO: Handle Fink, Homebrew, MacPorts, etc..., if desired.
+                return POSIXStandardPath.whereis_common_resources(
+                    self, context
+                )
+            base_path = base_path_trunc
+            if base_path.startswith( "/System" ): base_path = "/Library"
+        else: base_path = "/Library"
+        base_path = _join_path( base_path, "Application Support" )
+
+        if specific_path: return _join_path( base_path, specific_path )
+        return base_path
+
+    whereis_common_resources.__doc__ = \
+    POSIXStandardPath.whereis_common_resources.__doc__
+
+
+    def whereis_user_config( self, context = None ):
+        """ """
+
+    # TODO: Implement.
+
+    whereis_user_config.__doc__ = \
+    POSIXStandardPath.whereis_user_config.__doc__
+
+
+    # TODO: whereis_user_resources
+
+
+    @staticmethod
+    def _truncate_framework_path( path ):
+        """
+            If the Python path is for a MacOS X framework installation,
+            then truncates the path components associated with the framework
+            and returns the remainder of the path. Else, returns the path
+            without any alteration.
+        """
+
+        match = _re.findall( r".*/Python\.framework/Versions/.*", path )
+        if match:
+            return reduce(
+                lambda x, f: f( x ), [ _dirname_of_path ] * 4, path
+            )
+
+        return path
+
+
 ###############################################################################
 # vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #

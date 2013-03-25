@@ -61,7 +61,7 @@ from .. import (
 class StandardPathContext( StandardPathContext_BASE ):
     """
         Auxiliary class, which provides a context for calculating standard
-        paths on POSIX OS platforms.
+        paths for POSIX OS platforms.
 
         Inherits from :py:class:`StandardPathContext_BASE`.
 
