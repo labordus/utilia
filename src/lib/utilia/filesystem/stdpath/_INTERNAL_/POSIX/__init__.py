@@ -212,7 +212,7 @@ class StandardPath( StandardPath_BASE ):
                 base_path = _envvars.get( "XDG_CACHE_HOME" )
                 if None is base_path:
                     base_path = \
-                    _join_path( _whereis_user_home( ), ".cache" )
+                    _join_path( StandardPath._whereis_user_home( ), ".cache" )
         if None is base_path: base_path = "/tmp"
 
         if specific_path: return _join_path( base_path, specific_path )
@@ -319,13 +319,15 @@ class StandardPath( StandardPath_BASE ):
                 base_path = _envvars.get( "XDG_CONFIG_HOME" )
                 if None is base_path:
                     base_path = \
-                    _join_path( _whereis_user_home( ), ".config" )
+                    _join_path( StandardPath._whereis_user_home( ), ".config" )
         if None is base_path:
             if specific_path:
                 return _join_path(
-                    _whereis_user_home( ), "." + specific_path, "config"
+                    StandardPath._whereis_user_home( ),
+                    "." + specific_path,
+                    "config"
                 )
-            else: return _whereis_user_home( )
+            else: return StandardPath._whereis_user_home( )
 
         if specific_path: return _join_path( base_path, specific_path )
         return base_path
@@ -355,19 +357,26 @@ class StandardPath( StandardPath_BASE ):
                 base_path = _envvars.get( "XDG_DATA_HOME" )
                 if None is base_path:
                     base_path = \
-                    _join_path( _whereis_user_home( ), ".local", "share" )
+                    _join_path(
+                        StandardPath._whereis_user_home( ),
+                        ".local",
+                        "share"
+                    )
         if None is base_path:
             if specific_path:
                 return _join_path(
-                    _whereis_user_home( ), "." + specific_path, "resources"
+                   StandardPath._whereis_user_home( ),
+                   "." + specific_path,
+                   "resources"
                 )
-            else: return _whereis_user_home( )
+            else: return StandardPath._whereis_user_home( )
 
         if specific_path: return _join_path( base_path, specific_path )
         return base_path
 
     whereis_user_resources.__doc__ = \
     StandardPath_BASE.whereis_user_resources.__doc__
+
 
     def whereis_saved_data( self, context = None ):
         """ """
@@ -382,9 +391,11 @@ class StandardPath( StandardPath_BASE ):
         if not base_path:
             if specific_path:
                 return _join_path(
-                    _whereis_user_home( ), "." + specific_path, "saved_data"
+                    StandardPath._whereis_user_home( ),
+                    "." + specific_path,
+                    "saved_data"
                 )
-            else: return _whereis_user_home( )
+            else: return StandardPath._whereis_user_home( )
 
         if specific_path:
             specific_path = _join_path( specific_path, "saved_data" )
@@ -406,6 +417,36 @@ class StandardPath( StandardPath_BASE ):
 
     _is_absolute_path.__doc__ = \
     StandardPath_BASE._is_absolute_path.__doc__
+
+
+    @staticmethod
+    def _whereis_user_home( ):
+        """
+            Returns the path to the current user's home directory, if it can be
+            determined. Returns ``None``, otherwise.
+        """
+        # TODO: Consider users other than the current one from context.
+
+        user_id         = _envvars.get( "USER" )
+        user_home_path  = _expand_user_path( "~" )
+
+        if None is user_home_path:
+            if None is user_id:
+                raise UndeterminedPathError(
+                    _TD_(
+                        "Undetermined path to home directory "
+                        "because current user is unknown."
+                    )
+                )
+            else:
+                raise UndeterminedPathError(
+                    _TD_(
+                        "Undetermined path to home directory of user {0}."
+                    ),
+                    user_id
+                )
+
+        return user_home_path
 
 
 def _whereis_common_Python_package( context ):
@@ -448,34 +489,6 @@ def _whereis_user_Python_package( context ):
         )
 
     return _join_path( site.USER_SITE, python_package_name )
-
-
-def _whereis_user_home( ):
-    """
-        Returns the path to the current user's home directory, if it can be
-        determined. Returns ``None``, otherwise.
-    """
-
-    user_id         = _envvars.get( "USER" )
-    user_home_path  = _expand_user_path( "~" )
-
-    if None is user_home_path:
-        if None is user_id:
-            raise UndeterminedPathError(
-                _TD_(
-                    "Undetermined path to home directory "
-                    "because current user is unknown."
-                )
-            )
-        else:
-            raise UndeterminedPathError(
-                _TD_(
-                    "Undetermined path to home directory of user {0}."
-                ),
-                user_id
-            )
-
-    return user_home_path
 
 
 ###############################################################################

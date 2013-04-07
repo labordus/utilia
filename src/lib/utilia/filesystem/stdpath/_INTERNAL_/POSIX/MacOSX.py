@@ -19,6 +19,7 @@
 """
     Implementation of the standard path calculation logic for MacOS X.
 """
+# TODO: Consider any nuances of Fink, Homebrew, MacPorts, etc....
 
 
 # Note: Future imports must go before other imports.
@@ -40,10 +41,12 @@ from os.path import (
 )
 
 
+from .. import (
+    _OptionValidator,
+)
 from . import (
     StandardPathContext     as POSIXStandardPathContext,
     StandardPath            as POSIXStandardPath,
-    _whereis_common_Python_package,
 )
 
 
@@ -65,6 +68,11 @@ class StandardPathContext( POSIXStandardPathContext ):
 
 
     _option_validators = POSIXStandardPathContext._option_validators
+    _option_validators[ "XDG_standard" ]        = \
+    _OptionValidator(
+        _option_validators[ "XDG_standard" ].func, False,
+        _option_validators[ "XDG_standard" ].help
+    )
 
 
     def __init__( self, **options ):
@@ -132,8 +140,6 @@ class StandardPath( POSIXStandardPath ):
 
         pythonic = context.get_with_default( "Pythonic" )
         if pythonic:
-            if context.get_with_default( "strictly_Pythonic" ):
-                return _whereis_common_Python_package( context )
             return POSIXStandardPath.whereis_common_config( self, context )
 
         base_path, specific_path = \
@@ -143,7 +149,6 @@ class StandardPath( POSIXStandardPath ):
             base_path_trunc = \
             StandardPath._truncate_framework_path( base_path )
             if base_path == base_path_trunc:
-                # TODO: Handle Fink, Homebrew, MacPorts, etc..., if desired.
                 return POSIXStandardPath.whereis_common_config(
                     self, context
                 )
@@ -166,8 +171,6 @@ class StandardPath( POSIXStandardPath ):
 
         pythonic = context.get_with_default( "Pythonic" )
         if pythonic:
-            if context.get_with_default( "strictly_Pythonic" ):
-                return _whereis_common_Python_package( context )
             return POSIXStandardPath.whereis_common_resources( self, context )
 
         base_path, specific_path = \
@@ -177,7 +180,6 @@ class StandardPath( POSIXStandardPath ):
             base_path_trunc = \
             StandardPath._truncate_framework_path( base_path )
             if base_path == base_path_trunc:
-                # TODO: Handle Fink, Homebrew, MacPorts, etc..., if desired.
                 return POSIXStandardPath.whereis_common_resources(
                     self, context
                 )
@@ -196,13 +198,83 @@ class StandardPath( POSIXStandardPath ):
     def whereis_user_config( self, context = None ):
         """ """
 
-    # TODO: Implement.
+        context = self._find_context( context )
+
+        fallback_to_POSIX = \
+            context.get_with_default( "Pythonic" ) \
+        or  context.get_with_default( "XDG_standard" )
+        if fallback_to_POSIX:
+            return POSIXStandardPath.whereis_user_config( self, context )
+
+        base_path, specific_path = \
+        self._choose_user_path_parts( context )
+
+        if base_path:
+            base_path_trunc = \
+            StandardPath._truncate_framework_path( base_path )
+            if base_path == base_path_trunc:
+                return POSIXStandardPath.whereis_user_config(
+                    self, context
+                )
+            base_path = base_path_trunc
+        else: base_path = POSIXStandardPath._whereis_user_home( )
+        base_path = _join_path( base_path, "Preferences" )
+
+        if specific_path: return _join_path( base_path, specific_path )
+        return base_path
 
     whereis_user_config.__doc__ = \
     POSIXStandardPath.whereis_user_config.__doc__
 
 
-    # TODO: whereis_user_resources
+    def whereis_user_resources( self, context = None ):
+        """ """
+
+        context = self._find_context( context )
+
+        fallback_to_POSIX = \
+            context.get_with_default( "Pythonic" ) \
+        or  context.get_with_default( "XDG_standard" )
+        if fallback_to_POSIX:
+            return POSIXStandardPath.whereis_user_resources( self, context )
+
+        base_path, specific_path = \
+        self._choose_user_path_parts( context )
+
+        if base_path:
+            base_path_trunc = \
+            StandardPath._truncate_framework_path( base_path )
+            if base_path == base_path_trunc:
+                return POSIXStandardPath.whereis_user_resources(
+                    self, context
+                )
+            base_path = base_path_trunc
+        else: base_path = POSIXStandardPath._whereis_user_home( )
+        base_path = _join_path( base_path, "Application Support" )
+
+        if specific_path: return _join_path( base_path, specific_path )
+        return base_path
+
+    whereis_user_resources.__doc__ = \
+    POSIXStandardPath.whereis_user_resources.__doc__
+
+
+    def whereis_saved_data( self, context = None ):
+        """ """
+
+        context = self._find_context( context )
+
+        base_path, specific_path = \
+        self._choose_user_path_parts( context )
+
+        if not base_path: base_path = POSIXStandardPath._whereis_user_home( )
+        base_path = _join_path( base_path, "Documents" )
+
+        if specific_path: return _join_path( base_path, specific_path )
+        return base_path
+
+    whereis_saved_data.__doc__ = \
+    POSIXStandardPath.whereis_saved_data.__doc__
 
 
     @staticmethod
