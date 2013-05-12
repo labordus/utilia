@@ -238,6 +238,7 @@ class StandardPath( StandardPath_BASE ):
 
         if (None is base_path) and pythonic:
             base_path = context.get_with_default( "Python_prefix_path" )
+        # TODO: Handle '/etc/xdg' if XDG compliance is requested.
         if None is base_path: base_path = "/usr/local"
 
         # TODO? Handle '/opt' as '/etc/opt'.
