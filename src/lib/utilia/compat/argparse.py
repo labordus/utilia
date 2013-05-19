@@ -38,7 +38,7 @@ from __future__ import (
 __docformat__ = "reStructuredText"
 
 
-from utilia.config_parsers._COMPAT_.argparse import *
+from utilia.compat._INTERNAL_.argparse import *
 
 
 ###############################################################################
