@@ -17,18 +17,7 @@
 ###############################################################################
 
 """
-    Imports the contents of the :py:mod:`collections <CPython3:collections>`
-    module from the Python standard library and provides pieces which are 
-    missing in some Python implementations.
-
-    For Python 2.6 and 3.0, these missing classes are provided:
-
-        * :py:class:`OrderedDict <CPython2:collections.OrderedDict>`
-
-    .. note::
-       The source code for the ``OrderedDict`` class comes from a recipe
-       provided by a third party. This code or a near variant of it was
-       included into Python 2.7 and Python 3.1 per acceptance of :pep:`372`.
+    Compatibility layer internals.
 """
 
 
@@ -42,23 +31,6 @@ from __future__ import (
 
 __docformat__ = "reStructuredText"
 
-
-from utilia import (
-    python_version          as _python_version,
-)
-
-
-from collections import *
-
-if  [ _python_version.major, _python_version.minor ] \
-    in [ [ 2, 6 ], [ 3, 0 ] ]:
-    from utilia.compat._INTERNAL_.collections.ordered_dict import (
-        OrderedDict,
-    )
-
-
-# Cleanup the module namespace.
-del _python_version
 
 ###############################################################################
 # vim: set ft=python ts=4 sts=4 sw=4 et tw=79:                                #

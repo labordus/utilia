@@ -17,7 +17,7 @@
 ###############################################################################
 
 """
-    Compatibility layer.
+    Compatibility layer internals.
 """
 
 
